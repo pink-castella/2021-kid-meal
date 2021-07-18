@@ -15,9 +15,10 @@ router.get("/auth", auth, (req, res) => {
         isAuth: true,
         email: req.user.email,
         name: req.user.name,
-        lastname: req.user.lastname,
+        address: req.user.address,
         role: req.user.role,
-        image: req.user.image,
+        cart: req.user.cart,
+        history: req.user.history
     });
 });
 
@@ -67,5 +68,79 @@ router.get("/logout", auth, (req, res) => {
         });
     });
 });
+
+//=================================
+//          UserAddress
+//=================================
+/*주소 목록 불러오기 */
+router.get('/getAddress', auth, (req, res) => {
+    User.find(
+        { _id: req.user._id },
+        { "address":1 })
+        .exec((err,userAddresses) => {
+            if(err) return res.status(400).send(err);
+            return res.status(200).send({success: true, userAddresses});
+        });
+});
+
+/*주소 입력(등록)*/
+router.post('/inputAddress', auth, (req, res) => { 
+    User.findOneAndUpdate(
+        { _id: req.user._id },
+        { $push: {
+            address: {
+                nickname: req.body.nickname, 
+                address_name: req.body.address_name,
+                location: {
+                    x: req.body.x,
+                    y: req.body.y
+                }
+            }
+        } },
+        { new: true },
+        (err, userInfo) => {
+            if(err) return res.status(400).json({suceess: false, err});
+            return res.status(200).json({
+                success: true,
+                userInfo
+            });
+        })
+});
+
+/*주소 삭제*/
+router.get('/removeAddress', auth, (req, res) => {
+    User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+            "$pull":
+            { "address": { "_id": req.body.id }} //임시로body
+        },
+        { new: true },
+        (err, userInfo) => { 
+            if(err) return res.status(400).json({suceess: false, err});
+            return res.status(200).json({
+                success: true,
+                userInfo
+            });
+        });
+});
+
+/*주소 수정(별칭만)*/
+router.post('/updateAddress', auth, (req, res) => {
+    User.findOneAndUpdate(
+        { _id: req.user.id, "address._id": req.body.id }, //임시로 body
+        {
+            $set: { "address.$.nickname": req.body.nickname} 
+        },
+        { new: true },
+        (err, userInfo) => { 
+            if(err) return res.status(400).json({suceess: false, err});
+            return res.status(200).json({
+                success: true,
+                userInfo
+            });
+        });
+});
+
 
 module.exports = router;

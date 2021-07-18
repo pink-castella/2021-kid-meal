@@ -25,8 +25,7 @@ const userSchema = mongoose.Schema({
     address: [{
         nickname: String,
         address_name: String,
-        x: String,
-        y: String
+        location: Array
     }],
     role : {
         type:Number,

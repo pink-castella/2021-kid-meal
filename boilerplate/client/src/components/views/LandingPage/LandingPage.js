@@ -30,7 +30,7 @@ function LandingPage(props) {
             geocoder.addressSearch(fullAddress, function(result, status) {
                 // 정상적으로 검색이 완료
                 if (status === window.kakao.maps.services.Status.OK) {
-                    const body = {
+                    let body = {
                         x: parseFloat(result[0].x), 
                         y: parseFloat(result[0].y)
                     }
@@ -38,6 +38,7 @@ function LandingPage(props) {
                     axios.post('/api/stores/getStores', body)
                     .then(response => {
                         if (response.data.success) {
+                            localStorage.setItem('localUser', JSON.stringify(body))
                             props.history.push('/store')
                         }
                         else {

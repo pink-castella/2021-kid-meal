@@ -70,7 +70,7 @@ function RegisterPage(props) {
             if (response.payload.success) {
               props.history.push("/login");
             } else {
-              alert(JSON.stringify(response))
+              alert(response.payload.err.errmsg)
             }
           })
 

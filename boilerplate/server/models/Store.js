@@ -67,6 +67,5 @@ storeSchema.index({
     }
 });
 
-
 const Store = mongoose.model('Store', storeSchema);
 module.exports = { Store };

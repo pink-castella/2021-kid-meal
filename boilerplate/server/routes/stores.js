@@ -1,20 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const { Store } = require("../models/Store");
+const {Product} = require("../models/Product");
 const { User } = require("../models/User");
 const { auth } = require("../middleware/auth");
 
-/*랜딩페이지에서 위도경도 보내면 거리 계산해서 
-반경 500m이내 가게 목록 띄우도록 => main페이지에
-const body = {
-    address_name: String, //이건 db에 저장 
-    y: String, 
-    x: String
-}
+
+/*
 const body = {
     skip: Skip, //skip = 0 
     limit: Limit, //limit = 6
-    filters: filters
+    filter: filter
 }
 Axios.post('/api/stores/getStores', formData, config)
 */
@@ -24,35 +20,98 @@ router.post('/getStores', (req, res) => {
 
     //let limit = req.body.limit ? parseInt(req.body.limit) : 100;
     //let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+    
     //let x = 126.96756;
     //let y = 37.54460;
     let x = req.body.x; //현재 x 좌표(경도_longitude)
     let y = req.body.y; //현재 y 좌표(위도_latitude)
-    let radius = 500; //반경 500m 내 
+    //let radius = 500; //반경 500m 내 
+    let radius = 0.5;
     
-    //let findArgs = req.body.filters;
+    //let findArgs = {};
+    let findArgs = req.body.filters==="전체" ? {} : req.body.filters;
+    console.log(findArgs);
+    let term = req.body.searchTerm;
+    
+    /*현재 위치에서 500m이내*/
+    if(term){
+        Store.find({
+            "storeAddress.location": {
+                $geoWithin: {
+                    $centerSphere: 
+                        [[x, y], radius/6378.1]
+                    }
+            }
+        })
+        .find({"storeCategory": findArgs})
+        //.find({ $text: {$search: term}})
+        .find({"storeName": new RegExp(term)})
+        .exec((err, storeInfo) => {
+            if(err) return res.status(400).json({success: false, err});
+            return res.status(200).json({
+                success: true,
+                storeInfo,
+                postSize: storeInfo.length
+            }); });  
+    }else{
+        Store.find({
+            "storeAddress.location": {
+                $geoWithin: {
+                    $centerSphere: 
+                        [[x, y], radius/6378.1]
+                    }
+            }
+        })
+        .find({"storeCategory": findArgs})
+        .exec((err, storeInfo) => {
+            if(err) return res.status(400).json({success: false, err});
+            return res.status(200).json({
+                success: true,
+                storeInfo,
+                postSize: storeInfo.length
+            }); });  
+    }
+    
 
-    Store.aggregate([{ 
-        $geoNear: {
-            spherical: true, 
-            maxDistance: radius,
-            near:{ 
-                type:'Point',
-                coordinates:[ x, y ]
-            },
-            distanceField: 'distance',
-            key: 'storeAddress.location'
+    /*현재 위치에서 500m이내_가까운 순*/
+    /*
+    Store.find({
+        "storeAddress.location": {
+            $nearSphere: {
+                $geometry: {
+                    type: 'Point',
+                    coordinates: [126.96756, 37.54460]
+                },
+                $maxDistance: 500            
+            }
         }
-    }]).exec((err, storeInfo) => {
+    })
+    .exec((err, storeInfo) => {
         if(err) return res.status(400).json({success: false, err});
         return res.status(200).json({
             success: true,
             storeInfo,
-        }); });
-        //.find(findArgs);   
-   
-
+            postSize: storeInfo.length
+        }); });  */
 });
 
+/*
+const body = {
+    store: store
+}
+ */
+
+/*선택한 가게의 상품 정보 */
+router.post('/getProducts', (req, res) => {
+    let store = req.body.store;
+
+    Product.find({"store": store})
+        .exec((err, productInfo) => {
+        if(err) return res.status(400).json({success: false, err});
+        return res.status(200).json({
+            success: true,
+            productInfo});
+        })
+});
 
 module.exports = router;

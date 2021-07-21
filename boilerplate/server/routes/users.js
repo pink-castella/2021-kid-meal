@@ -104,7 +104,7 @@ router.post('/inputAddress', auth, (req, res) => {
                 success: true,
                 userInfo
             });
-        })
+        });
 });
 
 /*주소 삭제*/
@@ -113,7 +113,7 @@ router.get('/removeAddress', auth, (req, res) => {
         { _id: req.user._id },
         {
             "$pull":
-            { "address": { "_id": req.body.id }} //임시로body
+            { "address": { "_id": req.body.id }} 
         },
         { new: true },
         (err, userInfo) => { 
@@ -142,5 +142,55 @@ router.post('/updateAddress', auth, (req, res) => {
         });
 });
 
+//=================================
+//            Favorite
+//=================================
+
+/*찜목록에 저장 */
+router.post('/saveFavorite', auth, (req, res) => {
+    User.findOneAndUpdate(
+        { _id: req.user.id },
+        { $push: {
+            favorite: req.body.favorite
+        } },
+        { new: true },
+        (err, userInfo) => {
+            if(err) return res.status(400).json({suceess: false, err});
+            return res.status(200).json({
+                success: true,
+                userInfo
+            });
+        });
+});
+
+/*찜목록 불러오기 */
+router.get('/getFavorite', auth, (req, res) => {
+    User.find(
+        { _id: req.user._id },
+        { "favorite": 1 })
+        .populate("favorite")
+        .exec((err,userFavorites) => {
+            if(err) return res.status(400).send(err);
+            return res.status(200).send({success: true, userFavorites});
+        });
+});
+
+/*찜 해제 */
+router.get('/removeFavorite', auth, (req, res) => {
+    User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+            "$pull":
+            { "favorite": req.body.favorite }
+        },
+        { new: true },
+        (err, userFavorites) => { 
+            if(err) return res.status(400).json({suceess: false, err});
+                return res.status(200).json({
+                    success: true,
+                    userFavorites
+            });    
+    });
+});
 
 module.exports = router;

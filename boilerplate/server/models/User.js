@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 const moment = require("moment");
+const Schema = mongoose.Schema;
 
 const userSchema = mongoose.Schema({
     userName: {
@@ -39,6 +40,10 @@ const userSchema = mongoose.Schema({
         type: Array,
         default: []
     },
+    favorite: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Store',
+    }],
     token : {
         type: String,
     },

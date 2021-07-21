@@ -4,6 +4,9 @@ import {
     REGISTER_USER,
     AUTH_USER,
     LOGOUT_USER,
+    ADD_ADDRESS,
+    REMOVE_ADDRESS,
+    UPDATE_ADDRESS
 } from './types';
 import { USER_SERVER } from '../components/Config.js';
 
@@ -47,3 +50,48 @@ export function logoutUser(){
     }
 }
 
+export function addAddress(addressInfo) {
+    let body = {
+        x: addressInfo.x,
+        y: addressInfo.y,
+        address_name: addressInfo.address_name,
+        nickname: addressInfo.bname
+    }
+
+    const request = axios.post(`${USER_SERVER}/inputAddress`, body)
+        .then(response => response.data);
+
+    return {
+        type: ADD_ADDRESS,
+        payload: request
+    }
+}
+
+export function removeAddress(addressId) {
+    let body = {
+        id: addressId
+    }
+    
+    const request = axios.get(`${USER_SERVER}/removeAddress`, body)
+        .then(response => response.data)
+
+    return {
+        type: REMOVE_ADDRESS,
+        payload: request
+    }
+}
+
+export function updateAddress(addressId, update) {
+    let body = {
+        id: addressId,
+        nickname: update
+    }
+
+    const request = axios.post(`${USER_SERVER}/updateAddress`, body)
+        .then(response => response.data)
+
+    return {
+        type: UPDATE_ADDRESS,
+        payload: request
+    }
+}

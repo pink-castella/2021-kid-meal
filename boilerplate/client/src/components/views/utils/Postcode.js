@@ -31,7 +31,9 @@ function Postcode(props) {
                 if (status === window.kakao.maps.services.Status.OK) {
                     let body = {
                         x: parseFloat(result[0].x), 
-                        y: parseFloat(result[0].y)
+                        y: parseFloat(result[0].y),
+                        address_name: fullAddress,
+                        bname: data.bname
                     }
 
                     props.handleCoords(body)

@@ -85,7 +85,20 @@ router.post('/getProducts', (req, res) => {
         return res.status(200).json({
             success: true,
             productInfo});
-        })
+        });
+});
+
+/*선택한 가게의 정보 */
+router.post('/getStoreInfo', (req, res) => {
+    let store = req.body.store;
+
+    Store.find({"_id": store})
+        .exec((err, storeInfo) => {
+            if(err) return res.status(400).json({success: false, err});
+            return res.status(200).json({
+                success: true,
+                storeInfo});
+        });
 });
 
 

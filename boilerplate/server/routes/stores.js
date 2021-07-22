@@ -20,7 +20,8 @@ router.post('/getStores', (req, res) => {
     //let radius = 0.5;
     
     //let findArgs = {};
-    let findArgs = req.body.filters==="전체" ? {} : req.body.filters;
+    let findArgs = req.body.filters==="전체" ? {} : {"storeCategory": req.body.filters};
+    //let findArgs = req.body.filters==="전체" ? {} : req.body.filters;
     console.log(findArgs);
     let term = req.body.searchTerm;
     
@@ -37,7 +38,8 @@ router.post('/getStores', (req, res) => {
                 }
             }
         })
-        .find({"storeCategory": findArgs})
+        .find(findArgs)
+        //.find({"storeCategory": findArgs})
         //.find({ $text: {$search: term}})
         .find({"storeName": new RegExp(term)})
         .exec((err, storeInfo) => {
@@ -59,7 +61,8 @@ router.post('/getStores', (req, res) => {
                 }
             }
         })
-        .find({"storeCategory": findArgs})
+        .find(findArgs)
+        //.find({"storeCategory": findArgs})
         .exec((err, storeInfo) => {
             if(err) return res.status(400).json({success: false, err});
             return res.status(200).json({
@@ -71,7 +74,7 @@ router.post('/getStores', (req, res) => {
 });
 
 
-/*선택한 가게의 상품 정보 */
+/*해당 가게의 상품 정보 */
 router.post('/getProducts', (req, res) => {
     let store = req.body.store;
 
@@ -83,5 +86,6 @@ router.post('/getProducts', (req, res) => {
             productInfo});
         })
 });
+
 
 module.exports = router;

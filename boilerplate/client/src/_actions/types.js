@@ -5,3 +5,4 @@ export const LOGOUT_USER = 'logout_user';
 export const ADD_ADDRESS = 'add_address';
 export const REMOVE_ADDRESS = 'remove_address';
 export const UPDATE_ADDRESS = 'update_address';
+export const SET_CURRENT_ADDRESS = 'set_current_address';

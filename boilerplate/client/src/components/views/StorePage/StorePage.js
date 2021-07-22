@@ -8,16 +8,28 @@ import './StorePage.css';
 
 const { Text } = Typography;
 
-function StorePage() {
+function StorePage(props) {
     const [stores, setStores] = useState([])
-    const [filters, setFilters] = useState()
+    const [filters, setFilters] = useState("전체")
     const [searchTerm, setSearchTerm] = useState("")
     const [isEmpty, setEmpty] = useState(false)
 
     useEffect(() => {
-        let body = JSON.parse(localStorage.getItem('localUser'))
-        getStores(body)
-    }, [])
+        if (props.user.userData && props.user.userData.currentAddress &&  props.user.userData.currentAddress.location) {
+            if (props.user.userData.currentAddress.location.length > 0) {
+                let body = {
+                    x: props.user.userData.currentAddress.location[0].x,
+                    y: props.user.userData.currentAddress.location[0].y,
+                    filters: "전체",
+                    searchTerm: ""
+                }
+                getStores(body)
+            }
+        } else {
+            let body = JSON.parse(localStorage.getItem('localUser'))
+            getStores(body)
+        }
+    }, [props.user.userData])
 
     const getStores = (body) => {
         axios.post('/api/stores/getStores', body)
@@ -25,7 +37,6 @@ function StorePage() {
             if (response.data.success) {
                 if (response.data.storeInfo.length) {
                     setStores(response.data.storeInfo)
-                    console.log(JSON.stringify(response.data))    
                 }
                 else {
                     setEmpty(true)
@@ -37,8 +48,6 @@ function StorePage() {
     }
 
     const renderCards = stores.map((store, index) => {
-        console.log(store)
-
         return (
             <Col sm={12} xs={24} key={index}>
                 <a href={`/store/${store._id}`}>
@@ -101,6 +110,14 @@ function StorePage() {
         getStores(body)
     }
 
+    const goToEnterAddress = () => {
+        if (props.user.userData) {
+            window.location.href='/address'
+        } else {
+            window.location.href='/'
+        }
+    }
+
     return (
         isEmpty ? (
             <div>
@@ -113,7 +130,7 @@ function StorePage() {
                     </div>
                     }
                 >
-                    <Button type="primary" onClick={() => window.location.href='/'}>
+                    <Button type="primary" onClick={goToEnterAddress}>
                         주소 입력하러가기
                     </Button>
                 </Empty>

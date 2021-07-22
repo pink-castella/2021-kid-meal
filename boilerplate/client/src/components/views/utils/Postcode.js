@@ -29,14 +29,15 @@ function Postcode(props) {
             geocoder.addressSearch(fullAddress, function(result, status) {
                 // 정상적으로 검색이 완료
                 if (status === window.kakao.maps.services.Status.OK) {
-                    let body = {
+                    let addressInfo = {
                         x: parseFloat(result[0].x), 
                         y: parseFloat(result[0].y),
                         address_name: fullAddress,
-                        bname: data.bname
+                        nickname: data.bname
                     }
 
-                    props.handleCoords(body)
+                    props.handleCoords(addressInfo)
+                    setIsModal(false)
                 }
             })
         }
@@ -58,7 +59,7 @@ function Postcode(props) {
     `;
 
     return (
-        <>
+        <React.Fragment>
             <SearchWrapper>
                 <Input style={{ width: '60%' }} value="아이가 식사를 할 위치를 입력해주세요!" onClick={handleSearch} />
                 <Button type="primary" onClick={handleSearch}>검색</Button>
@@ -72,7 +73,7 @@ function Postcode(props) {
                     />
                 </PopupWrapper>
             }
-        </>
+        </React.Fragment>
     )
 }
 

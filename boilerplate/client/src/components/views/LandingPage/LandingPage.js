@@ -3,8 +3,15 @@ import Postcode from '../utils/Postcode';
 import axios from 'axios';
 
 function LandingPage(props) {
-    const handleCoords = (body) => {
-        if (body && body.x && body.y) {
+    const handleCoords = (addressInfo) => {
+        if (addressInfo && addressInfo.x && addressInfo.y) {
+            let body = {
+                x: addressInfo.x,
+                y: addressInfo.y,
+                filters: "전체",
+                searchTerm: ""
+            }
+
             axios.post('/api/stores/getStores', body)
             .then(response => {
                 if (response.data.success) {
@@ -19,7 +26,7 @@ function LandingPage(props) {
     }
 
     return (
-        <Postcode handleCoords={body => handleCoords(body)} />
+        <Postcode handleCoords={addressInfo => handleCoords(addressInfo)} />
     )
 }
 

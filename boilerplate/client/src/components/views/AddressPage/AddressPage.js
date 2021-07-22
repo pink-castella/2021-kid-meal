@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Postcode from '../utils/Postcode';
-import { Typography, List } from 'antd';
+import { Typography } from 'antd';
 import { addAddress, removeAddress, updateAddress } from '../../../_actions/user_actions';
 import AddressCard from './Sections/AddressCard';
 
@@ -17,10 +17,9 @@ function AddressPage(props) {
         if (props.user.userData && props.user.userData.address) {
             if (props.user.userData.address.length > 0) {
                 props.user.userData.address.forEach(item => {
-                    addressList.push(item) // 수정
+                    addressList.push(item)
                 })
 
-                console.log('address: '+JSON.stringify(addressList));
                 setAddressInfo(addressList)
             }
         }
@@ -28,7 +27,6 @@ function AddressPage(props) {
     }, [props.user.userData])
 
     const handleCoords = (body) => {
-        console.log('body'+JSON.stringify(body))
         if (body && body.x && body.y && body.address_name) {
             dispatch(addAddress(body))
             .then(response => {
@@ -49,7 +47,7 @@ function AddressPage(props) {
     }
 
     return (
-        <>
+        <React.Fragment>
             <Postcode handleCoords={body => handleCoords(body)} />
             <Title level={3}>저장된 주소</Title>
             <AddressCard 
@@ -57,7 +55,7 @@ function AddressPage(props) {
                 removeItem={addressId => removeAddressItem(addressId)}
                 updateItem={(addressId, update) => updateAddressItem(addressId, update)}    
             />
-        </>
+        </React.Fragment>
     )
 }
 

@@ -6,7 +6,8 @@ import {
     LOGOUT_USER,
     ADD_ADDRESS,
     REMOVE_ADDRESS,
-    UPDATE_ADDRESS
+    UPDATE_ADDRESS,
+    SET_CURRENT_ADDRESS
 } from './types';
 import { USER_SERVER } from '../components/Config.js';
 
@@ -92,6 +93,23 @@ export function updateAddress(addressId, update) {
 
     return {
         type: UPDATE_ADDRESS,
+        payload: request
+    }
+}
+
+export function setCurrentAddress(addressInfo) {
+    let body = {
+        nickname: addressInfo.nickname,
+        address_name: addressInfo.address_name,
+        x: addressInfo.x,
+        y: addressInfo.y
+    }
+
+    const request = axios.post(`${USER_SERVER}/setCurrent`, body)
+        .then(response => response.data)
+
+    return {
+        type: SET_CURRENT_ADDRESS,
         payload: request
     }
 }

@@ -5,7 +5,8 @@ import {
     LOGOUT_USER,
     ADD_ADDRESS,
     REMOVE_ADDRESS,
-    UPDATE_ADDRESS
+    UPDATE_ADDRESS,
+    SET_CURRENT_ADDRESS
 } from '../_actions/types';
  
 
@@ -38,6 +39,13 @@ export default function(state={}, action){
                 userData: {
                     ...state.userData,
                     address: action.payload.userInfo.address
+                }
+            }
+        case SET_CURRENT_ADDRESS:
+            return { ...state,
+                userData: {
+                    ...state.userData,
+                    currentAddress: action.payload.currentAddress
                 }
             }
         default:

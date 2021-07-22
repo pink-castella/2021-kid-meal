@@ -18,7 +18,8 @@ router.get("/auth", auth, (req, res) => {
         address: req.user.address,
         role: req.user.role,
         cart: req.user.cart,
-        history: req.user.history
+        history: req.user.history,
+        currentAddress: req.user.currentAddress
     });
 });
 
@@ -125,7 +126,7 @@ router.post('/updateAddress', auth, (req, res) => {
         (err, userInfo) => { 
             if(err) return res.status(400).json({suceess: false, err});
             return res.status(200).json({
-                success: true,
+            success: true,
                 userInfo
             });
         });

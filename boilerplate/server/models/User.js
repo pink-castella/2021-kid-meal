@@ -28,6 +28,11 @@ const userSchema = mongoose.Schema({
         address_name: String,
         location: Array
     }],
+    currentAddress:{
+        nickname: String,
+        address_name: String,
+        location: Array
+    },
     role : {
         type:Number,
         default: 0 

@@ -72,17 +72,6 @@ router.get("/logout", auth, (req, res) => {
 //=================================
 //          UserAddress
 //=================================
-/*주소 목록 불러오기 */
-router.get('/getAddress', auth, (req, res) => {
-    User.find(
-        { _id: req.user._id },
-        { "address":1 })
-        .exec((err,userAddresses) => {
-            if(err) return res.status(400).send(err);
-            return res.status(200).send({success: true, userAddresses});
-        });
-});
-
 /*주소 입력(등록)*/
 router.post('/inputAddress', auth, (req, res) => { 
     User.findOneAndUpdate(
@@ -142,6 +131,30 @@ router.post('/updateAddress', auth, (req, res) => {
         });
 });
 
+/*현재 주소 설정*/
+router.post('/setCurrent', auth, (req, res) => {
+    User.findOneAndUpdate(
+        { _id: req.user.id },
+        { $set: {
+                currentAddress: {
+                    nickname: req.body.nickname, 
+                    address_name: req.body.address_name,
+                    location: {
+                        x: req.body.x,
+                        y: req.body.y
+                    }
+                }
+        } },
+        { new: true },
+        (err, currentAddress) => {
+            if(err) return res.status(400).json({suceess: false, err});
+            return res.status(200).json({
+                success: true,
+                currentAddress
+            });
+        });
+});
+
 //=================================
 //            Favorite
 //=================================
@@ -192,6 +205,10 @@ router.get('/removeFavorite', auth, (req, res) => {
             });    
     });
 });
+
+//=================================
+//              Cart
+//=================================
 
 router.post("/addToCart", auth, (req, res) => {
     // 먼저 users collection에 해당 유저의 정보를 가져오기
@@ -267,6 +284,10 @@ router.get('/removeFromCart', auth, (req, res) => {
         }
     )
 })
+
+//=================================
+//            Payment
+//=================================
 
 router.post('/successBuy', auth, (req, res) => {
     let history = [];

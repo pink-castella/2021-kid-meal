@@ -22,7 +22,7 @@ router.post('/getStores', (req, res) => {
     //let findArgs = {};
     let findArgs = req.body.filters==="전체" ? {} : {"storeCategory": req.body.filters};
     //let findArgs = req.body.filters==="전체" ? {} : req.body.filters;
-    console.log(findArgs);
+    //console.log(findArgs);
     let term = req.body.searchTerm;
     
     /*현재 위치에서 500m이내_가까운 순*/
@@ -79,6 +79,7 @@ router.post('/getProducts', (req, res) => {
     let store = req.body.store;
 
     Product.find({"store": store})
+        .populate("store")
         .exec((err, productInfo) => {
         if(err) return res.status(400).json({success: false, err});
         return res.status(200).json({

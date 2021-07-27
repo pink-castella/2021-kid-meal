@@ -73,13 +73,11 @@ router.post('/getStores', (req, res) => {
     }
 });
 
-
 /*해당 가게의 상품 정보 */
 router.post('/getProducts', (req, res) => {
     let store = req.body.store;
 
     Product.find({"store": store})
-        .populate("store")
         .exec((err, productInfo) => {
         if(err) return res.status(400).json({success: false, err});
         return res.status(200).json({
@@ -101,5 +99,26 @@ router.post('/getStoreInfo', (req, res) => {
         });
 });
 
+/*찜목록 불러오기 */
+router.post('/getFavorites', auth, (req, res) => {
+    let type = typeof(req.body.favoriteIdArr)    // body 아니고 query
+    let storeIds = req.body.favoriteIdArr
+
+    console.log('ids'+storeIds)
+
+    if (type === "array") {
+        let ids = req.body.favoriteIdArr.split(',')
+        storeIds = ids.map(item => {
+            return item
+        })
+    }
+
+    Store.find({ _id: {$in: storeIds} })
+        .populate("store")
+        .exec((err, stores) => {
+            if(err) return res.status(400).send(err);
+            return res.status(200).send({success: true, stores});
+        });
+});
 
 module.exports = router;

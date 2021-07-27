@@ -45,7 +45,7 @@ const userSchema = mongoose.Schema({
         type: Array,
         default: []
     },
-    favorite: [{
+    favorites: [{
         type: Schema.Types.ObjectId,
         ref: 'Store',
     }],

@@ -6,3 +6,6 @@ export const ADD_ADDRESS = 'add_address';
 export const REMOVE_ADDRESS = 'remove_address';
 export const UPDATE_ADDRESS = 'update_address';
 export const SET_CURRENT_ADDRESS = 'set_current_address';
+export const SAVE_FAVORITE = 'save_favorite';
+export const REMOVE_FAVORITE = 'remove_favorite';
+export const ADD_TO_CART = 'add_to_cart';

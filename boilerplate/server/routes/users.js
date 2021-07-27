@@ -19,7 +19,8 @@ router.get("/auth", auth, (req, res) => {
         role: req.user.role,
         cart: req.user.cart,
         history: req.user.history,
-        currentAddress: req.user.currentAddress
+        currentAddress: req.user.currentAddress,
+        favorites: req.user.favorites
     });
 });
 
@@ -98,7 +99,7 @@ router.post('/inputAddress', auth, (req, res) => {
 });
 
 /*주소 삭제*/
-router.get('/removeAddress', auth, (req, res) => {
+router.post('/removeAddress', auth, (req, res) => {
     User.findOneAndUpdate(
         { _id: req.user._id },
         {
@@ -165,7 +166,7 @@ router.post('/saveFavorite', auth, (req, res) => {
     User.findOneAndUpdate(
         { _id: req.user.id },
         { $push: {
-            favorite: req.body.favorite
+            favorites: req.body.favorite
         } },
         { new: true },
         (err, userInfo) => {
@@ -177,32 +178,20 @@ router.post('/saveFavorite', auth, (req, res) => {
         });
 });
 
-/*찜목록 불러오기 */
-router.get('/getFavorite', auth, (req, res) => {
-    User.find(
-        { _id: req.user._id },
-        { "favorite": 1 })
-        .populate("favorite")
-        .exec((err,userFavorites) => {
-            if(err) return res.status(400).send(err);
-            return res.status(200).send({success: true, userFavorites});
-        });
-});
-
-/*찜 해제 */
-router.get('/removeFavorite', auth, (req, res) => {
+/*찜 해제*/
+router.post('/removeFavorite', auth, (req, res) => {
     User.findOneAndUpdate(
         { _id: req.user._id },
         {
             "$pull":
-            { "favorite": req.body.favorite }
+            { "favorites": req.body.favorite }
         },
         { new: true },
-        (err, userFavorites) => { 
+        (err, userInfo) => { 
             if(err) return res.status(400).json({suceess: false, err});
                 return res.status(200).json({
                     success: true,
-                    userFavorites
+                    userInfo
             });    
     });
 });
@@ -227,7 +216,7 @@ router.post("/addToCart", auth, (req, res) => {
             if (duplicate) {
                 User.findOneAndUpdate(
                     { _id: req.user._id, "cart.id": req.body.productId },
-                    { $inc: { "cart.$.quantity": 1 }},
+                    { $inc: { "cart.$.quantity": req.body.productCount }},
                     { new: true },
                     (err, userInfo) => {
                         if (err) return res.status(400).json({ success: false, err })
@@ -242,7 +231,7 @@ router.post("/addToCart", auth, (req, res) => {
                         $push: {
                             cart: {
                                 id: req.body.productId,
-                                quantity: 1,
+                                quantity: req.body.productCount,
                                 date: Date.now()
                             }
                         }

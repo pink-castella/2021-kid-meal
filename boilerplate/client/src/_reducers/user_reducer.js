@@ -6,7 +6,10 @@ import {
     ADD_ADDRESS,
     REMOVE_ADDRESS,
     UPDATE_ADDRESS,
-    SET_CURRENT_ADDRESS
+    SET_CURRENT_ADDRESS,
+    SAVE_FAVORITE,
+    REMOVE_FAVORITE,
+    ADD_TO_CART
 } from '../_actions/types';
  
 
@@ -46,6 +49,27 @@ export default function(state={}, action){
                 userData: {
                     ...state.userData,
                     currentAddress: action.payload.currentAddress
+                }
+            }
+        case SAVE_FAVORITE:
+            return { ...state,
+                userData: {
+                    ...state.userData,
+                    favorites: action.payload.userInfo.favorites
+                }
+            }    
+        case REMOVE_FAVORITE:
+            return { ...state,
+                userData: {
+                    ...state.userData,
+                    favorites: action.payload.userInfo.favorites
+                }
+            }
+        case ADD_TO_CART:
+            return { ...state,
+                userData: {
+                    ...state.userData,
+                    cart: action.payload.cart
                 }
             }
         default:

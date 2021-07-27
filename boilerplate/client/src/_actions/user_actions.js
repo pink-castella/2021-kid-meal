@@ -7,7 +7,10 @@ import {
     ADD_ADDRESS,
     REMOVE_ADDRESS,
     UPDATE_ADDRESS,
-    SET_CURRENT_ADDRESS
+    SET_CURRENT_ADDRESS,
+    SAVE_FAVORITE,
+    REMOVE_FAVORITE,
+    ADD_TO_CART
 } from './types';
 import { USER_SERVER } from '../components/Config.js';
 
@@ -73,7 +76,7 @@ export function removeAddress(addressId) {
         id: addressId
     }
     
-    const request = axios.get(`${USER_SERVER}/removeAddress`, body)
+    const request = axios.post(`${USER_SERVER}/removeAddress`, body)
         .then(response => response.data)
 
     return {
@@ -112,4 +115,47 @@ export function setCurrentAddress(addressInfo) {
         type: SET_CURRENT_ADDRESS,
         payload: request
     }
+}
+
+export function saveFavorite(favoriteId) {
+    let body = {
+        favorite: favoriteId
+    }
+
+    const request = axios.post(`${USER_SERVER}/saveFavorite`, body)
+        .then(response => response.data)
+
+    return {
+        type: SAVE_FAVORITE,
+        payload: request
+    }
+}
+
+export function removeFavorite(favoriteId) {
+    let body = {
+        favorite: favoriteId
+    }
+
+    const request = axios.post(`${USER_SERVER}/removeFavorite`, body)
+        .then(response => response.data)
+
+    return {
+        type: REMOVE_FAVORITE,
+        payload: request
+    }
+}
+
+export function addToCart(productId, productCount) {
+    let body = {
+        productId: productId,
+        productCount: productCount
+    }
+
+    const request = axios.post(`${USER_SERVER}/addToCart`, body)
+        .then(response => response.data)
+
+    return {
+        type: ADD_TO_CART,
+        payload: request
+    }    
 }

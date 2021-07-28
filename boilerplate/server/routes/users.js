@@ -99,7 +99,9 @@ router.post('/inputAddress', auth, (req, res) => {
 });
 
 /*주소 삭제*/
-router.post('/removeAddress', auth, (req, res) => {
+router.get('/removeAddress', auth, (req, res) => {
+    //console.log('typeof(req.body.id)',typeof(req.body.id));
+    //console.log('req.body.id',req.body.id);
     User.findOneAndUpdate(
         { _id: req.user._id },
         {
@@ -118,8 +120,9 @@ router.post('/removeAddress', auth, (req, res) => {
 
 /*주소 수정(별칭만)*/
 router.post('/updateAddress', auth, (req, res) => {
+    //console.log('req.body.id',req.body.id);
     User.findOneAndUpdate(
-        { _id: req.user.id, "address._id": req.body.id }, //임시로 body
+        { _id: req.user._id, "address._id": req.body.id }, //임시로 body
         {
             $set: { "address.$.nickname": req.body.nickname} 
         },
@@ -136,7 +139,7 @@ router.post('/updateAddress', auth, (req, res) => {
 /*현재 주소 설정*/
 router.post('/setCurrent', auth, (req, res) => {
     User.findOneAndUpdate(
-        { _id: req.user.id },
+        { _id: req.user._id },
         { $set: {
                 currentAddress: {
                     nickname: req.body.nickname, 
@@ -164,7 +167,7 @@ router.post('/setCurrent', auth, (req, res) => {
 /*찜목록에 저장 */
 router.post('/saveFavorite', auth, (req, res) => {
     User.findOneAndUpdate(
-        { _id: req.user.id },
+        { _id: req.user._id },
         { $push: {
             favorites: req.body.favorite
         } },
@@ -199,39 +202,41 @@ router.post('/removeFavorite', auth, (req, res) => {
 //=================================
 //              Cart
 //=================================
-
+/*장바구니에 추가*/
 router.post("/addToCart", auth, (req, res) => {
-    // 먼저 users collection에 해당 유저의 정보를 가져오기
-    User.findOne({ _id: req.user._id },
+    User.findOne(
+        { _id: req.user._id },
         (err, userInfo) => {
-            // 가져온 정보에 카트에 넣으려하는 상품이 이미 들어있는지 확인
+    
             let duplicate = false;
             userInfo.cart.forEach((item) => {
-                if (item.id === req.body.productId) {
+                if ((item.storeId === req.body.storeId) &&
+                    (item.productId === req.body.productId)) {
                     duplicate = true;
                 }
-            })
+            });
 
-            // 상품이 이미 있을 때
             if (duplicate) {
                 User.findOneAndUpdate(
-                    { _id: req.user._id, "cart.id": req.body.productId },
-                    { $inc: { "cart.$.quantity": req.body.productCount }},
+                    { _id: req.user._id, 
+                        "cart.storeId": req.body.storeId, 
+                        "cart.productId": req.body.productId },
+                    { $inc: { "cart.$.quantity": 1 }},
                     { new: true },
                     (err, userInfo) => {
-                        if (err) return res.status(400).json({ success: false, err })
-                        res.status(200).send(userInfo.cart)
+                        if (err) return res.status(400).json({ success: false, err });
+                        res.status(200).send(userInfo.cart);
                     }
-                )
-            // 상품이 이미 있지 않을 때
+                );
             } else {    
                 User.findOneAndUpdate(
                     { _id: req.user._id },
                     { 
                         $push: {
                             cart: {
-                                id: req.body.productId,
-                                quantity: req.body.productCount,
+                                storeId: req.body.storeId,
+                                productId: req.body.productId,
+                                quantity: 1,
                                 date: Date.now()
                             }
                         }
@@ -239,12 +244,11 @@ router.post("/addToCart", auth, (req, res) => {
                     { new: true },
                     (err, userInfo) => {
                         if (err) return res.status(400).json({ success: false, err })
-                        res.status(200).send(userInfo.cart)
+                        res.status(200).send(userInfo.cart);
                     }
-                )
-            }
-        })    
-})
+                );}
+        }); 
+});
 
 router.get('/removeFromCart', auth, (req, res) => {
     // 먼저 cart에 있던 내가 지우려고 한 상품 지워주기

@@ -24,6 +24,16 @@ function RightMenu(props) {
   if (user.userData && !user.userData.isAuth) {
     return (
       <Menu mode={props.mode} className="icon_bg">
+        <Menu.Item key="mypage">
+          <Link to="/login">
+            <Icon type="user" style={{ fontSize: 30 }} />
+          </Link>
+        </Menu.Item>
+      </Menu>
+    )
+  } else {
+    return (
+      <Menu mode={props.mode} className="icon_bg">
           <Menu.Item key="shop">
             <Link to="/cart">
               <Icon type="shopping-cart" style={{ fontSize: 30 }} />
@@ -39,16 +49,6 @@ function RightMenu(props) {
               <Icon type="user" style={{ fontSize: 30 }} />
             </Link>
           </Menu.Item>
-        </Menu>
-    )
-  } else {
-    return (
-      <Menu mode={props.mode} className="icon_bg">
-        <Menu.Item key="mypage">
-          <Link to="/login">
-            <Icon type="user" style={{ fontSize: 30 }} />
-          </Link>
-        </Menu.Item>
       </Menu>
     )
   }

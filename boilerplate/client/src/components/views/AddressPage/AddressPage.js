@@ -12,16 +12,8 @@ function AddressPage(props) {
     const [addressInfo, setAddressInfo] = useState([])
     
     useEffect(() => {
-        let addressList = []
-
         if (props.user.userData && props.user.userData.address) {
-            if (props.user.userData.address.length > 0) {
-                props.user.userData.address.forEach(item => {
-                    addressList.push(item)
-                })
-
-                setAddressInfo(addressList)
-            }
+            setAddressInfo(props.user.userData.address)
         }
 
     }, [props.user.userData])
@@ -41,9 +33,6 @@ function AddressPage(props) {
 
     const removeAddressItem = (addressId) => {
         dispatch(removeAddress(addressId))
-        .then(response => {
-            console.log('remove: '+JSON.stringify(response))
-        })
     }
 
     return (

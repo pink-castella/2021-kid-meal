@@ -4,6 +4,13 @@ import {
     REGISTER_USER,
     AUTH_USER,
     LOGOUT_USER,
+    ADD_ADDRESS,
+    REMOVE_ADDRESS,
+    UPDATE_ADDRESS,
+    SET_CURRENT_ADDRESS,
+    SAVE_FAVORITE,
+    REMOVE_FAVORITE,
+    ADD_TO_CART
 } from './types';
 import { USER_SERVER } from '../components/Config.js';
 
@@ -47,3 +54,108 @@ export function logoutUser(){
     }
 }
 
+export function addAddress(addressInfo) {
+    let body = {
+        x: addressInfo.x,
+        y: addressInfo.y,
+        address_name: addressInfo.address_name,
+        nickname: addressInfo.bname
+    }
+
+    const request = axios.post(`${USER_SERVER}/inputAddress`, body)
+        .then(response => response.data);
+
+    return {
+        type: ADD_ADDRESS,
+        payload: request
+    }
+}
+
+export function removeAddress(addressId) {
+    let body = {
+        id: addressId
+    }
+    
+    const request = axios.post(`${USER_SERVER}/removeAddress`, body)
+        .then(response => response.data)
+
+    return {
+        type: REMOVE_ADDRESS,
+        payload: request
+    }
+}
+
+export function updateAddress(addressId, update) {
+    let body = {
+        id: addressId,
+        nickname: update
+    }
+
+    const request = axios.post(`${USER_SERVER}/updateAddress`, body)
+        .then(response => response.data)
+
+    return {
+        type: UPDATE_ADDRESS,
+        payload: request
+    }
+}
+
+export function setCurrentAddress(addressInfo) {
+    let body = {
+        nickname: addressInfo.nickname,
+        address_name: addressInfo.address_name,
+        x: addressInfo.x,
+        y: addressInfo.y
+    }
+
+    const request = axios.post(`${USER_SERVER}/setCurrent`, body)
+        .then(response => response.data)
+
+    return {
+        type: SET_CURRENT_ADDRESS,
+        payload: request
+    }
+}
+
+export function saveFavorite(favoriteId) {
+    let body = {
+        favorite: favoriteId
+    }
+
+    const request = axios.post(`${USER_SERVER}/saveFavorite`, body)
+        .then(response => response.data)
+
+    return {
+        type: SAVE_FAVORITE,
+        payload: request
+    }
+}
+
+export function removeFavorite(favoriteId) {
+    let body = {
+        favorite: favoriteId
+    }
+
+    const request = axios.post(`${USER_SERVER}/removeFavorite`, body)
+        .then(response => response.data)
+
+    return {
+        type: REMOVE_FAVORITE,
+        payload: request
+    }
+}
+
+export function addToCart(productId, productCount) {
+    let body = {
+        productId: productId,
+        productCount: productCount
+    }
+
+    const request = axios.post(`${USER_SERVER}/addToCart`, body)
+        .then(response => response.data)
+
+    return {
+        type: ADD_TO_CART,
+        payload: request
+    }    
+}

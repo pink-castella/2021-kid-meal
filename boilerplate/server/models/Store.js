@@ -20,21 +20,20 @@ const storeSchema = mongoose.Schema({
         type: Array,
         default: []
     },
-    hour: [{ 
+    hour: { 
         open: String,
         close: String
-    }],
+    },
     dayoff: { 
         type: String
     },
     contact: { 
         type: String
     },
-    storeAddress: [{
+    storeAddress: {
         address_name: String,
-        x: String,
-        y: String
-    }],
+        location: Array
+    },
     distance: { 
         type: Number,
         default: 0
@@ -46,15 +45,15 @@ const storeSchema = mongoose.Schema({
     ratings: {
         type: Number
     },
-    sold: { //판매량 
-        type: Number,
-        default: 0
-    },
-    storeOwner: [{// 사업자 정보
+    storeOwner: {// 사업자 정보
         ownerName: String, 
         tradeName: String, 
         businessRegistrationNumber: String 
-    }]
+    },
+    sold: { //판매량 
+        type: Number,
+        default: 0
+    }
 }, { timestamps: true });
 
 //검색할 때 storeName과 description에 중점
@@ -67,7 +66,6 @@ storeSchema.index({
         storeDescription: 1,
     }
 });
-
 
 const Store = mongoose.model('Store', storeSchema);
 module.exports = { Store };

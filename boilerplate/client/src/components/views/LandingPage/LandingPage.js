@@ -1,15 +1,32 @@
-import React from 'react'
-import { FaCode } from "react-icons/fa";
+import React from 'react';
+import Postcode from '../utils/Postcode';
+import axios from 'axios';
 
-function LandingPage() {
+function LandingPage(props) {
+    const handleCoords = (addressInfo) => {
+        if (addressInfo && addressInfo.x && addressInfo.y) {
+            let body = {
+                x: addressInfo.x,
+                y: addressInfo.y,
+                filters: "전체",
+                searchTerm: ""
+            }
+
+            axios.post('/api/stores/getStores', body)
+            .then(response => {
+                if (response.data.success) {
+                    localStorage.setItem('localUser', JSON.stringify(body))
+                    props.history.push('/store')
+                }
+                else {
+                    alert("주소 검색에 실패했습니다")
+                }
+            })
+        }
+    }
+
     return (
-        <>
-            <div className="app">
-                <FaCode style={{ fontSize: '4rem' }} /><br />
-                <span style={{ fontSize: '2rem' }}>Let's Start Coding!</span>
-            </div>
-            <div style={{ float: 'right' }}>Thanks For Using This Boiler Plate by John Ahn</div>
-        </>
+        <Postcode handleCoords={addressInfo => handleCoords(addressInfo)} />
     )
 }
 

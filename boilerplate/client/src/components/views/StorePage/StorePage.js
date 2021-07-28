@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Col, Card, Row, Typography, Empty, Button } from 'antd';
+import styled from 'styled-components';
 import Radiobox from './Sections/RadioBox';
 import SearchFeature from './Sections/SearchFeature';
 import { category } from './Sections/Data';
-import './StorePage.css';
 
 const { Text } = Typography;
 
@@ -47,6 +47,14 @@ function StorePage(props) {
         })
     }
 
+    const EllipsisText = styled.div`
+        overflow: scroll;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1; /* number of lines to show */
+        -webkit-box-orient: vertical;
+    `;
+
     const renderCards = stores.map((store, index) => {
         return (
             <Col sm={12} xs={24} key={index}>
@@ -58,20 +66,24 @@ function StorePage(props) {
                         
                         <Row gutter={[16, 16]}>
                             <Col lg={10} md={24}>
-                                <img class="center-cropped" src={store.storeImages} />
+                                <img 
+                                    style={{ height: "150px", width: "150px" }} 
+                                    src={store.storeImages} 
+                                />
                             </Col>
                             <Col lg={14} md={24}>
                                 <Row>
+                                    <Text strong>별점 {store.ratings}</Text>
+                                </Row>
+                                <Row style={{ marginTop: "0.5rem" }}>
                                     <Text strong>거리</Text>
                                     <div>주소로부터 {parseInt(store.distance)} m</div>
                                 </Row>
-                                <br />
-                                <Row>
+                                <Row style={{ marginTop: "0.5rem" }}>
                                     <Text strong>설명</Text>
-                                    <div class="text">{store.storeDescription}</div>
+                                    <EllipsisText>{store.storeDescription}</EllipsisText>
                                 </Row>
-                                <br />
-                                <Row>
+                                <Row style={{ marginTop: "0.5rem" }}>
                                     {store.sanitary ? 
                                         <Text mark>위생인증가게</Text>
                                         :
@@ -88,7 +100,10 @@ function StorePage(props) {
 
     const showFilteredResults = (selected) => {
         let body = {
-            filters: selected
+            x: props.user.userData.currentAddress.location[0].x,
+            y: props.user.userData.currentAddress.location[0].y,
+            filters: selected,
+            searchTerm: ""
         }
 
         getStores(body)
@@ -101,6 +116,8 @@ function StorePage(props) {
 
     const updateSearchTerm = (newSearchTerm) => {
         let body = {
+            x: props.user.userData.currentAddress.location[0].x,
+            y: props.user.userData.currentAddress.location[0].y,
             filters: filters,
             searchTerm: newSearchTerm
         }

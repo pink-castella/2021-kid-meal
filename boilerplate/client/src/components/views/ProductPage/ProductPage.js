@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { Col, Card, Row, Typography, Collapse, Tabs } from 'antd';
+import { Col, Card, Row, Typography, Tabs, Icon } from 'antd';
+import styled from 'styled-components';
 import MenuTab from './Sections/MenuTab';
 import ReviewTab from './Sections/ReviewTab';
 import InfoTab from './Sections/InfoTab';
+import { saveFavorite, removeFavorite } from '../../../_actions/user_actions';
+
 
 const { Text } = Typography;
 const { TabPane } = Tabs;
 
 
 function ProductPage(props) {
+    const dispatch = useDispatch();
     const storeId = props.match.params.storeId
     const [products, setProducts] = useState([])
     const [storeInfo, setStoreInfo] = useState()
+    const [isFavorite, setIsFavorite] = useState(false)
 
     useEffect(() => {   
         let body = { 
@@ -30,14 +36,63 @@ function ProductPage(props) {
             setStoreInfo(response.data.storeInfo[0])
         })
         .catch(err => alert(err))
-    }, [])
+
+        if (props.user.userData && props.user.userData.favorite) {
+            if (props.user.userData.favorite.length > 0) {
+                if (props.user.userData.favorite.includes(storeId)) {
+                    setIsFavorite(true)
+                }
+                else {
+                    alert(props.user.userData.favorite.includes(storeId))
+                }
+            }
+        }
+
+    }, [props.user.userData])
+
+    const handleFavorite = () => {
+        if (isFavorite) {
+            dispatch(removeFavorite(storeId))
+            .then(response => {
+                if (response.payload.success) {
+                    setIsFavorite(false)
+                }
+            })
+        }
+        else {
+            dispatch(saveFavorite(storeId))
+            .then(response => {
+                if (response.payload.success) {
+                    setIsFavorite(true)
+                }
+            })
+        }
+    }
+
+    const TextButton = styled.button`
+        background: none;
+        border: none;
+        cursor: pointer;
+    `
+
+    const TitleBox = styled.div`
+        display: flex;
+        justify-content: space-between;  
+    `
 
     return (
         <div>
             { storeInfo &&
             <Card
-                title={storeInfo.storeName}
-                hoverable
+                title={
+                    <TitleBox>
+                        <div>{storeInfo.storeName}</div>
+                        { isFavorite 
+                        ? <div><TextButton onClick={handleFavorite}><Icon type="heart" theme="filled" /></TextButton></div>
+                        : <div><TextButton onClick={handleFavorite}><Icon type="heart" /></TextButton></div>
+                        }
+                    </TitleBox>
+                }
             >
                 <Row gutter={[16, 16]} justify="start">
                     <Col xs={6} sm={5} md={3}>

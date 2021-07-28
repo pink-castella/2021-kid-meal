@@ -16,15 +16,15 @@ router.post('/getStores', (req, res) => {
     //let y = 37.543402; //가희집으로 위치 변경
     let x = req.body.x; //현재 x 좌표(경도_longitude)
     let y = req.body.y; //현재 y 좌표(위도_latitude)
-    //let radius = 500; //반경 500m 내 
-    //let radius = 0.5;
-    
+    console.log('x', x);
+    console.log('y', y);
+
     //let findArgs = {};
     let findArgs = req.body.filters==="전체" ? {} : {"storeCategory": req.body.filters};
     //let findArgs = req.body.filters==="전체" ? {} : req.body.filters;
-    //console.log(findArgs);
+    console.log('findArgs', findArgs);
     let term = req.body.searchTerm;
-    
+    console.log('term', term);
     /*현재 위치에서 500m이내_가까운 순*/
     if(term){
         Store.find({

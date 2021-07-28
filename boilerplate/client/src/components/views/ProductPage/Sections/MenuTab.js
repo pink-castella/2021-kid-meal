@@ -12,7 +12,7 @@ function MenuTab(props) {
     const dispatch = useDispatch();
     const [topFourItems, setTopFourItems] = useState([])
     const [products, setProducts] = useState([])
-    const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(0)
     const [detail, setDetail] = useState({})
     const [count, setCount] = useState(0)
     const [price, setPrice] = useState(0)
@@ -54,9 +54,9 @@ function MenuTab(props) {
 
     const handleOk = () => {
         if (count > 0) {
-            dispatch(addToCart(visible, count))
+            dispatch(addToCart(props.storeId, visible, count))
             .then(response => {
-                if (response.payload.success) {
+                if (response.payload) {
                     alert("장바구니에 성공적으로 추가했습니다!")
                     setVisible(false)
                 }

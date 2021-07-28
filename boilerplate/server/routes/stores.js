@@ -121,4 +121,34 @@ router.post('/getFavorites', auth, (req, res) => {
         });
 });
 
+/*리뷰작성*/
+router.post('/addReview', auth, (req, res) => {
+    let storeId = req.body.storeId;
+    let ratings = req.body.ratings;
+    let reviews = req.body.reviews;
+
+    Store.findOneAndUpdate(
+        { "_id": storeId },
+        { $push: {
+            ratings: ratings,
+            reviews: {
+                first: reviews.first,
+                second: reviews.second,
+                third: reviews.third,
+                fourth: reviews.fourth,
+                fifth: reviews.fifth
+            }
+        } },
+        { new: true },
+        (err, storeInfo) => {
+            if (err) return res.status(400).json({ success: false, err });
+            return res.status(200).json({
+                success: true,
+                storeInfo
+            });
+        }
+    )
+        
+});
+
 module.exports = router;

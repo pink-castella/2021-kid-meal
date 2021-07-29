@@ -147,8 +147,9 @@ export function removeFavorite(favoriteId) {
     }
 }
 
-export function addToCart(productId, productCount) {
+export function addToCart(storeId, productId, productCount) {
     let body = {
+        storeId: storeId,
         productId: productId,
         productCount: productCount
     }

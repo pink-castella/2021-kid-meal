@@ -69,7 +69,7 @@ export default function(state={}, action){
             return { ...state,
                 userData: {
                     ...state.userData,
-                    cart: action.payload.cart
+                    cart: action.payload
                 }
             }
         default:

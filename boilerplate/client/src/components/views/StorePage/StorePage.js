@@ -13,9 +13,12 @@ function StorePage(props) {
     const [filters, setFilters] = useState("전체")
     const [searchTerm, setSearchTerm] = useState("")
     const [isEmpty, setEmpty] = useState(false)
+    const [location, setLocation] = useState({})
+    const [success, setSuccess] = useState(false)
 
     useEffect(() => {
         if (props.user.userData && props.user.userData.currentAddress &&  props.user.userData.currentAddress.location) {
+            /*로그인한 유저에 저장된 주소 있는 경우*/            
             if (props.user.userData.currentAddress.location.length > 0) {
                 let body = {
                     x: props.user.userData.currentAddress.location[0].x,
@@ -24,10 +27,24 @@ function StorePage(props) {
                     searchTerm: ""
                 }
                 getStores(body)
+                setLocation({ 
+                    x: props.user.userData.currentAddress.location[0].x,
+                    y: props.user.userData.currentAddress.location[0].y 
+                })
+            /*로그인한 유저에 저장된 주소 없는 경우*/
+            } else {
+                setLocation({})
+                setStores()
+                setEmpty(true)
             }
         } else {
+            /*로그인 안하고 랜딩 페이지에서 주소 입력한 경우*/
             let body = JSON.parse(localStorage.getItem('localUser'))
             getStores(body)
+            setLocation({
+                x: body.x,
+                y: body.y
+            })
         }
     }, [props.user.userData])
 
@@ -35,11 +52,13 @@ function StorePage(props) {
         axios.post('/api/stores/getStores', body)
         .then(response => {
             if (response.data.success) {
-                if (response.data.storeInfo.length) {
+                if (response.data.storeInfo) {
                     setStores(response.data.storeInfo)
-                }
-                else {
-                    setEmpty(true)
+                    setSuccess(true)
+                    
+                    if (!response.data.storeInfo.length) {
+                        setEmpty(true)
+                    }
                 }
             } else {
                 alert("가게 정보를 가져오는데 실패했습니다.")
@@ -55,7 +74,7 @@ function StorePage(props) {
         -webkit-box-orient: vertical;
     `;
 
-    const renderCards = stores.map((store, index) => {
+    const renderCards = stores && stores.map((store, index) => {
         return (
             <Col sm={12} xs={24} key={index}>
                 <a href={`/store/${store._id}`}>
@@ -87,7 +106,7 @@ function StorePage(props) {
                                     {store.sanitary ? 
                                         <Text mark>위생인증가게</Text>
                                         :
-                                        <Text disabled>위생인증</Text>
+                                        <Text>&nbsp;</Text>
                                     }
                                 </Row>
                             </Col>
@@ -100,8 +119,8 @@ function StorePage(props) {
 
     const showFilteredResults = (selected) => {
         let body = {
-            x: props.user.userData.currentAddress.location[0].x,
-            y: props.user.userData.currentAddress.location[0].y,
+            x: location.x,
+            y: location.y,
             filters: selected,
             searchTerm: ""
         }
@@ -116,8 +135,8 @@ function StorePage(props) {
 
     const updateSearchTerm = (newSearchTerm) => {
         let body = {
-            x: props.user.userData.currentAddress.location[0].x,
-            y: props.user.userData.currentAddress.location[0].y,
+            x: location.x,
+            y: location.y,
             filters: filters,
             searchTerm: newSearchTerm
         }
@@ -136,7 +155,7 @@ function StorePage(props) {
     }
 
     return (
-        isEmpty ? (
+        isEmpty && !props.user.userData ? (
             <div>
                 <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE} 
@@ -151,7 +170,7 @@ function StorePage(props) {
                         주소 입력하러가기
                     </Button>
                 </Empty>
-            </div>
+            </div>                   
         ) : (
             <div>
                 {/* Filter */}
@@ -173,6 +192,19 @@ function StorePage(props) {
                 <Row gutter={[16, 16]}>
                     {renderCards}
                 </Row>
+
+                {isEmpty ? (
+                    <div>
+                        <Empty
+                            image={Empty.PRESENTED_IMAGE_SIMPLE} 
+                            description={
+                            <div>
+                                가까운 지역 (500m) 내에 가맹점이 없습니다. <br />
+                            </div>
+                            }
+                        />
+                    </div>                
+                ) : null}
             </div>
         )
     )

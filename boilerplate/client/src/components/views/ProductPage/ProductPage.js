@@ -123,13 +123,13 @@ function ProductPage(props) {
                 products && products.length > 0 ? 
                 <Tabs defaultActiveKey="1" centered>
                     <TabPane tab="메뉴" key="1">
-                        <MenuTab productInfo={products} />
+                        <MenuTab productInfo={products} storeId={storeId} />
                     </TabPane>
                     <TabPane tab="클린리뷰" key="2">
-                        <ReviewTab />
+                        <ReviewTab userData={props.user.userData} />
                     </TabPane>
                     <TabPane tab="정보" key="3">
-                        <InfoTab />
+                        <InfoTab storeId={storeId} />
                     </TabPane>
                 </Tabs>  
                 : null          

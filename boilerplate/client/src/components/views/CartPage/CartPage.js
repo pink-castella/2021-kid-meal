@@ -14,18 +14,22 @@ function CartPage(props) {
     const [ShowTotal, setShowTotal] = useState(false)       // 가격 표시
 
     useEffect(() => {
-        let cartItems=[]        
-
-        if(props.user.userData && props.user.userData.cart){
-            if(props.user.userData.cart.length >0){
-                props.user.userData.cart.forEach(item => {
-                    cartItems.push(item.id)                             // cartItems은 cart의 요소들의 id를 담는 배열 
-                })
-
-                dispatch(getCartItems(cartItems, props.user.userData.cart))
-                .then(response => {calculateTotal(response.payload)}) 
-            }
-        }
+        
+        let cartItems=[]
+        
+        axios.get(`/api/product/....?_id=${userId}&type=single`)    // 로그인된 사용자의 cart 정보 받아와야 함
+            .then(response => {
+                if(props.user.userData && props.user.userData.cart){
+                    if(props.user.userData.cart.length >0){
+                        props.user.userData.cart.forEach(item => {
+                            cartItems.push(item.id)                 // cartItems은 cart의 요소들의 id를 담는 배열 
+                        })    
+                        dispatch(getCartItems(cartItems, props.user.userData.cart))
+                        .then(response => {calculateTotal(response.payload)}) 
+                    }
+                }
+            })
+            .catch(err=>alert(err))
         
     }, [props.user.userData])
 

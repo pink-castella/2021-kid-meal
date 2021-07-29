@@ -5,8 +5,10 @@ import styled from 'styled-components';
 import Radiobox from './Sections/RadioBox';
 import SearchFeature from './Sections/SearchFeature';
 import { category } from './Sections/Data';
+import SortFeature from './Sections/SortFeature';
 
 const { Text } = Typography;
+
 
 function StorePage(props) {
     const [stores, setStores] = useState([])
@@ -15,6 +17,7 @@ function StorePage(props) {
     const [isEmpty, setEmpty] = useState(false)
     const [location, setLocation] = useState({})
     const [success, setSuccess] = useState(false)
+    const [sort, setSort] = useState(false)
 
     useEffect(() => {
         if (props.user.userData && props.user.userData.currentAddress &&  props.user.userData.currentAddress.location) {
@@ -26,11 +29,11 @@ function StorePage(props) {
                     filters: "전체",
                     searchTerm: ""
                 }
-                getStores(body)
                 setLocation({ 
                     x: props.user.userData.currentAddress.location[0].x,
                     y: props.user.userData.currentAddress.location[0].y 
                 })
+                getStores(body)
             /*로그인한 유저에 저장된 주소 없는 경우*/
             } else {
                 setLocation({})
@@ -48,13 +51,40 @@ function StorePage(props) {
         }
     }, [props.user.userData])
 
+    function calcDistance(lat1, lon1, lat2, lon2) {
+        let R = 6371  // Radius of the earth in km
+        let dLat = toRad(lat2-lat1)
+        let dLon = toRad(lon2-lon1)
+        let latOne = toRad(lat1)
+        let latTwo = toRad(lat2)
+
+        let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(latOne) * Math.cos(latTwo)
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+        let d = R * c * 1000  // km to m
+        return d
+    }
+
+    function toRad(value) {
+        return value * Math.PI / 180
+    }
+
     const getStores = (body) => {
         axios.post('/api/stores/getStores', body)
         .then(response => {
             if (response.data.success) {
                 if (response.data.storeInfo) {
-                    setStores(response.data.storeInfo)
+                    let storeList = []
+
+                    response.data.storeInfo.forEach(item => {
+                        let distance = calcDistance(location.y, location.x, item.storeAddress.location[1], item.storeAddress.location[0])
+                        let distanceItem = { distance: distance }
+                        let obj = Object.assign({}, item, distanceItem)
+                        storeList.push(obj)
+                    })
+
+                    setStores(storeList.sort(compareByDistance))
                     setSuccess(true)
+                    setEmpty(false)
                     
                     if (!response.data.storeInfo.length) {
                         setEmpty(true)
@@ -64,6 +94,100 @@ function StorePage(props) {
                 alert("가게 정보를 가져오는데 실패했습니다.")
             }
         })
+    }
+
+    const showFilteredResults = (selected) => {
+        let body = {
+            x: location.x,
+            y: location.y,
+            filters: selected,
+            searchTerm: ""
+        }
+
+        getStores(body)
+    }
+
+    const handleFilters = (selected) => {
+        showFilteredResults(selected)
+        setFilters(selected)
+    }
+
+    const updateSearchTerm = (newSearchTerm) => {
+        let body = {
+            x: location.x,
+            y: location.y,
+            filters: filters,
+            searchTerm: newSearchTerm
+        }
+
+        setSearchTerm(newSearchTerm)
+        
+        getStores(body)
+    }
+
+    const goToEnterAddress = () => {
+        if (props.user.userData) {
+            window.location.href='/address'
+        } else {
+            window.location.href='/'
+        }
+    }
+
+    function compareBySold(a, b) {
+        const soldA = a.sold
+        const soldB = b.sold
+
+        let comparison = 0
+        if (soldA < soldB) {
+            comparison = 1
+        }
+        else if (soldA > soldB) {
+            comparison = -1
+        }
+        return comparison
+    }
+
+    function compareByName(a, b) {
+        const nameA = a.storeName
+        const nameB = b.storeName
+
+        let comparison = 0
+        if (nameA > nameB) {
+            comparison = 1
+        }
+        else if (nameA < nameB) {
+            comparison = -1
+        }
+        return comparison
+    }
+
+    function compareByDistance(a, b) {
+        const distanceA = a.distance
+        const distanceB = b.distance
+
+        let comparison = 0
+        if (distanceA > distanceB) {
+            comparison = 1
+        }
+        else if (distanceA < distanceB) {
+            comparison = -1
+        }
+        return comparison
+    }
+
+    const updateSortTerm = (newSortTerm) => {
+        let sorted = stores
+
+        if (newSortTerm === "주문") {
+            sorted = stores.sort(compareBySold)
+        } else if (newSortTerm === "이름") {
+            sorted = stores.sort(compareByName)
+        } else {
+            sorted = stores.sort(compareByDistance)
+        }
+        
+        setStores(sorted)
+        setSort(!sort)
     }
 
     const EllipsisText = styled.div`
@@ -117,43 +241,6 @@ function StorePage(props) {
         );
     })
 
-    const showFilteredResults = (selected) => {
-        let body = {
-            x: location.x,
-            y: location.y,
-            filters: selected,
-            searchTerm: ""
-        }
-
-        getStores(body)
-    }
-
-    const handleFilters = (selected) => {
-        showFilteredResults(selected)
-        setFilters(selected)
-    }
-
-    const updateSearchTerm = (newSearchTerm) => {
-        let body = {
-            x: location.x,
-            y: location.y,
-            filters: filters,
-            searchTerm: newSearchTerm
-        }
-
-        setSearchTerm(newSearchTerm)
-        
-        getStores(body)
-    }
-
-    const goToEnterAddress = () => {
-        if (props.user.userData) {
-            window.location.href='/address'
-        } else {
-            window.location.href='/'
-        }
-    }
-
     return (
         isEmpty && !props.user.userData ? (
             <div>
@@ -175,14 +262,19 @@ function StorePage(props) {
             <div>
                 {/* Filter */}
                 <Row gutter={[16, 16]}>
+                    {/* RadioBox */}
                     <Col>
-                        {/* RadioBox */}
                         <Radiobox list={category} handleFilters={selected => handleFilters(selected)} />
                     </Col>
                 </Row>
 
-                {/* Search */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '1rem auto' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem auto' }}>
+                    {/* Sort */}
+                    <SortFeature
+                        refreshFunction={updateSortTerm}
+                    />
+
+                    {/* Search */}
                     <SearchFeature 
                         refreshFunction={updateSearchTerm}
                     />

@@ -99,7 +99,7 @@ router.post('/inputAddress', auth, (req, res) => {
 });
 
 /*주소 삭제*/
-router.get('/removeAddress', auth, (req, res) => {
+router.post('/removeAddress', auth, (req, res) => {
     //console.log('typeof(req.body.id)',typeof(req.body.id));
     //console.log('req.body.id',req.body.id);
     User.findOneAndUpdate(
@@ -250,7 +250,7 @@ router.post("/addToCart", auth, (req, res) => {
         }); 
 });
 
-router.get('/removeFromCart', auth, (req, res) => {
+router.post('/removeFromCart', auth, (req, res) => {
     // 먼저 cart에 있던 내가 지우려고 한 상품 지워주기
     User.findOneAndUpdate(
         { _id: req.user._id },

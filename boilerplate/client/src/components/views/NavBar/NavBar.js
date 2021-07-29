@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import LeftMenu from './Sections/LeftMenu';
 import RightMenu from './Sections/RightMenu';
+import CenterMenu from './Sections/CenterMenu';
 import {Route, Link} from 'react-router-dom' 
 import { Drawer, Button, Icon } from 'antd';
 import './Sections/Navbar.css';
@@ -21,7 +21,13 @@ function NavBar() {
       <div className="menu__logo">
         <Link to="/">우리 아이 밥심</Link>
       </div>
+
+      <div className="menu_center">
+        <CenterMenu mode="horizontal" />
+      </div>
+      
       <div className="menu__container">
+
         <div className="menu_rigth">
           <RightMenu mode="horizontal" />
         </div>

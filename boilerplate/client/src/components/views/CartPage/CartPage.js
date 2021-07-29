@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { getCartItems, removeCartItem } from '../../../_actions/user_actions';
 import UserCardBlock from './Sections/UserCardBlock'
 import { Empty } from 'antd';
+import axios from 'axios'
 
 function CartPage(props) {
 

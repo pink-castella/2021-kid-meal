@@ -17,7 +17,7 @@
 }
 
 .menu__logo {
-  width: 150px;
+  width: 200px;
   float: left;
 }
 
@@ -45,8 +45,14 @@
   border-bottom: none;
 }
 
-.menu__container .menu_left {
-  float: left;
+/*.menu__container */.menu_center {
+ 
+  align-items: center;
+  
+  /*
+   float: left;
+   position: relative;
+  left: 50%;*/
 }
 
 .menu__container .menu_rigth {
@@ -76,7 +82,7 @@
     display: inline-block !important;
   }
 
-  .menu_left,
+  .menu_center,
   .menu_rigth {
     display: none;
   }

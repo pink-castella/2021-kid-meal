@@ -53,6 +53,9 @@ const storeSchema = mongoose.Schema({
     sold: { //판매량 
         type: Number,
         default: 0
+    },
+    reviews: {
+        type: Array
     }
 }, { timestamps: true });
 

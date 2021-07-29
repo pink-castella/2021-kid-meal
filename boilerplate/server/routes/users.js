@@ -292,13 +292,15 @@ router.post('/successBuy', auth, (req, res) => {
         history.push({
             dateOfPurchase: Date.now(),
             name: item.title,
-            id: item._id,
+            storeId: item.storeId,
+            productId: item.productId,
             price: item.price,
             quantity: item.quantity,
-            paymentId: req.body.paymentData.paymentId
+            paymentId: req.body.paymentData.paymentId,
+            expiredDay: Date.now()+86400000*31
         })
     })
-    
+
     // 2. Payment Collection 안에 자세한 결제 정보들 넣어주기
     transactionData.user = {
         id: req.user._id,
@@ -327,12 +329,12 @@ router.post('/successBuy', auth, (req, res) => {
                 // 상품 당 몇 개의 quantity를 샀는지
                 let products = [];;
                 doc.product.forEach(item => {
-                    products.push({ id: item.id, quantity: item.quantity })
+                    products.push({ id: item.productId, quantity: item.quantity })
                 })
 
                 async.eachSeries(products, (item, callback) => {
                     Product.update(
-                        { _id: item.id },
+                        { _id: item.productId },
                         { 
                             $inc: {
                                 "sold": item.quantity

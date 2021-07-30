@@ -18,14 +18,14 @@ function MenuTab(props) {
     const [price, setPrice] = useState(0)
 
     function compare(a, b) {
-        const soldA = a.soldA
-        const soldB = b.soldB
+        const soldA = a.sold
+        const soldB = b.sold
 
         let comparison = 0
-        if (soldA > soldB) {
+        if (soldA < soldB) {
             comparison = 1
         }
-        else if (soldA < soldB) {
+        else if (soldA > soldB) {
             comparison = -1
         }
         return comparison
@@ -36,7 +36,13 @@ function MenuTab(props) {
 
         if (products) {
             let top = products.sort(compare)
-            let topFour = [top[0], top[1], top[2], top[3]]
+
+            let topFour = []
+            top.forEach(item => {
+                if (topFour.length < 4 && item.menu !== "beverage") {
+                    topFour.push(item)
+                }
+            })
 
             setTopFourItems(topFour)
         }

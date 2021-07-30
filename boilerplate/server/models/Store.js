@@ -34,10 +34,6 @@ const storeSchema = mongoose.Schema({
         address_name: String,
         location: Array
     },
-    distance: { 
-        type: Number,
-        default: 0
-    },
     sanitary: {
         type: Boolean,
         default: false

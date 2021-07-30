@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { Menu, Dropdown, message, Icon } from 'antd';
+import { Menu, Dropdown, message, Icon} from 'antd';
+import { Link } from 'react-router-dom'
 
 function CenterMenu() {
     const [NickName, setNickName] = useState("예나미술학원")
@@ -23,11 +24,10 @@ function CenterMenu() {
     
     return (
         <Dropdown overlay={menu}>
-            <a href="/"
-                className="ant-dropdown-link" 
-                itemClick={e => e.preventDefault()}>
+            <Link to="/"
+                className="ant-dropdown-link">
             {NickName} <Icon type="down" />
-            </a>
+            </Link>
         </Dropdown>
     )
 }

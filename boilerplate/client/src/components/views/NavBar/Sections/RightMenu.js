@@ -24,32 +24,32 @@ function RightMenu(props) {
   if (user.userData && !user.userData.isAuth) {
     return (
       <Menu mode={props.mode} className="icon_bg">
-        <Menu.Item key="mypage">
+        <Menu.Item key="login">
           <Link to="/login">
             <Icon type="user" style={{ fontSize: 30 }} />
           </Link>
         </Menu.Item>
-      </Menu>
+      </Menu>      
     )
   } else {
-    return (
+    return (      
       <Menu mode={props.mode} className="icon_bg">
-          <Menu.Item key="shop">
-            <Link to="/cart">
-              <Icon type="shopping-cart" style={{ fontSize: 30 }} />
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="heart">
-            <Link to="/favorite">
-              <Icon type="heart" style={{ fontSize: 30 }} />
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="mypage">
-          <Link to="/login">
-              <Icon type="user" style={{ fontSize: 30 }} />
-            </Link>
-          </Menu.Item>
-      </Menu>
+      <Menu.Item key="shop">
+        <Link to="/cart">
+          <Icon type="shopping-cart" style={{ fontSize: 30 }} />
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="heart">
+        <Link to="/favorite">
+          <Icon type="heart" style={{ fontSize: 30 }} />
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="mypage">
+      <Link to="/mypage">
+          <Icon type="user" style={{ fontSize: 30 }} />
+        </Link>
+      </Menu.Item>
+    </Menu>      
     )
   }
 }

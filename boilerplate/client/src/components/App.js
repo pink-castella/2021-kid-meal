@@ -44,7 +44,7 @@ function App() {
           <Route exact path="/store/:storeId" component={Auth(ProductPage, null)} />
           <Route exact path="/address" component={Auth(AddressPage, true)} />
           <Route exact path="/favorite" component={Auth(FavoritePage, true)} />
-          <Route exact path="/cart/:_id" component={Auth(CartPage, true)} /> 
+          <Route exact path="/cart/:userId" component={Auth(CartPage, true)} /> 
         </Switch>
       </Container>
       <Footer />

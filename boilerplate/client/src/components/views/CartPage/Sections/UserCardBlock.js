@@ -17,6 +17,9 @@ function UserCardBlock(props) {
                         src={renderCartImage(product.images)} />        {/* 2개 이상 이미지 처리하려고 helper method 사용*/}
                 </td>
                 <td>
+                    {product.store.StoreName} // product.storeName?
+                </td>
+                <td>
                     {product.title}
                 </td>
                 <td>
@@ -26,7 +29,7 @@ function UserCardBlock(props) {
                     $ {product.price}
                 </td>
                 <td>
-                    <button onClick={() => props.removeItem(product._id)}>
+                    <button> {/*onClick={() => props.removeItem(product._id)}>*/}
                         Remove 
                     </button>
                 </td>
@@ -39,11 +42,12 @@ function UserCardBlock(props) {
             <table>
                 <thead>
                     <tr>
-                        <th>Product Image</th>
-                        <th>Product Name</th>
-                        <th>Product Quantity</th>
-                        <th>Product Price</th>
-                        <th>Remove from Cart</th>
+                        <th>제품 사진</th>
+                        <th>가게 이름</th>
+                        <th>메뉴 이름</th>
+                        <th>수량</th>
+                        <th>가격</th>
+                        <th>삭제</th>
                     </tr>
                 </thead>
 

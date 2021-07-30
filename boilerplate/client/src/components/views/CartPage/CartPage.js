@@ -8,29 +8,29 @@ import axios from 'axios'
 function CartPage(props) {
 
     const userId = props.match.params._id
+    console.log(`${props.user.userData._id}의 장바구니`)
 
     const dispatch = useDispatch();
 
     const [Total, setTotal] = useState(0)
     const [ShowTotal, setShowTotal] = useState(false)       // 가격 표시
 
+  
+
     useEffect(() => {
         
         let cartItems=[]
-        
-        axios.get(`/api/product/....?_id=${userId}&type=single`)    // 로그인된 사용자의 cart 정보 받아와야 함
-            .then(response => {
-                if(props.user.userData && props.user.userData.cart){
-                    if(props.user.userData.cart.length >0){
-                        props.user.userData.cart.forEach(item => {
-                            cartItems.push(item.id)                 // cartItems은 cart의 요소들의 id를 담는 배열 
-                        })    
-                        dispatch(getCartItems(cartItems, props.user.userData.cart))
-                        .then(response => {calculateTotal(response.payload)}) 
-                    }
-                }
-            })
-            .catch(err=>alert(err))
+
+        if(props.user.userData && props.user.userData.cart){
+            if(props.user.userData.cart.length >0){
+                props.user.userData.cart.forEach(item => {
+                    cartItems.push(item.id)                 // cartItems은 cart의 요소들의 id를 담는 배열 
+                })    
+                dispatch(getCartItems(cartItems, props.user.userData.cart))
+                .then(response => {calculateTotal(response.payload)
+                                    console.log('response.paylod', response.paylod)}) 
+            }
+        }
         
     }, [props.user.userData])
 
@@ -46,14 +46,12 @@ function CartPage(props) {
     }
 
     let removeFromCart = (productId) =>{
-        dispatch(removeCartItem(productId))     // removeCartItem이라는 액션
-            .then(response => {                 // 액션 수행 이후 할 것(=삭제 버튼 누르고 삭제 된 다음에 할 것)
+        dispatch(removeCartItem(productId))     
+            .then(response => {                
                 if(response.payload.productInfo.length <= 0){
                     setShowTotal(false)            // 가격 표시X
                 }
             })
-
-
     }
 
     return (

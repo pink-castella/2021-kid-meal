@@ -8,20 +8,19 @@ import axios from 'axios'
 function CartPage(props) {
 
     const userId = props.match.params._id
-    console.log(`${props.user.userData._id}의 장바구니`)
+    
 
     const dispatch = useDispatch();
 
     const [Total, setTotal] = useState(0)
     const [ShowTotal, setShowTotal] = useState(false)       // 가격 표시
 
-  
-
     useEffect(() => {
         
         let cartItems=[]
 
         if(props.user.userData && props.user.userData.cart){
+            // console.log(`${props.user.userData.email}의 장바구니`)
             if(props.user.userData.cart.length >0){
                 props.user.userData.cart.forEach(item => {
                     cartItems.push(item.id)                 // cartItems은 cart의 요소들의 id를 담는 배열 

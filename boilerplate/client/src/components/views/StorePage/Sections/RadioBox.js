@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Radio, Card } from 'antd';
 
 function RadioBox(props) {
-    const [value, setValue] = useState("")
+    const [value, setValue] = useState("전체")
 
     const renderRadioBox = () => (
         props.list && props.list.map((value) => (

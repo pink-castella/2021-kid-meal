@@ -20,18 +20,18 @@ function StorePage(props) {
     const [sort, setSort] = useState(false)
 
     useEffect(() => {
-        if (props.user.userData && props.user.userData.currentAddress &&  props.user.userData.currentAddress.location) {
-            /*로그인한 유저에 저장된 주소 있는 경우*/            
-            if (props.user.userData.currentAddress.location.length > 0) {
+        if (props.user.userData && props.user.userData.currentAddress) {
+            /*로그인한 유저에 저장된 주소 있는 경우*/         
+            if (props.user.userData.currentAddress.location) {
                 let body = {
-                    x: props.user.userData.currentAddress.location[0].x,
-                    y: props.user.userData.currentAddress.location[0].y,
+                    x: props.user.userData.currentAddress.location.x,
+                    y: props.user.userData.currentAddress.location.y,
                     filters: "전체",
                     searchTerm: ""
                 }
                 setLocation({ 
-                    x: props.user.userData.currentAddress.location[0].x,
-                    y: props.user.userData.currentAddress.location[0].y 
+                    x: props.user.userData.currentAddress.location.x,
+                    y: props.user.userData.currentAddress.location.y 
                 })
                 getStores(body)
             /*로그인한 유저에 저장된 주소 없는 경우*/
@@ -40,7 +40,9 @@ function StorePage(props) {
                 setStores()
                 setEmpty(true)
             }
-        } else {
+        }
+
+        if (localStorage.getItem('localUser')) {
             /*로그인 안하고 랜딩 페이지에서 주소 입력한 경우*/
             let body = JSON.parse(localStorage.getItem('localUser'))
             getStores(body)
@@ -76,7 +78,7 @@ function StorePage(props) {
                     let storeList = []
 
                     response.data.storeInfo.forEach(item => {
-                        let distance = calcDistance(location.y, location.x, item.storeAddress.location[1], item.storeAddress.location[0])
+                        let distance = calcDistance(body.y, body.x, item.storeAddress.location[1], item.storeAddress.location[0])
                         let distanceItem = { distance: distance }
                         let obj = Object.assign({}, item, distanceItem)
                         storeList.push(obj)

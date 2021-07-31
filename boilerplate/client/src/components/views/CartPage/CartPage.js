@@ -72,7 +72,6 @@ function CartPage(props) {
                 </>
             }
 
-            
         </div>
     )
 }

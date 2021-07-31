@@ -21,7 +21,7 @@ function NavBar() {
       <div className="menu__logo">
         <Link to="/">우리 아이 밥심</Link>
       </div>
-
+      
       <div className="menu_center">
         <CenterMenu mode="horizontal" />
       </div>

@@ -52,7 +52,43 @@ function CenterMenu() {
 
 export default CenterMenu
 
+const renderCards = userAddress.map((address, index) => { 
+    return( 
+        <Menu onClick={itemClick}>
+            <Menu.item key={index}>{address.nickname}</Menu.item>
+        </Menu>
+    )   
+})
+
+const renderItems = () => (
+    user.userData && user.userData.address.map((address, index) => (
+        <Menu.item key={index}>
+            {address.nickname}
+        </Menu.item>
+    ))
+)
 
 
 
+{ userAddress.length > 1 ?
+    <Dropdown overlay={renderCards}>
+        <Link to="/address"
+            className="ant-dropdown-link">
+            {cuurrentName} <Icon type="down" />
+        </Link>
+    </Dropdown>
+    :
+    
+}
 
+const renderCards = userAddress.map((address, index) => { 
+    return( 
+        <Menu onClick={itemClick}>
+            <Menu.item key={index}>{address.nickname}</Menu.item>
+        </Menu>
+    )   
+})
+
+const check = userAddress.map((address, index) => { 
+    console.log(address.nickname) 
+})

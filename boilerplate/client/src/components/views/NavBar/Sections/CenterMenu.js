@@ -1,81 +1,83 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Menu, Dropdown, message, Icon} from 'antd';
-import { useSelector, useStore } from "react-redux";
-import { Link } from 'react-router-dom'
+import { useSelector, useDispatch, useStore } from "react-redux";
+import { withRouter, Link } from 'react-router-dom'
+import { setCurrentAddress } from '../../../../_actions/user_actions';
+
 
 function CenterMenu() {
     const user = useSelector(state => state.user)
-    const [cuurrentName, setcuurrentName] = useState('')
-    const [NickName, setNickName] = useState([])
+    const [currentName, setcurrentName] = useState('주소 선택하기')
     const [userAddress, setuserAddress] = useState([])
+    const dispatch = useDispatch();
     
     useEffect(() => {
         if (user.userData && user.userData.isAuth) {
-            setcuurrentName(user.userData.currentAddress.nickname)
+            if(user.userData.currentAddress.nickname){       
+                // 저장된 주소가 하나 이상 있을 때
+                setcurrentName(user.userData.currentAddress.nickname)
+                console.log(currentName)
+            }
             setuserAddress(user.userData.address)
         }
     }, [user.userData])
 
-    const itemClick = ({ key }) => {
-        setcuurrentName(`item ${key}`)
-        //message.info(`Click on item ${key}`);
-        // 클릭하면 주소 닉네임이 바뀐다
-        // 페이지를 이동해도 마지막 선택한 것으로 저장 되어야 하는데 !
-    };          
-        
-    
-
-    const menu = (
-        <Menu onClick={itemClick}>
-          <Menu.Item key="1">1st menu item</Menu.Item>
-        </Menu>
-    );
-    /* 초기화 되었으면 ? renderCards : menu
-    */
-
-    
-   
+    const itemClick = ( address ) => {
+        setcurrentName(address.nickname)
+        // currentAddress도 바꿔줘야 함
+        let bodyForCurrent = {
+            x: address.location[0].x,
+            y: address.location[0].y,
+            address_name:  address.address_name,
+            nickname:  address.nickname,
+        }
+        dispatch(setCurrentAddress(bodyForCurrent))    
+    }; 
 
     if (user.userData && user.userData.isAuth) {
-        console.log(cuurrentName)
-        console.log(userAddress.length)
-    
-        const renderCards = userAddress.map((address, index) => { 
-            return(
-                <Menu onClick={itemClick}>
-                    <Menu.item key={index}>{`${address.nickname}`}</Menu.item>
-                </Menu>
-            )   
+
+        const renderItems = userAddress && userAddress.map((address, index) => { 
+            return (
+                <option key={index} onClick={()=>itemClick(address)}>
+                    {address.nickname}
+                </option>
+            )
         })
+
+        const menu = (
+            <Menu>
+                {renderItems}
+            </Menu>
+        );    
 
         return (
             <div>
                 { userAddress.length > 1 ?
-                    <Dropdown overlay={renderCards}>
+                    <Dropdown overlay={menu}>
                         <Link to="/address"
                             className="ant-dropdown-link">
-                            {cuurrentName} <Icon type="down" />
+                            {currentName} <Icon type="down" />
                         </Link>
                     </Dropdown>
                     :
                     <Link to="/address">
-                        {cuurrentName}
-                    </Link>                     
-                }               
-                
+                        {currentName}
+                    </Link>                                     
+                }            
             </div>
         )
-    } else{
-        return (
-            <div>
-                {null}
-            </div>
-        )
+        } else{
+            return (
+                <div>
+                    {null}
+                </div>
+            )
+        }
     }
-}
 
-export default CenterMenu
+
+export default withRouter(CenterMenu)
 
 
 

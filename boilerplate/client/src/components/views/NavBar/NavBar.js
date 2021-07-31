@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import RightMenu from './Sections/RightMenu';
 import CenterMenu from './Sections/CenterMenu';
-import {Route, Link} from 'react-router-dom' 
+import { withRouter, Route, Link} from 'react-router-dom' 
 import { Drawer, Button, Icon } from 'antd';
 import './Sections/Navbar.css';
 
@@ -54,4 +54,4 @@ function NavBar() {
   )
 }
 
-export default NavBar
+export default withRouter(NavBar)

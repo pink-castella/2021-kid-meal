@@ -24,6 +24,16 @@ function CenterMenu() {
             <Menu.Item key="3">3rd menu item</Menu.Item>
         </Menu>
     );
+
+    const menu = (
+        <Menu onClick={itemClick}>
+            <Menu.Item key="1">{userAddress[1].nickname}</Menu.Item>
+            <Menu.Item key="2">{userAddress[2].nickname}</Menu.Item>
+            <Menu.Item key="3">{userAddress[3].nickname}</Menu.Item>
+        </Menu>
+    );
+
+    
     useEffect(() => {
         if (user.userData && user.userData.isAuth){
             setNickName(user.userData.currentAddress.nickname)

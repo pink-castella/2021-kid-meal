@@ -61,7 +61,7 @@ export function addAddress(addressInfo) {
         x: addressInfo.x,
         y: addressInfo.y,
         address_name: addressInfo.address_name,
-        nickname: addressInfo.bname
+        nickname: addressInfo.nickname
     }
 
     const request = axios.post(`${USER_SERVER}/inputAddress`, body)

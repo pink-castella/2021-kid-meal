@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Descriptions, Typography, Row } from 'antd';
+import { Card, Descriptions, Typography, Row, Icon } from 'antd';
 import axios from 'axios';
+import KakaoMap from './KakaoMap';
+import styled from 'styled-components';
 
 const { Text } = Typography
 
+
 function InfoTab(props) {
     const [storeInfo, setStoreInfo] = useState()
+    const [visible, setVisible] = useState(false)
 
     useEffect(() => {
         let body = { 
@@ -14,11 +18,21 @@ function InfoTab(props) {
 
         axios.post(`/api/stores/getStoreInfo`, body)
         .then(response => {
-            console.log("response"+JSON.stringify(response.data.storeInfo[0]))
             setStoreInfo(response.data.storeInfo[0])
         })
         .catch(err => alert(err))
     }, [])
+
+    const showMap = () => {
+        setVisible(!visible)
+    }
+
+    const TextButton = styled.button`
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    `
 
     return (
         storeInfo ? (
@@ -29,8 +43,16 @@ function InfoTab(props) {
                             <Descriptions.Item label="영업시간">{storeInfo.hour.open} - {storeInfo.hour.close}</Descriptions.Item>
                             <Descriptions.Item label="휴무일">{storeInfo.dayoff}</Descriptions.Item>
                             <Descriptions.Item label="전화번호">{storeInfo.contact}</Descriptions.Item>
-                            <Descriptions.Item label="주소">{storeInfo.storeAddress.address_name}</Descriptions.Item>
                         </Descriptions>
+                        <div>
+                            <Text strong>지도: </Text>&nbsp; {storeInfo.storeAddress.address_name} &nbsp;
+                            <TextButton onClick={showMap}>
+                                <Icon type="environment" style={{ fontSize: "1.5rem", color: "#FFD30A" }} theme="filled" />
+                            </TextButton>
+                            { visible ? (
+                                <KakaoMap storeInfo={storeInfo} />
+                            ): null }
+                        </div>
                     </Card>
                 </Row>
                 <Row gutter={16}>

@@ -6,7 +6,7 @@ import { withRouter, Link } from 'react-router-dom'
 import { setCurrentAddress } from '../../../../_actions/user_actions';
 
 
-function CenterMenu({history}) {
+function CenterMenu() {
     const user = useSelector(state => state.user)
     const [currentName, setcurrentName] = useState('주소 선택하기')
     const [userAddress, setuserAddress] = useState([])
@@ -14,7 +14,7 @@ function CenterMenu({history}) {
     
     useEffect(() => {
         if (user.userData && user.userData.isAuth) {
-            if(user.userData.currentAddress.nickname){       
+            if (user.userData.currentAddress && user.userData.currentAddress.nickname){       
                 // 저장된 주소가 하나 이상 있을 때
                 setcurrentName(user.userData.currentAddress.nickname)
                 console.log(currentName)

@@ -5,10 +5,7 @@ import UserCardBlock from './Sections/UserCardBlock'
 import { Empty } from 'antd';
 import axios from 'axios'
 
-function CartPage(props) {
-
-    const userId = props.match.params._id
-    
+function CartPage(props) {   
 
     const dispatch = useDispatch();
 
@@ -34,7 +31,7 @@ function CartPage(props) {
     }, [props.user.userData])
 
 
-    let calculateTotal = (cartDetail) => {
+    const calculateTotal = (cartDetail) => {
         let total = 0;
 
         cartDetail.map(item => {

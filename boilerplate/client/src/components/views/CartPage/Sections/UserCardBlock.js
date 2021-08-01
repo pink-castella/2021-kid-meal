@@ -2,19 +2,13 @@ import React from 'react'
 import"./UserCardBlock.css"
 
 function UserCardBlock(props) {
-    const renderCartImage = (images) => {
-        if (images.length > 0) {
-            let image = images[0]                       // 첫 번째 사진만 가져온다
-            return `http://localhost:5000/${image}`
-        }
-    }
 
     const renderItems = () => (
         props.products && props.products.map((product, index) => (
             <tr key={index}>
                 <td>
                     <img style={{ width: '70px' }} alt="product"
-                        src={renderCartImage(product.images)} />        {/* 2개 이상 이미지 처리하려고 helper method 사용*/}
+                        src={renderCartImage(product.image)} />        {/* 2개 이상 이미지 처리하려고 helper method 사용*/}
                 </td>
                 <td>
                     {product.store.StoreName} // product.storeName?

@@ -12,6 +12,7 @@ import StorePage from './views/StorePage/StorePage';
 import ProductPage from './views/ProductPage/ProductPage';
 import AddressPage from './views/AddressPage/AddressPage';
 import FavoritePage from './views/FavoritePage/FavoritePage';
+import CartPage from './views/CartPage/CartPage';
 
 // null  Anyone Can go inside
 // true  only logged in user can go inside
@@ -43,6 +44,7 @@ function App() {
           <Route exact path="/store/:storeId" component={Auth(ProductPage, null)} />
           <Route exact path="/address" component={Auth(AddressPage, true)} />
           <Route exact path="/favorite" component={Auth(FavoritePage, true)} />
+          <Route exact path="/cart" component={Auth(CartPage, true)} /> 
         </Switch>
       </Container>
       <Footer />

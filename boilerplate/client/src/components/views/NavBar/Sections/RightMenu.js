@@ -1,10 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
-import { Menu } from 'antd';
+import { Menu, Icon, Badge } from 'antd';
 import axios from 'axios';
 import { USER_SERVER } from '../../../Config';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { useSelector } from "react-redux";
+import ReactDOM from 'react-dom'
+import './Navbar.css'
 
 function RightMenu(props) {
   const user = useSelector(state => state.user)
@@ -18,28 +20,43 @@ function RightMenu(props) {
       }
     });
   };
-
-  if (user.userData && !user.userData.isAuth) {
+  
+  if (user.userData && user.userData.isAuth) {
+    // console.log('true-true(로그인o)')
     return (
-      <Menu mode={props.mode}>
-        <Menu.Item key="mail">
-          <a href="/login">Signin</a>
+      <Menu mode={props.mode} className="icon_bg">
+        <Menu.Item key="shop">
+          <Link to="/cart">
+            <Icon type="shopping-cart" style={{ fontSize: 30 }} />
+          </Link>
         </Menu.Item>
-        <Menu.Item key="app">
-          <a href="/register">Signup</a>
+        <Menu.Item key="heart">
+          <Link to="/favorite">
+            <Icon type="heart" style={{ fontSize: 30 }} />
+          </Link>
         </Menu.Item>
+        <Menu.Item key="mypage">
+        <Link to="/mypage">
+            <Icon type="user" style={{ fontSize: 30 }} />
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="logout">
+            <a onClick={logoutHandler}>Logout</a>
+        </Menu.Item> 
       </Menu>
     )
   } else {
-    return (
-      <Menu mode={props.mode}>
-        <Menu.Item key="logout">
-          <a onClick={logoutHandler}>Logout</a>
-        </Menu.Item>
-      </Menu>
+    // console.log('false/true-false(로그인x)')
+    return (       
+      <Menu mode={props.mode} className="icon_bg">
+      <Menu.Item key="login">
+        <Link to="/login">
+          <Icon type="user" style={{ fontSize: 30 }} />
+        </Link>
+      </Menu.Item>
+    </Menu>         
     )
   }
 }
 
 export default withRouter(RightMenu);
-

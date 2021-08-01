@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Col, Card, Row, Typography, Collapse, Modal, Button, InputNumber } from 'antd';
+import { Col, Card, Row, Typography, Collapse, Modal, Button, InputNumber, Tag, Popover, Icon } from 'antd';
 import styled from 'styled-components';
 import { addToCart } from '../../../../_actions/user_actions';
 
@@ -59,17 +59,21 @@ function MenuTab(props) {
     }
 
     const handleOk = () => {
-        if (count > 0) {
-            dispatch(addToCart(props.storeId, visible, count))
-            .then(response => {
-                if (response.payload) {
-                    alert("장바구니에 성공적으로 추가했습니다!")
-                    setVisible(false)
-                }
-            })
-        }
-        else {
-            alert("1개 이상만 장바구니에 넣을 수 있습니다.")
+        if (props.userData && props.userData.isAuth) {
+            if (count > 0) {
+                dispatch(addToCart(props.storeId, visible, count))
+                .then(response => {
+                    if (response.payload) {
+                        alert("장바구니에 성공적으로 추가했습니다!")
+                        setVisible(false)
+                    }
+                })
+            }
+            else {
+                alert("1개 이상만 장바구니에 넣을 수 있습니다.")
+            }
+        } else {
+            alert("로그인 후 이용가능합니다.")
         }
     }
 
@@ -94,6 +98,12 @@ function MenuTab(props) {
         )
     })
 
+    const content = (
+        <div>
+            이 메뉴는 순한 음식으로, 아이들이 먹기에도 좋답니다 <Icon type="smile" />
+        </div>
+    )
+    
     const renderCards = (menu) => products && products.map((product, index) => {
         return (
             product.menu === menu &&
@@ -106,6 +116,15 @@ function MenuTab(props) {
                                 </Row>
                                 <Row>
                                     <Text>{product.price} 원</Text>
+                                </Row>
+                                <Row style={{ paddingTop: "0.25rem" }}>
+                                    {product.mild &&
+                                        <Popover placement="bottomLeft" content={content}>
+                                            <Tag color="#FFD30A">
+                                                순한맛
+                                            </Tag>
+                                        </Popover>
+                                    }
                                 </Row>
                             </Col>
                             <Col>

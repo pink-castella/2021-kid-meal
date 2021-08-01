@@ -6,7 +6,7 @@ import { withRouter, Link } from 'react-router-dom'
 import { setCurrentAddress } from '../../../../_actions/user_actions';
 
 
-function CenterMenu() {
+function CenterMenu({history}) {
     const user = useSelector(state => state.user)
     const [currentName, setcurrentName] = useState('주소 선택하기')
     const [userAddress, setuserAddress] = useState([])
@@ -32,7 +32,11 @@ function CenterMenu() {
             address_name:  address.address_name,
             nickname:  address.nickname,
         }
-        dispatch(setCurrentAddress(bodyForCurrent))    
+        dispatch(setCurrentAddress(bodyForCurrent))
+            .then(
+                history.go(0),  // 새로고침
+                history.push('/store')
+            )       // store 페이지로 이동 혹은 새로고침
     }; 
 
     if (user.userData && user.userData.isAuth) {

@@ -1,11 +1,12 @@
 /* global kakao */
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DaumPostcode from 'react-daum-postcode';
 import { Input, Button } from 'antd';
 import styled from 'styled-components';
 
 function Postcode(props) {
-    const [isModal, setIsModal] = useState(false)
+    const backdropEl = useRef()
+    const [isOpen, setOpen] = useState(false)
 
     const handleComplete = (data) => {
         let fullAddress = data.address;
@@ -24,7 +25,6 @@ function Postcode(props) {
         // 주소-좌표 변환 객체 생성
         if (fullAddress) {
             let geocoder = new window.kakao.maps.services.Geocoder();
-
             // 주소로 좌표를 검색
             geocoder.addressSearch(fullAddress, function(result, status) {
                 // 정상적으로 검색이 완료
@@ -37,15 +37,29 @@ function Postcode(props) {
                     }
 
                     props.handleCoords(addressInfo)
-                    setIsModal(false)
+                    setOpen(false)
                 }
             })
         }
     }
 
     const handleSearch = () => {
-        setIsModal(true)
+        setOpen(true)
     }
+
+    const handleClickOutside = ({ target }) => {
+        if (backdropEl.current && backdropEl.current.contains(target)) {
+            setOpen(false)
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener("click", handleClickOutside)
+        return () => {
+            window.removeEventListener("click", handleClickOutside)
+        }
+    }, [])
+
     
     const SearchWrapper = styled.div`
         display: flex;
@@ -54,8 +68,28 @@ function Postcode(props) {
     `;
 
     const PopupWrapper = styled.div`
+        position: absolute;
+        width: 90%;
+        max-width: 60rem;
+        height: auto;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 99;
+    `;
+
+    const Backdrop = styled.div`
+        z-index: 9;
+        position: fixed;
         display: flex;
+        align-items: center;
         justify-content: center;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        -webkit-tap-highlight-color: transparent;
     `;
 
     return (
@@ -64,14 +98,17 @@ function Postcode(props) {
                 <Input style={{ width: '60%' }} value="아이가 식사를 할 위치를 입력해주세요!" onClick={handleSearch} />
                 <Button type="primary" onClick={handleSearch}>검색</Button>
             </SearchWrapper>
-            {isModal && 
+            {isOpen && 
+                <div>
+                <Backdrop ref={backdropEl} />
                 <PopupWrapper>
                     <DaumPostcode
                         onComplete={handleComplete}
                         autoClose
-                        style={{ boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px" }}
+                        style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 8px 24px 0px" }}
                     />
                 </PopupWrapper>
+                </div>
             }
         </React.Fragment>
     )

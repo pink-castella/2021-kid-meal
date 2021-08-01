@@ -33,10 +33,7 @@ function CenterMenu({history}) {
             nickname:  address.nickname,
         }
         dispatch(setCurrentAddress(bodyForCurrent))
-            .then(
-                history.go(0),  // 새로고침
-                history.push('/store')
-            )       // store 페이지로 이동 혹은 새로고침
+            .then(window.location.replace("/store"))      // store 페이지로 이동 혹은 새로고침
     }; 
 
     if (user.userData && user.userData.isAuth) {

@@ -37,13 +37,13 @@ function ProductPage(props) {
         })
         .catch(err => alert(err))
 
-        if (props.user.userData && props.user.userData.favorite) {
-            if (props.user.userData.favorite.length > 0) {
-                if (props.user.userData.favorite.includes(storeId)) {
+        if (props.user.userData && props.user.userData.favorites) {
+            if (props.user.userData.favorites.length > 0) {
+                if (props.user.userData.favorites.includes(storeId)) {
                     setIsFavorite(true)
                 }
                 else {
-                    alert(props.user.userData.favorite.includes(storeId))
+                    alert(props.user.userData.favorites.includes(storeId))
                 }
             }
         }

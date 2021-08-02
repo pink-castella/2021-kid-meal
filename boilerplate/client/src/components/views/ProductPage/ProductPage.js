@@ -8,7 +8,6 @@ import ReviewTab from './Sections/ReviewTab';
 import InfoTab from './Sections/InfoTab';
 import { saveFavorite, removeFavorite } from '../../../_actions/user_actions';
 
-
 const { Text } = Typography;
 const { TabPane } = Tabs;
 
@@ -37,13 +36,10 @@ function ProductPage(props) {
         })
         .catch(err => alert(err))
 
-        if (props.user.userData && props.user.userData.favorite) {
-            if (props.user.userData.favorite.length > 0) {
-                if (props.user.userData.favorite.includes(storeId)) {
+        if (props.user.userData && props.user.userData.favorites) {
+            if (props.user.userData.favorites.length > 0) {
+                if (props.user.userData.favorites.includes(storeId)) {
                     setIsFavorite(true)
-                }
-                else {
-                    alert(props.user.userData.favorite.includes(storeId))
                 }
             }
         }
@@ -128,17 +124,13 @@ function ProductPage(props) {
                         <div>
                             <Empty
                                 image={Empty.PRESENTED_IMAGE_SIMPLE} 
-                                description={
-                                <div>
-                                    메뉴를 준비중입니다. <br />
-                                </div>
-                                }
+                                description="메뉴를 준비중입니다."
                             />
                         </div>                     
                     )}
                 </TabPane>
                 <TabPane tab="클린리뷰" key="2">
-                    <ReviewTab userData={props.user.userData} />
+                    <ReviewTab />
                 </TabPane>
                 <TabPane tab="정보" key="3">
                     <InfoTab storeId={storeId} />

@@ -37,6 +37,10 @@ const productSchema = mongoose.Schema({
         maxlength: 100,
         default: 0
     },
+    mild: {
+        type: Boolean,
+        default: false
+    },
     /*
     countryOfOriginInfo: [{ 
         //원산지 그냥 여기 넣었는데 그냥 지울까

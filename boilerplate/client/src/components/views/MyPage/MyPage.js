@@ -10,7 +10,7 @@ function Mypage() {
             if (props.user.userData.history.length > 0) {
                 props.user.userData.history.forEach(item => {
                     // 1day = 86400000ms
-                    let dday = (item.expiredDay-Date.now()) / 86400000
+                    let dday = (item.expiredDate-Date.now()) / 86400000
                     let ddayItem = { dday: dday }
                     let obj = Object.assign({}, item, ddayItem)
                     historyList.push(obj)

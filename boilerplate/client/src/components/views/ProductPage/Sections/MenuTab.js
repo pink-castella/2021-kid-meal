@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Col, Card, Row, Typography, Collapse, Modal, Button, InputNumber } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { Col, Card, Row, Typography, Collapse, Modal, Button, InputNumber, Tag, Popover, Icon } from 'antd';
 import styled from 'styled-components';
 import { addToCart } from '../../../../_actions/user_actions';
 
@@ -10,6 +10,7 @@ const { Panel } = Collapse;
 
 function MenuTab(props) {
     const dispatch = useDispatch();
+    const user = useSelector(state => state.user)
     const [topFourItems, setTopFourItems] = useState([])
     const [products, setProducts] = useState([])
     const [visible, setVisible] = useState(0)
@@ -49,7 +50,9 @@ function MenuTab(props) {
     }, [products])
 
     const showDetail = (productId) => {
-        setVisible(true)
+        setVisible(productId)
+        setCount(0)
+        setPrice(0)
 
         products.forEach(item => {
             if (Object.values(item).indexOf(productId) > -1) {
@@ -59,28 +62,33 @@ function MenuTab(props) {
     }
 
     const handleOk = () => {
-        if (count > 0) {
-            dispatch(addToCart(props.storeId, visible, count))
-            .then(response => {
-                if (response.payload) {
-                    alert("장바구니에 성공적으로 추가했습니다!")
-                    setVisible(false)
-                }
-            })
-        }
-        else {
-            alert("1개 이상만 장바구니에 넣을 수 있습니다.")
+        if (user.userData.isAuth) {
+            if (count > 0) {
+                console.log('count:'+count)
+                dispatch(addToCart(props.storeId, visible, count))
+                .then(response => {
+                    if (response.payload) {
+                        alert("장바구니에 성공적으로 추가했습니다!")
+                        setVisible(0)
+                    }
+                })
+            }
+            else {
+                alert("1개 이상만 장바구니에 넣을 수 있습니다.")
+            }    
+        } else {
+            alert("로그인 후 이용가능합니다.")
         }
     }
 
     const handleCancel = () => {
-        setVisible(false)
+        setVisible(0)
     }
 
     const showTopFour = topFourItems && topFourItems.map((product, index) => {
         return (
             product &&
-                <Col span={6}>
+                <Col key={index} span={6}>
                     <Card 
                         cover={<img src={product.image} />} 
                         hoverable 
@@ -94,6 +102,12 @@ function MenuTab(props) {
         )
     })
 
+    const content = (
+        <div>
+            이 메뉴는 순한 음식으로, 아이들이 먹기에도 좋답니다 <Icon type="smile" />
+        </div>
+    )
+    
     const renderCards = (menu) => products && products.map((product, index) => {
         return (
             product.menu === menu &&
@@ -106,6 +120,15 @@ function MenuTab(props) {
                                 </Row>
                                 <Row>
                                     <Text>{product.price} 원</Text>
+                                </Row>
+                                <Row style={{ paddingTop: "0.25rem" }}>
+                                    {product.mild &&
+                                        <Popover placement="bottomLeft" content={content}>
+                                            <Tag color="#FFD30A">
+                                                순한맛
+                                            </Tag>
+                                        </Popover>
+                                    }
                                 </Row>
                             </Col>
                             <Col>
@@ -152,7 +175,7 @@ function MenuTab(props) {
 
             { detail &&
                 <Modal
-                    visible={visible}
+                    visible={Boolean(visible)}
                     title="메뉴상세"
                     onOk={handleOk}
                     onCancel={handleCancel}

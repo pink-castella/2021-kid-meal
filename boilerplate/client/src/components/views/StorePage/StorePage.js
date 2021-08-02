@@ -249,10 +249,10 @@ function StorePage(props) {
                 <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE} 
                     description={
-                    <div>
+                    <span>
                         가까운 지역 (500m) 안팎에 가맹점이 없습니다. <br />
                         다른 주소를 입력해주세요.
-                    </div>
+                    </span>
                     }
                 >
                     <Button type="primary" onClick={goToEnterAddress}>
@@ -291,11 +291,7 @@ function StorePage(props) {
                     <div>
                         <Empty
                             image={Empty.PRESENTED_IMAGE_SIMPLE} 
-                            description={
-                            <div>
-                                가까운 지역 (500m) 안팎에 가맹점이 없습니다. <br />
-                            </div>
-                            }
+                            description="가까운 지역 (500m) 안팎에 가맹점이 없습니다."
                         />
                     </div>                
                 ) : null}

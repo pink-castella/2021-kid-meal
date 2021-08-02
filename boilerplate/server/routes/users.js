@@ -221,7 +221,7 @@ router.post("/addToCart", auth, (req, res) => {
                     { _id: req.user._id, 
                         "cart.storeId": req.body.storeId, 
                         "cart.productId": req.body.productId },
-                    { $inc: { "cart.$.quantity": 1 }},
+                    { $inc: { "cart.$.quantity": req.body.productCount }},
                     { new: true },
                     (err, userInfo) => {
                         if (err) return res.status(400).json({ success: false, err });
@@ -236,7 +236,7 @@ router.post("/addToCart", auth, (req, res) => {
                             cart: {
                                 storeId: req.body.storeId,
                                 productId: req.body.productId,
-                                quantity: 1,
+                                quantity: req.body.productCount,
                                 date: Date.now()
                             }
                         }
@@ -299,7 +299,7 @@ router.post('/successBuy', auth, (req, res) => {
             quantity: item.quantity,
             paymentId: req.body.paymentData.paymentId,
             expiredDate: Date.now()+86400000*31,
-            used: false
+            used: 0,
         })
     })
 
@@ -366,7 +366,7 @@ router.post('/successUse', auth, (req, res) => {
     User.findOneAndUpdate(
         { _id: req.user._id, "history.productId": req.body.id },
         {
-            $set: { "history.used": true} 
+            $set: { "history.used": Date.now() } 
         },
         { new: true },
         (err, userInfo) => { 

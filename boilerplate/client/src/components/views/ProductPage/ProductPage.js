@@ -8,7 +8,6 @@ import ReviewTab from './Sections/ReviewTab';
 import InfoTab from './Sections/InfoTab';
 import { saveFavorite, removeFavorite } from '../../../_actions/user_actions';
 
-
 const { Text } = Typography;
 const { TabPane } = Tabs;
 
@@ -138,7 +137,7 @@ function ProductPage(props) {
                     )}
                 </TabPane>
                 <TabPane tab="클린리뷰" key="2">
-                    <ReviewTab userData={props.user.userData} />
+                    <ReviewTab />
                 </TabPane>
                 <TabPane tab="정보" key="3">
                     <InfoTab storeId={storeId} />

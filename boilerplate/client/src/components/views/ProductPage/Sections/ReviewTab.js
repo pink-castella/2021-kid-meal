@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Typography, Rate, Empty } from 'antd';
 import styled from 'styled-components';
 
 const { Title, Text } = Typography;
 
 
-function ReviewTab(props) {
+function ReviewTab() {
+    const user = useSelector(state => state.user)
     const [ratings, setTableRowRatings] = useState(0.0)
     const [reviews, setTableRowReviews] = useState({})
 
     useEffect(() => {
-        if (props.userData && props.userData.ratings && props.userData.reviews) {
-            setTableRowRatings(props.userData.ratings)
-            setTableRowReviews(props.userData.reviews)
-            alert(props.userData.reviews)
+        if (user.userData && user.userData.ratings && user.userData.reviews) {
+            setTableRowRatings(user.userData.ratings)
+            setTableRowReviews(user.userData.reviews)
+            alert(user.userData.reviews)
         }
         else {
             /* FOR TEST

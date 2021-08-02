@@ -11,7 +11,7 @@ function UserCardBlock(props) {
                         src={product.image} />        {/* 2개 이상 이미지 처리하려고 helper method 사용*/}
                 </td>
                 <td>
-                    {product.store.StoreName} // product.storeName?
+                    {product.store.StoreName}
                 </td>
                 <td>
                     {product.title}
@@ -23,7 +23,7 @@ function UserCardBlock(props) {
                     $ {product.price}
                 </td>
                 <td>
-                    <button> {/*onClick={() => props.removeItem(product._id)}>*/}
+                    <button onClick={() => props.removeItem(product._id)}>
                         Remove 
                     </button>
                 </td>

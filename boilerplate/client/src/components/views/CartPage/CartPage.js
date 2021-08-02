@@ -17,18 +17,13 @@ function CartPage(props) {
         let cartItems=[]
 
         if(props.user.userData && props.user.userData.cart){
-            // console.log(`${props.user.userData.email}의 장바구니`)
-            console.log('장바구니: ', props.user.userData.cart)
 
             if(props.user.userData.cart.length >0){
                 props.user.userData.cart.forEach(item => {
-                    console.log('item:', item)
                     cartItems.push(item.productId)                 // cartItems은 cart 객체에 담긴 요소들의 id를 담는 배열 
                 })
-                console.log('장바구니 목록: ', cartItems)
                 dispatch(getCartItems(cartItems, props.user.userData.cart))
-                .then(response => {calculateTotal(response.payload)
-                                    console.log('response.paylod', response.paylod)}) 
+                .then(response => {calculateTotal(response.payload)}) 
             }
         }
         
@@ -47,7 +42,7 @@ function CartPage(props) {
 
     let removeFromCart = (productId) =>{
         dispatch(removeCartItem(productId))     
-            .then(response => {                
+            .then(response => { 
                 if(response.payload.productInfo.length <= 0){
                     setShowTotal(false)            // 가격 표시X
                 }

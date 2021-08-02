@@ -162,14 +162,14 @@ export function addToCart(storeId, productId, productCount) {
         payload: request
     }    
 }
-
+// 장바구니로 상품 정보들을 가져온다.
 export function getCartItems(cartItems, userCart) {                                         // 1. client에서 받음
-
-    const request = axios.get(`/api/product/products_by_id?id=${cartItems}&type=array`)     // 2. 라우터로 보냄
+    const request = axios.get(`/api/stores/products_by_id?id=${cartItems}&type=array`)     // 2. 라우터로 보냄
         .then(response => {
+             //productInfo , cart 정보를 조합해서 CartDetail을 만든다. 
             userCart.forEach(cartItem => {
                 response.data.forEach((productDetail, index) => {
-                    if (cartItem.id === productDetail._id) {
+                    if (cartItem.productId === productDetail._id) {
                         response.data[index].quantity = cartItem.quantity
                     }
                 })
@@ -184,9 +184,8 @@ export function getCartItems(cartItems, userCart) {                             
 }
 
 export function removeCartItem(productId){
-    const request = axios.get(`/api/users/removeFromCart?id=${productId}`)
+    const request = axios.get(`/api/stores/removeFromCart?id=${productId}`)
         .then(response => {
-             //productInfo , cart 정보를 조합해서 CartDetail을 만든다. 
              response.data.cart.forEach(item => {
                 response.data.productInfo.forEach((product, index) => {
                     if (item.id === product._id) {

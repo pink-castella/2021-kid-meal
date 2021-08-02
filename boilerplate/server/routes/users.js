@@ -221,7 +221,7 @@ router.post("/addToCart", auth, (req, res) => {
                     { _id: req.user._id, 
                         "cart.storeId": req.body.storeId, 
                         "cart.productId": req.body.productId },
-                    { $inc: { "cart.$.quantity": 1 }},
+                    { $inc: { "cart.$.quantity": req.body.productCount }},
                     { new: true },
                     (err, userInfo) => {
                         if (err) return res.status(400).json({ success: false, err });
@@ -236,7 +236,7 @@ router.post("/addToCart", auth, (req, res) => {
                             cart: {
                                 storeId: req.body.storeId,
                                 productId: req.body.productId,
-                                quantity: 1,
+                                quantity: req.body.productCount,
                                 date: Date.now()
                             }
                         }
@@ -283,7 +283,7 @@ router.post('/removeFromCart', auth, (req, res) => {
 //=================================
 //            Payment
 //=================================
-
+/*결제 후 DB 업데이트*/
 router.post('/successBuy', auth, (req, res) => {
     let history = [];
     let transactionData = {};
@@ -298,7 +298,8 @@ router.post('/successBuy', auth, (req, res) => {
             price: item.price,
             quantity: item.quantity,
             paymentId: req.body.paymentData.paymentId,
-            expiredDay: Date.now()+86400000*31
+            expiredDate: Date.now()+86400000*31,
+            used: 0,
         })
     })
 
@@ -356,6 +357,26 @@ router.post('/successBuy', auth, (req, res) => {
         }
     )
 })
+
+//=================================
+//            MyPage
+//=================================
+/*상품 사용 완료*/
+router.post('/successUse', auth, (req, res) => {
+    User.findOneAndUpdate(
+        { _id: req.user._id, "history.productId": req.body.id },
+        {
+            $set: { "history.used": Date.now() } 
+        },
+        { new: true },
+        (err, userInfo) => { 
+            if(err) return res.status(400).json({suceess: false, err});
+            return res.status(200).json({
+            success: true,
+                userInfo
+            });
+        });
+});
 
 
 module.exports = router;

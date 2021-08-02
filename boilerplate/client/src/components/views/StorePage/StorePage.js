@@ -244,13 +244,13 @@ function StorePage(props) {
     })
 
     return (
-        isEmpty && !props.user.userData ? (
+        isEmpty && (props.user.userData && !props.user.userData.isAuth) ? (
             <div>
                 <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE} 
                     description={
                     <div>
-                        가까운 지역 (500m) 내에 가맹점이 없습니다. <br />
+                        가까운 지역 (500m) 안팎에 가맹점이 없습니다. <br />
                         다른 주소를 입력해주세요.
                     </div>
                     }
@@ -293,7 +293,7 @@ function StorePage(props) {
                             image={Empty.PRESENTED_IMAGE_SIMPLE} 
                             description={
                             <div>
-                                가까운 지역 (500m) 내에 가맹점이 없습니다. <br />
+                                가까운 지역 (500m) 안팎에 가맹점이 없습니다. <br />
                             </div>
                             }
                         />

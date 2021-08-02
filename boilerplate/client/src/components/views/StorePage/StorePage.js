@@ -244,7 +244,7 @@ function StorePage(props) {
     })
 
     return (
-        isEmpty && !props.user.userData ? (
+        isEmpty && (props.user.userData && !props.user.userData.isAuth) ? (
             <div>
                 <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE} 

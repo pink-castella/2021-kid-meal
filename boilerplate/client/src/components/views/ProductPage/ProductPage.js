@@ -41,9 +41,6 @@ function ProductPage(props) {
                 if (props.user.userData.favorites.includes(storeId)) {
                     setIsFavorite(true)
                 }
-                else {
-                    alert(props.user.userData.favorites.includes(storeId))
-                }
             }
         }
 
@@ -127,11 +124,7 @@ function ProductPage(props) {
                         <div>
                             <Empty
                                 image={Empty.PRESENTED_IMAGE_SIMPLE} 
-                                description={
-                                <div>
-                                    메뉴를 준비중입니다. <br />
-                                </div>
-                                }
+                                description="메뉴를 준비중입니다."
                             />
                         </div>                     
                     )}

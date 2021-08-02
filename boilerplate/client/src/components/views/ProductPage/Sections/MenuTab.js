@@ -50,7 +50,9 @@ function MenuTab(props) {
     }, [products])
 
     const showDetail = (productId) => {
-    setVisible(productId)
+        setVisible(productId)
+        setCount(0)
+        setPrice(0)
 
         products.forEach(item => {
             if (Object.values(item).indexOf(productId) > -1) {
@@ -62,6 +64,7 @@ function MenuTab(props) {
     const handleOk = () => {
         if (user.userData.isAuth) {
             if (count > 0) {
+                console.log('count:'+count)
                 dispatch(addToCart(props.storeId, visible, count))
                 .then(response => {
                     if (response.payload) {
@@ -85,7 +88,7 @@ function MenuTab(props) {
     const showTopFour = topFourItems && topFourItems.map((product, index) => {
         return (
             product &&
-                <Col span={6}>
+                <Col key={index} span={6}>
                     <Card 
                         cover={<img src={product.image} />} 
                         hoverable 
@@ -172,7 +175,7 @@ function MenuTab(props) {
 
             { detail &&
                 <Modal
-                    visible={visible}
+                    visible={Boolean(visible)}
                     title="메뉴상세"
                     onOk={handleOk}
                     onCancel={handleCancel}

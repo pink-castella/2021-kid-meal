@@ -8,7 +8,7 @@ function UserCardBlock(props) {
             <tr key={index}>
                 <td>
                     <img style={{ width: '70px' }} alt="product"
-                        src={renderCartImage(product.image)} />        {/* 2개 이상 이미지 처리하려고 helper method 사용*/}
+                        src={product.image} />        {/* 2개 이상 이미지 처리하려고 helper method 사용*/}
                 </td>
                 <td>
                     {product.store.StoreName} // product.storeName?

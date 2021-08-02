@@ -17,7 +17,6 @@ function CenterMenu() {
             if (user.userData.currentAddress && user.userData.currentAddress.nickname){       
                 // 저장된 주소가 하나 이상 있을 때
                 setcurrentName(user.userData.currentAddress.nickname)
-                console.log(currentName)
             }
             setuserAddress(user.userData.address)
         }

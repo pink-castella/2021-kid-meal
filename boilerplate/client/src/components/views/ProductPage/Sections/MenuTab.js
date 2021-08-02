@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Col, Card, Row, Typography, Collapse, Modal, Button, InputNumber, Tag, Popover, Icon } from 'antd';
 import styled from 'styled-components';
 import { addToCart } from '../../../../_actions/user_actions';
@@ -10,6 +10,7 @@ const { Panel } = Collapse;
 
 function MenuTab(props) {
     const dispatch = useDispatch();
+    const user = useSelector(state => state.user)
     const [topFourItems, setTopFourItems] = useState([])
     const [products, setProducts] = useState([])
     const [visible, setVisible] = useState(0)
@@ -49,7 +50,7 @@ function MenuTab(props) {
     }, [products])
 
     const showDetail = (productId) => {
-        setVisible(true)
+    setVisible(productId)
 
         products.forEach(item => {
             if (Object.values(item).indexOf(productId) > -1) {
@@ -59,26 +60,26 @@ function MenuTab(props) {
     }
 
     const handleOk = () => {
-        if (props.userData && props.userData.isAuth) {
+        if (user.userData.isAuth) {
             if (count > 0) {
                 dispatch(addToCart(props.storeId, visible, count))
                 .then(response => {
                     if (response.payload) {
                         alert("장바구니에 성공적으로 추가했습니다!")
-                        setVisible(false)
+                        setVisible(0)
                     }
                 })
             }
             else {
                 alert("1개 이상만 장바구니에 넣을 수 있습니다.")
-            }
+            }    
         } else {
             alert("로그인 후 이용가능합니다.")
         }
     }
 
     const handleCancel = () => {
-        setVisible(false)
+        setVisible(0)
     }
 
     const showTopFour = topFourItems && topFourItems.map((product, index) => {

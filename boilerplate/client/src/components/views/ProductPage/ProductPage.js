@@ -90,28 +90,28 @@ function ProductPage(props) {
                         </TitleBox>
                     }
                 >
-                    <Row gutter={[16, 16]} justify="start">
-                        <Col xs={6} sm={5} md={3}>
+                    <Row gutter={[16, 16]} type="flex" justifyContent="start">
+                        <div>
                             <img src={storeInfo.storeImages} style={{ height: "100px", width: "100px" }} />
-                        </Col>
-                        <Col xs={18} sm={17} md={12}>
-                            <Row>
+                        </div>
+                        <div style={{ paddingLeft: "1rem"}}>
+                            <div>
                                 <Text strong>별점 </Text>{parseFloat(storeInfo.ratings)}
-                            </Row>
-                            <Row style={{ marginTop: "0.25rem" }}>
+                            </div>
+                            <div style={{ marginTop: "0.25rem" }}>
                                 <Text strong>거리 </Text><Text>주소로부터 {parseInt(storeInfo.distance)} m</Text>
-                            </Row>
-                            <Row style={{ marginTop: "0.25rem" }}>
+                            </div>
+                            <div style={{ marginTop: "0.25rem" }}>
                                 <Text strong>설명 </Text><Text>{storeInfo.storeDescription}</Text>
-                            </Row>
-                            <Row style={{ marginTop: "0.25rem" }}>
+                            </div>
+                            <div style={{ marginTop: "0.25rem" }}>
                                 {storeInfo.sanitary ? 
                                     <Text mark>위생인증가게</Text>
                                     :
                                     null
                                 }
-                            </Row>
-                        </Col>
+                            </div>
+                        </div>
                     </Row>
                 </Card>        
             )}

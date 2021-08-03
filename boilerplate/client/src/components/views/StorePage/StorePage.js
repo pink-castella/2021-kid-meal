@@ -210,13 +210,13 @@ function StorePage(props) {
                     >
                         
                         <Row gutter={[16, 16]}>
-                            <Col lg={10} md={24}>
+                            <Col lg={9} md={24}>
                                 <img 
                                     style={{ height: "150px", width: "150px" }} 
                                     src={store.storeImages} 
                                 />
                             </Col>
-                            <Col lg={14} md={24}>
+                            <Col lg={15} md={24}>
                                 <Row>
                                     <Text strong>별점 {store.ratings}</Text>
                                 </Row>

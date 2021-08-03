@@ -73,18 +73,6 @@ router.post('/getStores', (req, res) => {
     }
 });
 
-/*해당 가게의 상품 정보 */
-router.post('/getProducts', (req, res) => {
-    let store = req.body.store;
-
-    Product.find({"store": store})
-        .exec((err, productInfo) => {
-        if(err) return res.status(400).json({success: false, err});
-        return res.status(200).json({
-            success: true,
-            productInfo});
-        });
-});
 
 /*선택한 가게의 정보 */
 router.post('/getStoreInfo', (req, res) => {

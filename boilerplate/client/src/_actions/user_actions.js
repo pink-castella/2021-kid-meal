@@ -165,7 +165,7 @@ export function addToCart(storeId, productId, productCount) {
 
 export function getCartItems(cartItems, userCart) {                                         // 1. client에서 받음
 
-    const request = axios.get(`/api/product/products_by_id?id=${cartItems}&type=array`)     // 2. 라우터로 보냄
+    const request = axios.get(`/api/products/products_by_id?id=${cartItems}&type=array`)     // 2. 라우터로 보냄
         .then(response => {
             userCart.forEach(cartItem => {
                 response.data.forEach((productDetail, index) => {

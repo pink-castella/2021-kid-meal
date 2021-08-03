@@ -24,7 +24,7 @@ function ProductPage(props) {
             store: storeId
         }
 
-        axios.post(`/api/stores/getProducts`, body)
+        axios.post(`/api/products/getProducts`, body)
         .then(response => {
             setProducts(response.data.productInfo)
         })

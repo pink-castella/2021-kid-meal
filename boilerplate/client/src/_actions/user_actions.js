@@ -185,13 +185,10 @@ export function getCartItems(cartItems, userCart) {
 }
 
 export function removeCartItem(productId){
-    console.log('>>> removeCartItem: ', productId)
     const request = axios.get(`/api/users/removeFromCart?id=${productId}`)
         .then(response => {
              response.data.cart.forEach(item => {
-                console.log('>>> item: ', item)
                 response.data.productInfo.forEach((product, index) => {
-                    console.log('>>> [product]: ', product)
                     if (item.productId === product._id) {
                         response.data.productInfo[index].quantity = item.quantity
                     }

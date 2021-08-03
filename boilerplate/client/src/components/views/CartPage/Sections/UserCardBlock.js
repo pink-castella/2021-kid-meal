@@ -2,7 +2,6 @@ import React from 'react'
 import"./UserCardBlock.css"
 
 function UserCardBlock(props) {
-    console.log('usercardblock: ', props)
     const renderItems = () => (
         props.products && props.products.map((product, index) => (
             <tr key={index}>

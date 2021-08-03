@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { User } = require("../models/User");
 const { Product } = require("../models/Product");
+const { Payment }  = require("../models/Payment");
 const { auth } = require("../middleware/auth");
+
+const async = require('async');
 
 //=================================
 //             User
@@ -292,30 +295,40 @@ router.post('/successBuy', auth, (req, res) => {
     req.body.cartDetail.forEach((item) => {
         if (item.quantity > 1) {
             for (let i = 0; i < item.quantity; i++) {
+                // generate random string
+                let length = 16;
+                let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                let randS = "";
+                while (length > 0) {
+                    randS += chars.charAt(Math.floor(Math.random() * chars.length));
+                    length--;
+                }
+                
                 history.push({
+                    id: randS,
                     dateOfPurchase: Date.now(),
                     name: item.title,
-                    storeId: item.storeId,
-                    productId: item.productId,
+                    storeId: item.store,
+                    productId: item._id,
                     price: item.price,
                     quantity: 1,
                     paymentId: req.body.paymentData.paymentId,
                     expiredDate: Date.now()+86400000*31,
                     used: 0,
-                })
+                })                
             }
         } else {
             history.push({
                 dateOfPurchase: Date.now(),
                 name: item.title,
-                storeId: item.storeId,
-                productId: item.productId,
+                storeId: item.store,
+                productId: item._id,
                 price: item.price,
                 quantity: 1,
                 paymentId: req.body.paymentData.paymentId,
                 expiredDate: Date.now()+86400000*31,
                 used: 0,
-            })
+            })        
         }
     })
 
@@ -329,11 +342,11 @@ router.post('/successBuy', auth, (req, res) => {
     transactionData.data = req.body.paymentData
     transactionData.product = history
 
-    // history 정보 저장
+    // history 정보 저장 
     User.findOneAndUpdate(
         { _id: req.user._id },
-        { $push: { history: history }, $set: { cart: {} } },
-        { new: true},
+        { $push: { history: history }, $set: { cart: [] } },
+        { new: true },
         (err, user) => {
             if (err) return res.json({ success: false, err })
 
@@ -343,11 +356,10 @@ router.post('/successBuy', auth, (req, res) => {
                 if (err) return res.json({ success: false, err })
 
                 // 3. Product Collection 안에 있는 sold 필드 정보 업데이트 시켜주기
-
                 // 상품 당 몇 개의 quantity를 샀는지
-                let products = [];;
+                let products = [];
                 doc.product.forEach(item => {
-                    products.push({ id: item.productId, quantity: item.quantity })
+                    products.push({ productId: item.productId, quantity: item.quantity })
                 })
 
                 async.eachSeries(products, (item, callback) => {

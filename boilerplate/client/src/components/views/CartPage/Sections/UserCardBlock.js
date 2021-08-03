@@ -2,22 +2,15 @@ import React from 'react'
 import"./UserCardBlock.css"
 
 function UserCardBlock(props) {
-    const renderCartImage = (images) => {
-        if (images.length > 0) {
-            let image = images[0]                       // 첫 번째 사진만 가져온다
-            return `http://localhost:5000/${image}`
-        }
-    }
-
     const renderItems = () => (
         props.products && props.products.map((product, index) => (
             <tr key={index}>
                 <td>
-                    <img style={{ width: '70px' }} alt="product"
-                        src={renderCartImage(product.images)} />        {/* 2개 이상 이미지 처리하려고 helper method 사용*/}
+                    {product.store.StoreName}
                 </td>
                 <td>
-                    {product.store.StoreName} // product.storeName?
+                    <img style={{ width: '70px' }} alt="product"
+                        src={product.image} /> 
                 </td>
                 <td>
                     {product.title}
@@ -29,7 +22,7 @@ function UserCardBlock(props) {
                     $ {product.price}
                 </td>
                 <td>
-                    <button> {/*onClick={() => props.removeItem(product._id)}>*/}
+                    <button onClick={() => props.removeItem(product._id)}>
                         Remove 
                     </button>
                 </td>
@@ -42,8 +35,8 @@ function UserCardBlock(props) {
             <table>
                 <thead>
                     <tr>
-                        <th>제품 사진</th>
                         <th>가게 이름</th>
+                        <th>제품 사진</th>
                         <th>메뉴 이름</th>
                         <th>수량</th>
                         <th>가격</th>

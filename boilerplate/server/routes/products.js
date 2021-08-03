@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {Product} = require("../models/Product");
+const { Product } = require("../models/Product");
 
 /*해당 가게의 상품 정보*/
 router.post('/getProducts', (req, res) => {
@@ -34,6 +34,7 @@ router.get('/products_by_id', (req, res) => {
         return res.status(200).send(product)
     })
 })
+  
 
 
 module.exports = router;

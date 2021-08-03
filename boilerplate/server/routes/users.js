@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require("../models/User");
-
+const { Product } = require("../models/Product");
 const { auth } = require("../middleware/auth");
 
 //=================================
@@ -250,7 +250,7 @@ router.post("/addToCart", auth, (req, res) => {
         }); 
 });
 
-router.post('/removeFromCart', auth, (req, res) => {
+router.get('/removeFromCart', auth, (req, res) => {
     // 먼저 cart에 있던 내가 지우려고 한 상품 지워주기
     User.findOneAndUpdate(
         { _id: req.user._id },

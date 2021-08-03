@@ -68,6 +68,11 @@ function CartPage(props) {
                 </>
             }
 
+            {/* <KakaoPay 
+                    total = {Total}
+                    cart = {props.user.cartDetail}
+                />*/}
+
         </div>
     )
 }

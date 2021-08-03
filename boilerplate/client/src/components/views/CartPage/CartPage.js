@@ -22,6 +22,8 @@ function CartPage(props) {
                 props.user.userData.cart.forEach(item => {
                     cartItems.push(item.productId)                 // cartItems은 cart 객체에 담긴 요소들의 id를 담는 배열 
                 })
+                console.log('cartItems: ', cartItems)
+                console.log('userData: ',props.user.userData.cart)
                 dispatch(getCartItems(cartItems, props.user.userData.cart))
                 .then(response => {calculateTotal(response.payload)}) 
             }
@@ -31,6 +33,7 @@ function CartPage(props) {
 
 
     const calculateTotal = (cartDetail) => {
+        console.log('함수 안: ', cartDetail)
         let total = 0;
 
         cartDetail.map(item => {

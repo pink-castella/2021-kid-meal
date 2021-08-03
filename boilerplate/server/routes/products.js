@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {Product} = require("../models/Product");
+const { Product } = require("../models/Product");
 
 /*해당 가게의 상품 정보*/
 router.post('/getProducts', (req, res) => {
@@ -29,11 +29,13 @@ router.get('/products_by_id', (req, res) => {
 
     // productId를 이용해서 DB에서 productId와 같은 상품 정보를 가져온다.
     Product.find({ _id: {$in: productIds }})
+    .populate('writer')
     .exec((err, product) => {
         if (err) return res.status(400).send(err)
         return res.status(200).send(product)
     })
 })
+  
 
 
 module.exports = router;

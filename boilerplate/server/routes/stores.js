@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { Store } = require("../models/Store");
-const {Product} = require("../models/Product");
-const { User } = require("../models/User");
 const { auth } = require("../middleware/auth");
 
 
@@ -73,20 +71,7 @@ router.post('/getStores', (req, res) => {
     }
 });
 
-/*해당 가게의 상품 정보 */
-router.post('/getProducts', (req, res) => {
-    let store = req.body.store;
-
-    Product.find({"store": store})
-        .exec((err, productInfo) => {
-        if(err) return res.status(400).json({success: false, err});
-        return res.status(200).json({
-            success: true,
-            productInfo});
-        });
-});
-
-/*선택한 가게의 정보 */
+/*선택한 가게의 정보*/
 router.post('/getStoreInfo', (req, res) => {
     let store = req.body.store;
 
@@ -99,9 +84,9 @@ router.post('/getStoreInfo', (req, res) => {
         });
 });
 
-/*찜목록 불러오기 */
+/*찜목록 불러오기*/
 router.post('/getFavorites', auth, (req, res) => {
-    let type = typeof(req.body.favoriteIdArr)    // body 아니고 query
+    let type = typeof(req.body.favoriteIdArr)
     let storeIds = req.body.favoriteIdArr
 
     console.log('ids'+storeIds)

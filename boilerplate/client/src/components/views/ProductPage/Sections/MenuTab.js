@@ -64,7 +64,6 @@ function MenuTab(props) {
     const handleOk = () => {
         if (user.userData.isAuth) {
             if (count > 0) {
-                console.log('count:'+count)
                 dispatch(addToCart(props.storeId, visible, count))
                 .then(response => {
                     if (response.payload) {

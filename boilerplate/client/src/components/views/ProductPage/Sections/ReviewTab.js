@@ -106,11 +106,7 @@ function ReviewTab() {
             <div style={{ display: "flex", justifyContent: "center" }}>
                 <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE} 
-                    description={
-                    <div>
-                        아직 리뷰가 없습니다.
-                    </div>
-                    }
+                    description="아직 리뷰가 없습니다."
                 />
             </div>
         )

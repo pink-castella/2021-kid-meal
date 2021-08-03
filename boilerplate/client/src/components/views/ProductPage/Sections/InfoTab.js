@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Descriptions, Typography, Row, Icon } from 'antd';
+import { Card, Typography, Descriptions, Row, Col, Icon } from 'antd';
 import axios from 'axios';
 import KakaoMap from './KakaoMap';
 import styled from 'styled-components';
@@ -39,13 +39,19 @@ function InfoTab(props) {
             <div>
                 <Row gutter={16}>
                     <Card title="업체정보">
-                        <Descriptions>
-                            <Descriptions.Item label="영업시간">{storeInfo.hour.open} - {storeInfo.hour.close}</Descriptions.Item>
-                            <Descriptions.Item label="휴무일">{storeInfo.dayoff}</Descriptions.Item>
-                            <Descriptions.Item label="전화번호">{storeInfo.contact}</Descriptions.Item>
-                        </Descriptions>
+                        <Row>
+                            <Col xs={24} sm={12} md={8} style={{ paddingBottom: "0.5rem" }}>
+                                <Text strong>영업시간</Text> &nbsp; {storeInfo.hour.open} - {storeInfo.hour.close}
+                            </Col>
+                            <Col xs={24} sm={12} md={8} style={{ paddingBottom: "0.5rem" }}>
+                                <Text strong>휴무일</Text> &nbsp; {storeInfo.dayoff}
+                            </Col>
+                            <Col xs={24} sm={12} md={8} style={{ paddingBottom: "0.5rem" }}>
+                                <Text strong>전화번호</Text> &nbsp; {storeInfo.contact}
+                            </Col>
+                        </Row>
                         <div>
-                            <Text strong>지도: </Text>&nbsp; {storeInfo.storeAddress.address_name} &nbsp;
+                            <Text strong>지도 </Text> &nbsp; {storeInfo.storeAddress.address_name} &nbsp;
                             <TextButton onClick={showMap}>
                                 <Icon type="environment" style={{ fontSize: "1.5rem", color: "#FFD30A" }} theme="filled" />
                             </TextButton>
@@ -57,39 +63,37 @@ function InfoTab(props) {
                 </Row>
                 <Row gutter={16}>
                     <Card title="위생정보">
-                        <Descriptions>
-                            <Descriptions.Item>
-                                {storeInfo.sanitary ? 
-                                    <Text mark>위생인증가게</Text>
-                                    :
-                                    <Text disabled>X</Text>
-                                }
-                            </Descriptions.Item>
-                        </Descriptions>
+                        <Row>
+                            {storeInfo.sanitary ? 
+                                <Text mark>위생인증가게</Text>
+                                :
+                                <Text disabled>X</Text>
+                            }
+                        </Row>
                     </Card>
                 </Row>
                 <Row gutter={16}>
                     <Card title="사업자정보">
-                        <Descriptions>
-                            <Descriptions.Item label="사업자명">
-                                {storeInfo.storeOwner.ownerName}
-                            </Descriptions.Item>
-                            <Descriptions.Item label="상호명">
-                                {storeInfo.storeOwner.tradeName}
-                            </Descriptions.Item>
-                            <Descriptions.Item label="사업자등록번호">
-                                {storeInfo.storeOwner.businessRegistrationNumber}
-                            </Descriptions.Item>
-                        </Descriptions>
+                        <Row>
+                            <Col xs={24} sm={12} md={8} style={{ paddingBottom: "0.5rem" }}>
+                                <Text strong>사업자명</Text> &nbsp; {storeInfo.storeOwner.ownerName}
+                            </Col>
+                            <Col xs={24} sm={12} md={8} style={{ paddingBottom: "0.5rem" }}>
+                                <Text strong>상호명</Text> &nbsp; {storeInfo.storeOwner.tradeName}
+                            </Col>
+                            <Col xs={24} sm={12} md={8} style={{ paddingBottom: "0.5rem" }}>
+                                <Text strong>사업자등록번호</Text> &nbsp; {storeInfo.storeOwner.businessRegistrationNumber}
+                            </Col>
+                        </Row>
                     </Card>
                 </Row>
                 <Row gutter={16}>
                     <Card title="원산지정보">
-                        <Descriptions>
-                            <Descriptions.Item>
+                        <Row>
+                            <Col>
                                 원산지정보
-                            </Descriptions.Item>
-                        </Descriptions>
+                            </Col>
+                        </Row>
                     </Card>
                 </Row>
             </div>

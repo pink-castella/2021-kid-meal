@@ -210,13 +210,13 @@ function StorePage(props) {
                     >
                         
                         <Row gutter={[16, 16]}>
-                            <Col lg={10} md={24}>
+                            <Col lg={9} md={24}>
                                 <img 
                                     style={{ height: "150px", width: "150px" }} 
                                     src={store.storeImages} 
                                 />
                             </Col>
-                            <Col lg={14} md={24}>
+                            <Col lg={15} md={24}>
                                 <Row>
                                     <Text strong>별점 {store.ratings}</Text>
                                 </Row>
@@ -249,10 +249,10 @@ function StorePage(props) {
                 <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE} 
                     description={
-                    <div>
+                    <span>
                         가까운 지역 (500m) 안팎에 가맹점이 없습니다. <br />
                         다른 주소를 입력해주세요.
-                    </div>
+                    </span>
                     }
                 >
                     <Button type="primary" onClick={goToEnterAddress}>
@@ -291,11 +291,7 @@ function StorePage(props) {
                     <div>
                         <Empty
                             image={Empty.PRESENTED_IMAGE_SIMPLE} 
-                            description={
-                            <div>
-                                가까운 지역 (500m) 안팎에 가맹점이 없습니다. <br />
-                            </div>
-                            }
+                            description="가까운 지역 (500m) 안팎에 가맹점이 없습니다."
                         />
                     </div>                
                 ) : null}

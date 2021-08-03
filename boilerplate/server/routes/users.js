@@ -256,7 +256,7 @@ router.post('/removeFromCart', auth, (req, res) => {
         { _id: req.user._id },
         { 
             "$pull": {
-                "cart": { "id": req.query.id }
+                "cart": { "productId": req.query.id }
             }
         },
         { new: true },
@@ -290,17 +290,33 @@ router.post('/successBuy', auth, (req, res) => {
 
     // 1. User Collection 안에 History 필드 안에 간단한 결제 정보 넣어주기
     req.body.cartDetail.forEach((item) => {
-        history.push({
-            dateOfPurchase: Date.now(),
-            name: item.title,
-            storeId: item.storeId,
-            productId: item.productId,
-            price: item.price,
-            quantity: item.quantity,
-            paymentId: req.body.paymentData.paymentId,
-            expiredDate: Date.now()+86400000*31,
-            used: 0,
-        })
+        if (item.quantity > 1) {
+            for (let i = 0; i < item.quantity; i++) {
+                history.push({
+                    dateOfPurchase: Date.now(),
+                    name: item.title,
+                    storeId: item.storeId,
+                    productId: item.productId,
+                    price: item.price,
+                    quantity: 1,
+                    paymentId: req.body.paymentData.paymentId,
+                    expiredDate: Date.now()+86400000*31,
+                    used: 0,
+                })
+            }
+        } else {
+            history.push({
+                dateOfPurchase: Date.now(),
+                name: item.title,
+                storeId: item.storeId,
+                productId: item.productId,
+                price: item.price,
+                quantity: 1,
+                paymentId: req.body.paymentData.paymentId,
+                expiredDate: Date.now()+86400000*31,
+                used: 0,
+            })
+        }
     })
 
     // 2. Payment Collection 안에 자세한 결제 정보들 넣어주기
@@ -364,7 +380,7 @@ router.post('/successBuy', auth, (req, res) => {
 /*상품 사용 완료*/
 router.post('/successUse', auth, (req, res) => {
     User.findOneAndUpdate(
-        { _id: req.user._id, "history.productId": req.body.id },
+        { _id: req.user._id, "history._id": req.body.id },
         {
             $set: { "history.used": Date.now() } 
         },

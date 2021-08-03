@@ -1,7 +1,7 @@
 /* global kakao */
 import React, { useState, useEffect, useRef } from 'react';
 import DaumPostcode from 'react-daum-postcode';
-import { Input, Button } from 'antd';
+import { Input } from 'antd';
 import styled from 'styled-components';
 
 function Postcode(props) {
@@ -92,11 +92,24 @@ function Postcode(props) {
         -webkit-tap-highlight-color: transparent;
     `;
 
+    const SearchButton = styled.button`
+        background-color: #FFD30A;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        border-radius: 0px 4px 4px 0px;
+        border: none;
+        cursor: pointer;
+        font-weight: 700;
+        &:hover {
+            color: white;
+        }
+    `;
+
     return (
         <React.Fragment>
             <SearchWrapper>
-                <Input style={{ width: '60%' }} value="아이가 식사를 할 위치를 입력해주세요!" onClick={handleSearch} />
-                <Button type="primary" onClick={handleSearch}>검색</Button>
+                <Input style={{ width: '60%', borderRadius: "4px 0 0 4px" }} value="아이가 식사를 할 위치를 입력해주세요!" onClick={handleSearch} />
+                <SearchButton onClick={handleSearch}>검색</SearchButton>
             </SearchWrapper>
             {isOpen && 
                 <div>

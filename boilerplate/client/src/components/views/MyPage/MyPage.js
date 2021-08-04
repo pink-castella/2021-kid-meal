@@ -10,7 +10,7 @@ const { TabPane } = Tabs;
 function MyPage(props) {
 
     const [historyInfo, setHistoryInfo] = useState([])
-    /*
+    
     useEffect(() => {
         let historyList = []
 
@@ -27,9 +27,10 @@ function MyPage(props) {
                 setHistoryInfo(historyList)
             }    
         }
-    }, [props.user.userData]) */
+    }, [props.user.userData]) 
 
 //---------------------------------------------------
+/*
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -48,16 +49,16 @@ function MyPage(props) {
         
     }, [props.user.userData])
 
-
+*/
     //--------------------
     const callback = (key) => {
         console.log(key);
       }
-      //<ProductCard history={historyInfo} />
+      //<ProductCard history={} />
     return (
         <Tabs defaultActiveKey="1" onChange={callback}>
             <TabPane tab="사용 가능" key="1">
-               <ProductCard history={props.user.cartDetail}/>
+               <ProductCard history={historyInfo}/>
             </TabPane>
             <TabPane tab="사용 완료" key="2">
             Content of Tab Pane 2

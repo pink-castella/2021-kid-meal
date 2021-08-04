@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { useDispatch } from 'react-redux';
 import { getCartItems, removeCartItem } from '../../../_actions/user_actions';
 import UserCardBlock from './Sections/UserCardBlock'
-import { Empty } from 'antd';
-import axios from 'axios'
+import { Empty, Modal, Button, Form, Input } from 'antd';
 
 function CartPage(props) {   
 
@@ -29,6 +28,22 @@ function CartPage(props) {
         
     }, [props.user.userData])
 
+    const formatNumber = (value) => {   //  2000 -> '2,000'
+        value += '';
+        const list = value.split('.');
+        const prefix = list[0].charAt(0) === '-' ? '-' : '';
+        let num = prefix ? list[0].slice(1) : list[0];
+        let result = '';
+        while (num.length > 3) {
+          result = `,${num.slice(-3)}${result}`;
+          num = num.slice(0, num.length - 3);
+        }
+        if (num) {
+          result = num + result;
+        }
+        return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
+      }
+
 
     const calculateTotal = (cartDetail) => {
         let total = 0;
@@ -37,7 +52,7 @@ function CartPage(props) {
             total += parseInt(item.price, 10)* item.quantity
         })
         setTotal(total)
-        setShowTotal(true)                 
+        setShowTotal(true)
     }
 
     let removeFromCart = (productId) =>{
@@ -47,6 +62,67 @@ function CartPage(props) {
                     setShowTotal(false)            // 가격 표시X
                 }
             })
+    }
+    const [Modal2Visible, setModal2Visible] = useState(false)
+    const [Loading, setLoading] = useState(false)
+    
+    const handleOk = () => {
+        console.log('확인')
+        setLoading(true)
+        setTimeout(() => {
+            setModal2Visible(false)
+        }, 3000);
+    };
+    
+    const handleCancel = () => {
+        //setState({ visible: false });
+        setModal2Visible(false)
+      };
+
+    const [Title, setTitle] = useState("")
+    const [Phone, setPhone] = useState('')
+    const [CheckPhone, setCheckPhone] = useState(false)
+
+    const titleChangeHandler = (event) => {
+        setTitle(event.currentTarget.value)
+    }
+
+    const numberChangeHandler = (event) => {
+        setPhone(event.currentTarget.value)
+    }
+
+    const checkPhonenumber = (e) => {
+        // 숫자만 입력 시
+        // var regExp = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/
+        
+        var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/
+        
+        if(regExp.test(e.target.value)){
+            setCheckPhone(true)
+        }
+    }
+
+    
+    const submitHandler = (e) => {
+        e.preventDefault();        // 확인 버튼 누를 때 페이지 refresh 되는 것 방지
+
+        if(!Title || !Phone){
+            return alert(" 모든 값을 넣어주셔야 합니다.")
+        }
+        else{
+            if(!CheckPhone){
+                return alert(" 올바른 휴대폰 번호를 입력해주세요.")
+            }
+            else{
+                console.log('성공')
+                console.log('이름: ', Title)
+                console.log('번호: ', Phone)
+                setLoading(true)
+                setTimeout(() => {
+                    setModal2Visible(false)
+                }, 2000);
+                    }
+        }
     }
 
     return (
@@ -68,10 +144,44 @@ function CartPage(props) {
                 </>
             }
 
-            {/* <KakaoPay 
-                    total = {Total}
-                    cart = {props.user.cartDetail}
-                />*/}
+             <React.Fragment>
+                <div>
+                    <Button type="primary" onClick={ () => setModal2Visible(true)}>
+                        주문하기
+                    </Button>
+                    <Modal
+                        title="주문자 정보 입력하기"
+                        centered
+                        visible={Modal2Visible}
+                        onOk={() =>setModal2Visible(false)}
+                        onCancel={() =>setModal2Visible(false)}
+                        footer={[
+                            <Button key="back" onClick={handleCancel}>
+                                Return
+                            </Button>,
+                            
+                            <Button key="submit" loading={Loading} type="primary" onClick={submitHandler}>
+                                결제하기
+                            </Button>
+                        ]}
+                    >   
+                        <h2>주문 금액: $ {Total} </h2>
+                        <p>some contents...</p>
+                        <p>some contents...</p>
+                        <Form >
+                            <label>이름</label>
+                            <Input onChange={titleChangeHandler} value={Title}/>
+                            
+                            <label>휴대폰 번호</label>
+                            <Input type='text' onChange={numberChangeHandler} onBlur={checkPhonenumber}
+                                value={Phone} placeholder='01x-xxxx-xxxx' />
+                            <br />
+                            <br />
+                        </Form>
+
+                    </Modal>
+                </div>
+            </React.Fragment>
 
         </div>
     )

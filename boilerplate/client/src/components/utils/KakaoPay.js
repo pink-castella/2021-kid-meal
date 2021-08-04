@@ -1,8 +1,9 @@
+/*
 import jQuery from "jquery";
 window.$ = window.jQuery = jQuery;
 import React from 'react'
 import axios from 'axios'
-
+/*
 function KakaoPay(props) {
     const requestPay = () => {
         const { IMP } = window;
@@ -10,12 +11,13 @@ function KakaoPay(props) {
 
         // IMP.request_pay(param, callback) 호출
         IMP.request_pay({ // param
-          pg: "html5_inicis",
+          pg: "kakaopay",
           pay_method: "card",
-          merchant_uid: `mid_${new Date().getTime()}`,
+          merchant_uid: `mid_${new Date().getTime()}`,  // 필수
           name: "노르웨이 회전 의자",
           amount: props.total,
           buyer_email: props.user.userData.email,
+          buyer_tel: "01000000000"
           cartDetail: { title, storeId, productId, price, quantity }, 
           paymentData: { paymentId }
         }, rsp => { // callback
@@ -45,3 +47,4 @@ function KakaoPay(props) {
 }
 
 export default KakaoPay
+*/

@@ -312,7 +312,8 @@ router.post('/successBuy', auth, (req, res) => {
                     productId: item._id,
                     price: item.price,
                     quantity: 1,
-                    paymentId: req.body.paymentData.paymentId,
+                    paymentId: req.body.paymentData.id,
+                    mid: req.body.paymentData.mid,
                     expiredDate: Date.now()+86400000*31,
                     used: 0,
                 })                
@@ -325,7 +326,8 @@ router.post('/successBuy', auth, (req, res) => {
                 productId: item._id,
                 price: item.price,
                 quantity: 1,
-                paymentId: req.body.paymentData.paymentId,
+                paymentId: req.body.paymentData.id,
+                mid: req.body.paymentData.mid,
                 expiredDate: Date.now()+86400000*31,
                 used: 0,
             })        
@@ -392,7 +394,7 @@ router.post('/successBuy', auth, (req, res) => {
 /*상품 사용 완료*/
 router.post('/successUse', auth, (req, res) => {
     User.findOneAndUpdate(
-        { _id: req.user._id, "history._id": req.body.id },
+        { _id: req.user._id, "history.id": req.body.id },
         {
             $set: { "history.used": Date.now() } 
         },

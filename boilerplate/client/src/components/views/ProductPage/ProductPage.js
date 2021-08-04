@@ -94,7 +94,7 @@ function ProductPage(props) {
                         <div>
                             <img src={storeInfo.storeImages} style={{ height: "100px", width: "100px" }} />
                         </div>
-                        <div style={{ paddingLeft: "1rem"}}>
+                        <div style={{ paddingLeft: "1rem" }}>
                             <div>
                                 <Text strong>별점 </Text>{parseFloat(storeInfo.ratings)}
                             </div>

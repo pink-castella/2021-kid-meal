@@ -206,10 +206,13 @@ export function removeCartItem(productId){
 }
 
 
-export function buyCartItem(imp_id, merchant_id) {
+export function buyCartItem(imp_id, merchant_id, cartDetail) {
     let body = {
-        imp_uid: imp_id,
-        merchant_uid: merchant_id
+        cartDetail: cartDetail,
+        paymentData: {
+            id: imp_id,
+            mid: merchant_id
+        }
     }
     
     const request = axios.post(`/api/users/successBuy`, body)

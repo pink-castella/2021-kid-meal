@@ -26,14 +26,14 @@ function KakaoPay(props) {
             buyer_email: props.user.userData.email,
             buyer_name: props.name,
             buyer_tel: props.phone,
-            name: ` ${props.user.cartDetail[0].title} 포함 ${props.user.cartDetail.length}건`,
-            cartDetail: props.user.cartDetail
+            name: ` ${props.user.cartDetail[0].title} 포함 ${props.user.cartDetail.length}건`
+            //cartDetail: props.user.cartDetail
         }
 
         const callback = (response) => {
             console.log('>>>response: ', response)
             if (response.success) {
-                dispatch(buyCartItem(response.imp_uid, response.merchant_uid))       
+                dispatch(buyCartItem(response.imp_uid, response.merchant_uid, props.user.cartDetail))       
                 console.log('결제 성공');
                 var msg = '결제가 완료되었습니다.';
                 msg += '고유ID : ' + response.imp_uid;
@@ -41,6 +41,7 @@ function KakaoPay(props) {
                 msg += '결제 금액 : ' + response.paid_amount;
                 msg += '카드 승인번호 : ' + response.apply_num;
                 console.log(msg)
+                document.location.href = "/mypage"
             } else {
               alert(`!! 결제 실패: ${response.error_msg}`);
             }

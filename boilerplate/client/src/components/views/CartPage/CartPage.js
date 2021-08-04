@@ -171,8 +171,8 @@ function CartPage(props) {
                         ]}
                     >   
                         <h2>주문 금액: $ {Total} </h2>
-                        <p> .. </p>
-                        <p>some contents...</p>
+                        <p></p>
+                        <p></p>
                         <Form onSubmit={submitHandler}>
                             <label>이름</label>
                             <Input onChange={titleChangeHandler} value={Name}/>

@@ -84,6 +84,14 @@ function MenuTab(props) {
         setVisible(0)
     }
 
+    const EllipsisText = styled.div`
+        overflow: scroll;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1; /* number of lines to show */
+        -webkit-box-orient: vertical;
+    `;
+
     const showTopFour = topFourItems && topFourItems.map((product, index) => {
         return (
             product &&
@@ -94,7 +102,7 @@ function MenuTab(props) {
                         onClick={() => showDetail((product._id).toString())} 
                         key={product._id} 
                     >                            
-                        <Text strong>{product.title}</Text>
+                        <EllipsisText>{product.title}</EllipsisText>
                         <div>{product.price}</div>
                     </Card>
                 </Col>
@@ -156,6 +164,7 @@ function MenuTab(props) {
             <Row gutter={16}>
                 {showTopFour}
             </Row>
+            <br />
             <Collapse defaultActiveKey={['1']}>
                 <Panel header="메인 메뉴" key="1">
                     {renderCards("main")}

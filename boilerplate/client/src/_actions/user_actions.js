@@ -12,7 +12,8 @@ import {
     REMOVE_FAVORITE,
     ADD_TO_CART,
     GET_CART_ITEMS,
-    REMOVE_CART_ITEM
+    REMOVE_CART_ITEM,
+    BUY_CART_ITEMS
 } from './types';
 import { USER_SERVER } from '../components/Config.js';
 
@@ -200,6 +201,34 @@ export function removeCartItem(productId){
 
     return {
         type: REMOVE_CART_ITEM,
+        payload: request
+    }
+}
+
+
+export function buyCartItem(imp_id, merchant_id) {
+    let body = {
+        imp_uid: imp_id,
+        merchant_uid: merchant_id
+    }
+    
+    const request = axios.post(`/api/users/successBuy`, body)
+        .then(response => {
+            // 가맹점 서버 결제 API 성공시 로직
+            switch(response.data.status) {
+                case "vbankIssued":
+                // 가상계좌 발급 시 로직
+                console.log('action 가상 계좌 발급 성공')
+                break;
+                case "success":
+                // 결제 성공 시 로직
+                console.log('action 결제 성공')
+                break;
+            }
+        })
+
+    return {
+        type: BUY_CART_ITEMS,
         payload: request
     }
 }

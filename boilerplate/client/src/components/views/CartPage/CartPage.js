@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { getCartItems, removeCartItem } from '../../../_actions/user_actions';
 import UserCardBlock from './Sections/UserCardBlock'
 import { Empty, Modal, Button, Form, Input } from 'antd';
+import KakaoPay from '../../utils/KakaoPay';
 
 function CartPage(props) {   
 
@@ -10,13 +11,21 @@ function CartPage(props) {
 
     const [Total, setTotal] = useState(0)
     const [ShowTotal, setShowTotal] = useState(false)       // 가격 표시
+    const [Modal2Visible, setModal2Visible] = useState(false)
+
+    const [Loading, setLoading] = useState(false)
+    const [InputSave, setInputSave] = useState(false)
+
+    const [Name, setName] = useState("")
+    const [Phone, setPhone] = useState('')
+    const [CheckPhone, setCheckPhone] = useState(false)
 
     useEffect(() => {
         
         let cartItems=[]
 
         if(props.user.userData && props.user.userData.cart){
-
+            console.log('props.user.userData.cart')
             if(props.user.userData.cart.length >0){
                 props.user.userData.cart.forEach(item => {
                     cartItems.push(item.productId)                 // cartItems은 cart 객체에 담긴 요소들의 id를 담는 배열 
@@ -63,8 +72,7 @@ function CartPage(props) {
                 }
             })
     }
-    const [Modal2Visible, setModal2Visible] = useState(false)
-    const [Loading, setLoading] = useState(false)
+    
     
     const handleOk = () => {
         console.log('확인')
@@ -79,12 +87,10 @@ function CartPage(props) {
         setModal2Visible(false)
       };
 
-    const [Title, setTitle] = useState("")
-    const [Phone, setPhone] = useState('')
-    const [CheckPhone, setCheckPhone] = useState(false)
+    
 
     const titleChangeHandler = (event) => {
-        setTitle(event.currentTarget.value)
+        setName(event.currentTarget.value)
     }
 
     const numberChangeHandler = (event) => {
@@ -106,7 +112,7 @@ function CartPage(props) {
     const submitHandler = (e) => {
         e.preventDefault();        // 확인 버튼 누를 때 페이지 refresh 되는 것 방지
 
-        if(!Title || !Phone){
+        if(!Name || !Phone){
             return alert(" 모든 값을 넣어주셔야 합니다.")
         }
         else{
@@ -114,14 +120,9 @@ function CartPage(props) {
                 return alert(" 올바른 휴대폰 번호를 입력해주세요.")
             }
             else{
-                console.log('성공')
-                console.log('이름: ', Title)
-                console.log('번호: ', Phone)
                 setLoading(true)
-                setTimeout(() => {
-                    setModal2Visible(false)
-                }, 2000);
-                    }
+                setInputSave(true)
+            }
         }
     }
 
@@ -160,23 +161,30 @@ function CartPage(props) {
                                 Return
                             </Button>,
                             
-                            <Button key="submit" loading={Loading} type="primary" onClick={submitHandler}>
-                                결제하기
-                            </Button>
+                            <KakaoPay
+                                isSave={InputSave}
+                                loading={Loading} 
+                                user={props.user}
+                                total ={Total}
+                                name = {Name}
+                                phone = {Phone} />
                         ]}
                     >   
                         <h2>주문 금액: $ {Total} </h2>
+                        <p> .. </p>
                         <p>some contents...</p>
-                        <p>some contents...</p>
-                        <Form >
+                        <Form onSubmit={submitHandler}>
                             <label>이름</label>
-                            <Input onChange={titleChangeHandler} value={Title}/>
+                            <Input onChange={titleChangeHandler} value={Name}/>
                             
                             <label>휴대폰 번호</label>
                             <Input type='text' onChange={numberChangeHandler} onBlur={checkPhonenumber}
                                 value={Phone} placeholder='01x-xxxx-xxxx' />
                             <br />
                             <br />
+                            <Button  htmlType="submit">
+                                주문 정보 저장
+                            </Button>
                         </Form>
 
                     </Modal>
@@ -187,4 +195,4 @@ function CartPage(props) {
     )
 }
 
-export default CartPage
+export default React.memo(CartPage)

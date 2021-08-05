@@ -12,7 +12,9 @@ import {
     REMOVE_FAVORITE,
     ADD_TO_CART,
     GET_CART_ITEMS,
-    REMOVE_CART_ITEM
+    REMOVE_CART_ITEM,
+    BUY_CART_ITEMS,
+    GET_PRODUCT_IMAGE
 } from './types';
 import { USER_SERVER } from '../components/Config.js';
 
@@ -203,3 +205,43 @@ export function removeCartItem(productId){
         payload: request
     }
 }
+
+
+export function buyCartItem(imp_id, merchant_id, cartDetail) {
+    let body = {
+        cartDetail: cartDetail,
+        paymentData: {
+            id: imp_id,
+            mid: merchant_id
+        }
+    }
+    
+    const request = axios.post(`/api/users/successBuy`, body)
+        .then(response => {
+            // 가맹점 서버 결제 API 성공시 로직
+            switch(response.data.status) {
+                case "vbankIssued":
+                // 가상계좌 발급 시 로직
+                break;
+                case "success":
+                // 결제 성공 시 로직
+                break;
+            }
+        })
+
+    return {
+        type: BUY_CART_ITEMS,
+        payload: request
+    }
+}
+/*
+// 사진을 가져온다.
+export function getProductImage(historyItem) {  
+    const request = axios.get(`/api/products/products_by_id?id=${historyItem}&type=array`)     // 2. 라우터로 보냄
+        .then(response => response.data)
+
+    return {
+        type: GET_PRODUCT_IMAGE,
+        payload: request
+    }
+}*/

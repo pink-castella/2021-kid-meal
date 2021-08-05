@@ -6,6 +6,7 @@ function UserCardBlock(props) {
         props.products && props.products.map((product, index) => (
             <tr key={index}>
                 <td>
+                    // 고쳐야 함 !
                     {product.store.StoreName}
                 </td>
                 <td>

@@ -386,7 +386,7 @@ router.post('/successUse', auth, (req, res) => {
     User.findOneAndUpdate(
         { _id: req.user._id, "history.id": req.body.id },
         {
-            $set: { "history.used": Date.now() } 
+            $set: { "history.$.used": Date.now() } 
         },
         { new: true },
         (err, userInfo) => { 

@@ -11,7 +11,9 @@ import {
     REMOVE_FAVORITE,
     ADD_TO_CART,
     GET_CART_ITEMS,
-    REMOVE_CART_ITEM
+    REMOVE_CART_ITEM,
+    BUY_CART_ITEMS,
+    GET_PRODUCT_IMAGE
 } from '../_actions/types';
  
 
@@ -85,6 +87,17 @@ export default function(state={}, action){
                         cart: action.payload.cart
                     }
                 }
+
+        case BUY_CART_ITEMS:{
+            return {...state, 
+                payment: action.payload }
+            }
+        case GET_PRODUCT_IMAGE: {
+            return {
+                ...state,
+                Product: action.payload
+            }
+        }
         default:
             return state;
     }

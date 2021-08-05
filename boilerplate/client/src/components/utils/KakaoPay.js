@@ -1,39 +1,63 @@
 import jQuery from "jquery";
-window.$ = window.jQuery = jQuery;
-
-
 import React from 'react'
+import { useDispatch } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { buyCartItem } from "../../_actions/user_actions";
 
 function KakaoPay(props) {
-    const requestPay = () => {
-        const IMP = window.IMP; // 생략해도 괜찮습니다.
-        IMP.init("TC0ONETIME");
+    // window.$ = window.jQuery = jQuery;
 
-        // IMP.request_pay(param, callback) 호출
-        IMP.request_pay({ // param
-          pg: "html5_inicis",
-          pay_method: "card",
-          merchant_uid: "ORD20180131-0000011",
-          name: "노르웨이 회전 의자",
-          amount: props.total,
-          buyer_email: "gildong@gmail.com",
-          buyer_name: "홍길동",
-          buyer_tel: "010-4242-4242",
-          // buyer_addr: "서울특별시 강남구 신사동",
-          // buyer_postcode: "01181"
-        }, rsp => { // callback
-          if (rsp.success) {
-            // 결제 성공 시 로직
-          } else {
-            // 결제 실패 시 로직
-          }
-        });
+    const saveCheck = () => {
+        return alert(' 먼저 주문자 정보를 저장해주세요.')
+    } 
+
+    const dispatch = useDispatch()
+
+    const requestPay = () => {
+        // const { IMP } = window.IMP;
+        let IMP = window.IMP;
+        IMP.init("imp57663893");
+
+        const data = { // param
+            pg: "kakaopay",
+            pay_method: "card",
+            merchant_uid: `mid_${new Date().getTime()}`,  // 필수
+            amount: props.total,
+            buyer_email: props.user.userData.email,
+            buyer_name: props.name,
+            buyer_tel: props.phone,
+            name: ` ${props.user.cartDetail[0].title} 포함 ${props.user.cartDetail.length}건`
+            //cartDetail: props.user.cartDetail
+        }
+
+        const callback = (response) => {
+            console.log('>>>response: ', response)
+            if (response.success) {
+                dispatch(buyCartItem(response.imp_uid, response.merchant_uid, props.user.cartDetail))       
+                console.log('결제 성공');
+                var msg = '결제가 완료되었습니다.';
+                msg += '고유ID : ' + response.imp_uid;
+                msg += '상점 거래ID : ' + response.merchant_uid;
+                msg += '결제 금액 : ' + response.paid_amount;
+                msg += '카드 승인번호 : ' + response.apply_num;
+                console.log(msg)
+                document.location.href = "/mypage"
+            } else {
+              alert(`!! 결제 실패: ${response.error_msg}`);
+            }
+        }
+
+        IMP.request_pay(data, callback);
       }
 
     return (
-      <button onClick={requestPay}>결제하기</button>
+       
+        props.isSave ?
+        <button loading={props.loading} type="primary" onClick={requestPay}>결제하기</button>
+        :
+        <button loading={props.loading} type="primary" onClick={saveCheck}>결제하기</button>
     )
 
 }
 
-export default KakaoPay
+export default withRouter(KakaoPay)

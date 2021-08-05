@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Container } from '../../style/styledDiv';
 import { Tabs } from 'antd';
 import ProductCard from './Sections/ProductCard';
 import axios from 'axios';
@@ -8,7 +9,6 @@ import { getCartItems } from '../../../_actions/user_actions';
 const { TabPane } = Tabs;
 
 function MyPage(props) {
-
     const [historyInfo, setHistoryInfo] = useState([])
     
     useEffect(() => {
@@ -56,14 +56,16 @@ function MyPage(props) {
       }
       //<ProductCard history={} />
     return (
-        <Tabs defaultActiveKey="1" onChange={callback}>
-            <TabPane tab="사용 가능" key="1">
-               <ProductCard history={historyInfo}/>
-            </TabPane>
-            <TabPane tab="사용 완료" key="2">
-            Content of Tab Pane 2
-            </TabPane>
-        </Tabs>
+        <Container>
+            <Tabs defaultActiveKey="1" onChange={callback}>
+                <TabPane tab="사용 가능" key="1">
+                <ProductCard history={historyInfo}/>
+                </TabPane>
+                <TabPane tab="사용 완료" key="2">
+                Content of Tab Pane 2
+                </TabPane>
+            </Tabs>
+        </Container>
     )
 }
 

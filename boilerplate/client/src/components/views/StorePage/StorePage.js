@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Col, Card, Row, Typography, Empty, Button } from 'antd';
-import styled from 'styled-components';
 import Radiobox from './Sections/RadioBox';
 import SearchFeature from './Sections/SearchFeature';
 import { category } from './Sections/Data';
 import SortFeature from './Sections/SortFeature';
+import { Container, EllipsisText } from '../../style/styledDiv';
 
 const { Text } = Typography;
 
@@ -192,14 +192,6 @@ function StorePage(props) {
         setSort(!sort)
     }
 
-    const EllipsisText = styled.div`
-        overflow: scroll;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 1; /* number of lines to show */
-        -webkit-box-orient: vertical;
-    `;
-
     const renderCards = stores && stores.map((store, index) => {
         return (
             <Col sm={12} xs={24} key={index}>
@@ -244,59 +236,61 @@ function StorePage(props) {
     })
 
     return (
-        isEmpty && (props.user.userData && !props.user.userData.isAuth) ? (
-            <div>
-                <Empty
-                    image={Empty.PRESENTED_IMAGE_SIMPLE} 
-                    description={
-                    <span>
-                        가까운 지역 (500m) 안팎에 가맹점이 없습니다. <br />
-                        다른 주소를 입력해주세요.
-                    </span>
-                    }
-                >
-                    <Button type="primary" onClick={goToEnterAddress}>
-                        주소 입력하러가기
-                    </Button>
-                </Empty>
-            </div>                   
-        ) : (
-            <div>
-                {/* Filter */}
-                <Row gutter={[16, 16]}>
-                    {/* RadioBox */}
-                    <Col>
-                        <Radiobox list={category} handleFilters={selected => handleFilters(selected)} />
-                    </Col>
-                </Row>
+        <Container>
+            {isEmpty && (props.user.userData && !props.user.userData.isAuth) ? (
+                <div>
+                    <Empty
+                        image={Empty.PRESENTED_IMAGE_SIMPLE} 
+                        description={
+                        <span>
+                            가까운 지역 (500m) 안팎에 가맹점이 없습니다. <br />
+                            다른 주소를 입력해주세요.
+                        </span>
+                        }
+                    >
+                        <Button type="primary" onClick={goToEnterAddress}>
+                            주소 입력하러가기
+                        </Button>
+                    </Empty>
+                </div>                   
+            ) : (
+                <div>
+                    {/* Filter */}
+                    <Row gutter={[16, 16]}>
+                        {/* RadioBox */}
+                        <Col>
+                            <Radiobox list={category} handleFilters={selected => handleFilters(selected)} />
+                        </Col>
+                    </Row>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem auto' }}>
-                    {/* Sort */}
-                    <SortFeature
-                        refreshFunction={updateSortTerm}
-                    />
-
-                    {/* Search */}
-                    <SearchFeature 
-                        refreshFunction={updateSearchTerm}
-                    />
-                </div>
-
-                {/* Cards */}
-                <Row gutter={[16, 16]}>
-                    {renderCards}
-                </Row>
-
-                {isEmpty ? (
-                    <div>
-                        <Empty
-                            image={Empty.PRESENTED_IMAGE_SIMPLE} 
-                            description="가까운 지역 (500m) 안팎에 가맹점이 없습니다."
+                    <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem auto' }}>
+                        {/* Sort */}
+                        <SortFeature
+                            refreshFunction={updateSortTerm}
                         />
-                    </div>                
-                ) : null}
-            </div>
-        )
+
+                        {/* Search */}
+                        <SearchFeature 
+                            refreshFunction={updateSearchTerm}
+                        />
+                    </div>
+
+                    {/* Cards */}
+                    <Row gutter={[16, 16]}>
+                        {renderCards}
+                    </Row>
+
+                    {isEmpty ? (
+                        <div>
+                            <Empty
+                                image={Empty.PRESENTED_IMAGE_SIMPLE} 
+                                description="가까운 지역 (500m) 안팎에 가맹점이 없습니다."
+                            />
+                        </div>                
+                    ) : null}
+                </div>
+            )}
+        </Container>
     )
 }
 

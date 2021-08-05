@@ -22,18 +22,17 @@ function App() {
   return (
     <Suspense fallback={(<div>Loading...</div>)}>
       <NavBar />
-        <Switch>
-          <Route exact path="/" component={Auth(LandingPage, false)} />
-          <Route exact path="/login" component={Auth(LoginPage, false)} />
-          <Route exact path="/register" component={Auth(RegisterPage, false)} />
-          <Route exact path="/store" component={Auth(StorePage, null)} />
-          <Route exact path="/store/:storeId" component={Auth(ProductPage, null)} />
-          <Route exact path="/address" component={Auth(AddressPage, true)} />
-          <Route exact path="/favorite" component={Auth(FavoritePage, true)} />
-          <Route exact path="/cart" component={Auth(CartPage, true)} />
-          <Route exact path="/mypage" component={Auth(MyPage, true)} /> 
-        </Switch>
-      <Footer />
+      <Switch>
+        <Route exact path="/" component={Auth(LandingPage, false)} />
+        <Route exact path="/login" component={Auth(LoginPage, false)} />
+        <Route exact path="/register" component={Auth(RegisterPage, false)} />
+        <Route exact path="/store" component={Auth(StorePage, null)} />
+        <Route exact path="/store/:storeId" component={Auth(ProductPage, null)} />
+        <Route exact path="/address" component={Auth(AddressPage, true)} />
+        <Route exact path="/favorite" component={Auth(FavoritePage, true)} />
+        <Route exact path="/cart" component={Auth(CartPage, true)} />
+        <Route exact path="/mypage" component={Auth(MyPage, true)} /> 
+      </Switch>
     </Suspense>
   );
 }

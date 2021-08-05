@@ -75,7 +75,7 @@ function LandingPage(props) {
         font-size: 2rem;
         font-weight: 900;
         color: black;
-        padding-bottom: 1rem;
+        padding-top: 1rem;
     `;
 
     const SubTitle = styled.div`
@@ -102,10 +102,10 @@ function LandingPage(props) {
             </Background>
             <Container>
                 <div>
-                    <TitleLeft>우리 아이 <br /> 밥심(心)</TitleLeft>
                     <SubTitle>
-                        나를 대신해 건강한 밥 한끼를 챙겨줄 사람이 없을까?
+                        나를 대신해 건강한 밥 한끼를 챙겨줄,
                     </SubTitle>
+                    <TitleLeft>우리 아이 <br /> 밥심(心)</TitleLeft>
                     <br />
                 </div>
                 <div style={{ display: "flex", alignItems: "start" }}>

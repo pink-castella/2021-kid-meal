@@ -4,6 +4,8 @@ import { getCartItems, removeCartItem } from '../../../_actions/user_actions';
 import UserCardBlock from './Sections/UserCardBlock'
 import { Empty } from 'antd';
 import axios from 'axios'
+import { Container } from '../../style/styledDiv';
+
 
 function CartPage(props) {   
 
@@ -50,7 +52,7 @@ function CartPage(props) {
     }
 
     return (
-        <div style={{ width: '85%', margin: '3rem auto' }}>
+        <Container>
             <h1>My Cart</h1>
 
             <div>
@@ -68,7 +70,7 @@ function CartPage(props) {
                 </>
             }
 
-        </div>
+        </Container>
     )
 }
 

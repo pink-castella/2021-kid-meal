@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { removeFavorite } from '../../../_actions/user_actions';
 import { Col, Card, Row, Typography, Empty, Button, Icon } from 'antd';
-import styled from 'styled-components';
+import { Container, EllipsisText } from '../../style/styledDiv';
+import { TextButton } from '../../style/styledButton';
 
 const { Title, Text } = Typography
 
@@ -44,20 +45,6 @@ function FavoritePage(props) {
     const removeFavoriteItem = (favoriteId) => {
         dispatch(removeFavorite(favoriteId))
     }
-    
-    const TextButton = styled.button`
-        background: none;
-        border: none;
-        cursor: pointer;
-    `
-
-    const EllipsisText = styled.div`
-        overflow: scroll;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 1; /* number of lines to show */
-        -webkit-box-orient: vertical;
-    `;
 
     const renderCards = stores.map((store, index) => {
         return (
@@ -103,31 +90,33 @@ function FavoritePage(props) {
     })
 
     return (
-        isEmpty ? (
-            <div>
-                <Empty
-                    image={Empty.PRESENTED_IMAGE_SIMPLE} 
-                    description={
-                    <div>
-                        찜한 가게가 없습니다.
-                    </div>
-                    }
-                >
-                    <Button type="primary" onClick={() => window.location.href='/store' }>
-                        가게 찜하러 가기
-                    </Button>
-                </Empty>
-            </div>
-        ) : (
-            <div>
-                <Title level={3}>찜한 가게 목록</Title>
-                <br />
-                {/* Cards */}
-                <Row gutter={[16, 16]}>
-                    {renderCards}
-                </Row>
-            </div>
-        )
+        <Container>
+            {isEmpty ? (
+                <div>
+                    <Empty
+                        image={Empty.PRESENTED_IMAGE_SIMPLE} 
+                        description={
+                        <div>
+                            찜한 가게가 없습니다.
+                        </div>
+                        }
+                    >
+                        <Button type="primary" onClick={() => window.location.href='/store' }>
+                            가게 찜하러 가기
+                        </Button>
+                    </Empty>
+                </div>
+            ) : (
+                <div>
+                    <Title level={3}>찜한 가게 목록</Title>
+                    <br />
+                    {/* Cards */}
+                    <Row gutter={[16, 16]}>
+                        {renderCards}
+                    </Row>
+                </div>
+            )}
+        </Container>
     )
 }
 

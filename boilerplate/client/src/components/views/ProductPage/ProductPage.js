@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { Col, Card, Row, Typography, Tabs, Icon, Empty } from 'antd';
+import { Card, Row, Typography, Tabs, Icon, Empty } from 'antd';
 import styled from 'styled-components';
 import MenuTab from './Sections/MenuTab';
 import ReviewTab from './Sections/ReviewTab';
 import InfoTab from './Sections/InfoTab';
 import { saveFavorite, removeFavorite } from '../../../_actions/user_actions';
+import { Container } from '../../style/styledDiv';
+import { TextButton } from '../../style/styledButton';
 
 const { Text } = Typography;
 const { TabPane } = Tabs;
@@ -65,19 +67,13 @@ function ProductPage(props) {
         }
     }
 
-    const TextButton = styled.button`
-        background: none;
-        border: none;
-        cursor: pointer;
-    `
-
     const TitleBox = styled.div`
         display: flex;
         justify-content: space-between;  
     `
 
     return (
-        <div>
+        <Container>
             {storeInfo && (
                 <Card
                     title={
@@ -136,7 +132,7 @@ function ProductPage(props) {
                     <InfoTab storeId={storeId} />
                 </TabPane>
             </Tabs>  
-        </div>        
+        </Container>      
     )
 }
 

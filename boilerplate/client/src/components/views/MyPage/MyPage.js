@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Container } from '../../style/styledDiv';
+
 
 function Mypage() {
     const [historyInfo, setHistoryInfo] = useState([])
@@ -22,9 +24,9 @@ function Mypage() {
     }, [props.user.userData])
 
     return (
-        <div>
+        <Container>
             <h1> Mypage </h1>
-        </div>
+        </Container>
     )
 }
 

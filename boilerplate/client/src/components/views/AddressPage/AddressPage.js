@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import Postcode from '../utils/Postcode';
+import Postcode from '../../utils/Postcode';
 import { Typography } from 'antd';
 import { addAddress, removeAddress, updateAddress } from '../../../_actions/user_actions';
 import AddressCard from './Sections/AddressCard';
+import { Container } from '../../style/styledDiv';
 
 const { Title } = Typography;
+
 
 function AddressPage(props) {
     const dispatch = useDispatch();
@@ -21,9 +23,6 @@ function AddressPage(props) {
     const handleCoords = (body) => {
         if (body && body.x && body.y && body.address_name) {
             dispatch(addAddress(body))
-            .then(response => {
-                console.log(response)
-            })
         }
     }
 
@@ -36,7 +35,8 @@ function AddressPage(props) {
     }
 
     return (
-        <React.Fragment>
+        <Container>
+            <br />
             <Postcode handleCoords={body => handleCoords(body)} />
             <Title level={3}>저장된 주소</Title>
             <AddressCard 
@@ -44,7 +44,7 @@ function AddressPage(props) {
                 removeItem={addressId => removeAddressItem(addressId)}
                 updateItem={(addressId, update) => updateAddressItem(addressId, update)}    
             />
-        </React.Fragment>
+        </Container>
     )
 }
 

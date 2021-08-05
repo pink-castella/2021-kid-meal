@@ -107,9 +107,12 @@ function ProductPage(props) {
                                 ) : ( "-" ) 
                                 }
                             </div>
-                            <div style={{ marginTop: "0.25rem" }}>
-                                <Text strong>거리&nbsp;&nbsp;</Text><Text>주소로부터 {parseInt(distance)} m</Text>
-                            </div>
+                            { distance ?
+                                <div style={{ marginTop: "0.25rem" }}>
+                                    <Text strong>거리&nbsp;&nbsp;</Text>
+                                    <Text>주소로부터 {parseInt(distance)} m</Text>
+                                </div>
+                            : null }
                             <div style={{ marginTop: "0.25rem" }}>
                                 <Text strong>설명&nbsp;&nbsp;</Text><Text>{storeInfo.storeDescription}</Text>
                             </div>

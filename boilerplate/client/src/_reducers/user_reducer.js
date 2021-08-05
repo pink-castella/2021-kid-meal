@@ -12,8 +12,7 @@ import {
     ADD_TO_CART,
     GET_CART_ITEMS,
     REMOVE_CART_ITEM,
-    BUY_CART_ITEMS,
-    GET_PRODUCT_IMAGE
+    BUY_CART_ITEMS
 } from '../_actions/types';
  
 
@@ -92,12 +91,6 @@ export default function(state={}, action){
             return {...state, 
                 payment: action.payload }
             }
-        case GET_PRODUCT_IMAGE: {
-            return {
-                ...state,
-                Product: action.payload
-            }
-        }
         default:
             return state;
     }

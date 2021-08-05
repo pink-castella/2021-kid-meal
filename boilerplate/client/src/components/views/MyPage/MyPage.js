@@ -4,12 +4,14 @@ import ProductCard from './Sections/ProductCard';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { getCartItems } from '../../../_actions/user_actions';
+import UsedProductCard from './Sections/UsedProductCard';
 
 const { TabPane } = Tabs;
 
 function MyPage(props) {
 
     const [historyInfo, setHistoryInfo] = useState([])
+    
     
     useEffect(() => {
         let historyList = []
@@ -25,7 +27,7 @@ function MyPage(props) {
                 })
 
                 setHistoryInfo(historyList)
-            }    
+            }   
         }
     }, [props.user.userData]) 
 
@@ -58,10 +60,14 @@ function MyPage(props) {
     return (
         <Tabs defaultActiveKey="1" onChange={callback}>
             <TabPane tab="사용 가능" key="1">
-               <ProductCard history={historyInfo}/>
+               <ProductCard 
+                history={historyInfo}
+                user={props.user.userData}/>
             </TabPane>
             <TabPane tab="사용 완료" key="2">
-            Content of Tab Pane 2
+                <UsedProductCard
+                history={historyInfo}
+                user={props.user.userData}/>
             </TabPane>
         </Tabs>
     )

@@ -1,35 +1,127 @@
 import React, { useEffect, useState } from 'react'
-import { Empty, Col, Card, Row } from 'antd';
+import { Empty, Col, Card, Row, Button, Modal } from 'antd';
 import Meta from 'antd/lib/card/Meta';
+import QrCode from './QrCode';
+import KakaoShareButton from './KakaoShareButton'
+import axios from 'axios';
+import Moment from 'react-moment';
 
 function ProductCard(props) {
-    console.log('왓: ', props.history.length)
     
+    const [History, setHistory] = useState([])
     const [CountCard, setCountCard] = useState(0)
-    useEffect(() => {
-        setCountCard(props.history.length)
-    }, [props.history])
+    const [Detail, setDetail] = useState({})
+   
+    const [StoreInfo, setStoreInfo] = useState([])
+    const [StoreName, setStoreName] = useState('')
     
+    const [ProductInfo, setProductInfo] = useState([])
+    const [Image, setImage] = useState([])  // 상품 사진 저장
+
+    const [Modal2Visible, setModal2Visible] = useState(false)
+    const [Loading, setLoading] = useState(false)
+    
+    useEffect(() => {
+        setHistory(props.history)
+        setCountCard(props.history.length)
+        
+        let storeList= []
+        let productList= []
+        props.history && props.history.forEach(item => {
+
+            let body = {
+                store: item.storeId
+            }
+
+            axios.post(`/api/stores/getStoreInfo`, body)
+                .then(response => {
+                    storeList.push(response.data.storeInfo[0])
+                })
+                .catch(err => alert(err))
+
+            
+            // 사진을 가져온다.
+            axios.get(`/api/products/products_by_id?id=${item.productId}&type=single`)
+                .then(response => {
+                    productList.push(response.data[0])
+                })
+        
+        })
+        setStoreInfo(storeList)
+        setProductInfo(productList)
+
+        
+        // 이미지 저장
+        let imageList = []
+        props.history && props.history.forEach(item => {
+            console.log('>> item: ', item)
+            ProductInfo && ProductInfo.some(info =>{
+                console.log('>> info: ', info)
+                if(item.productId === info._id){
+                    imageList.push(info.image)
+                }
+            })
+        })
+        setImage(imageList)             
+        
+    }, [props.history])
+
+    const handleOk = () => {
+        setLoading(true)
+        setTimeout(() => {
+            setLoading(false)
+            setModal2Visible(false)
+        }, 500);
+    };
+    
+    const handleCancel = () => {
+        setModal2Visible(false)
+    };
+
+    const showDetail = (buyId) => {     // 클릭한 구매건 고유id
+        setModal2Visible(true)
+
+        History.forEach(item => {
+            if(item.id === buyId){
+         // if (Object.values(item).indexOf(buyId) > -1) {
+                setDetail(item)     //클릭한 것의 상품 정보를 Detail에 다 담는다.
+                StoreInfo.some(info => {
+                    if(item.storeId === info._id){
+                        setStoreName(info.storeName)
+                    }
+                })
+            }
+        })
+    }
+
+    const MomentDateChage = (day) => {
+        return <Moment>{day}</Moment>;
+    }
 
     const renderCards = props.history && props.history.map((product, index) => { 
-        
-        /* 큰 화면(lg)일 때 하나는 6size(한 줄에 4개), 
-        제일 작은 화면(xs)일 때 하나는 24size(한 줄에 1개) */
-        console.log('>>> mypage_history: ', product)
-        return <Col lg={6} md={8} xs={24} key={index}> 
-            <Card            
-                cover={<a href={`/product/${product.productId}`}>
-                        <img style={{ width: '100%', maxHeight: '150px'}} 
-                src={product.image}/></a>}
+        console.log('날짜: ', MomentDateChage(product.dateOfPurchase))
+        return(
+            <> { Image &&
+            <Col lg={6} md={8} xs={24} key={index}> 
+                <Card            
+                    cover={<img src={Image[index]} />}
                 >
-                <Meta 
-                    title={product.title}
-                    description={`$${product.price}`}   // 가격
-                />
-            </Card>
-        </Col>
+                    <Meta 
+                        title={product.name}
+                        description={`$${product.price} 결제일: ${product.dateOfPurchase}`}   // 가격
+                    />
+                    <br/>
+                    <br/>
+                    <Button type="primary" onClick={ () => showDetail(product.id)}>
+                        QR 공유하기
+                    </Button>
+                                    
+                </Card>
+            </Col>
+            }
+        </>
+        )
     })
-
 
     return (
         <>
@@ -43,11 +135,42 @@ function ProductCard(props) {
             :
             <>
                 <br />
-                <Empty description={false}/>
+                <Empty description={'결제를 완료한 상품이 없습니다.'}/>
             </>
             }
+
+            { Detail && 
+                <Modal
+                    title="QR 공유하기"
+                    centered
+                    visible={Modal2Visible}
+                    onOk={() =>setModal2Visible(false)}
+                    onCancel={() =>setModal2Visible(false)}
+                    footer={[
+                        <Button key="back" onClick={handleCancel}>
+                            창 닫기
+                        </Button>,
+                        <Button key="download" loading={Loading} type="primary" onClick={handleOk}>
+                            사용 완료
+                        </Button>
+                    ]}
+                > 
+                    <h2> {StoreName} </h2>
+                    <p> {Detail.name} </p>
+                    <p> {Detail.price} 원</p>
+                    <div>
+                        <QrCode id={Detail.id}/>
+                    </div>
+                    <br/>
+                    <div className="layout">
+                        <KakaoShareButton />
+                    </div>
+                    <br/>           
+                </Modal>
+            }           
         </>
     )
 }
 
 export default ProductCard
+

@@ -135,17 +135,10 @@ function CartPage(props) {
             </div>
 
             {ShowTotal ? 
+                <>
                 <div style={{ marginTop: '3rem' }}>
                     <h2>Total Amount: ${Total}</h2>
                 </div>
-                :
-                <>
-                    <br />
-                    <Empty description={false}/>
-                </>
-            }
-
-             <React.Fragment>
                 <div>
                     <Button type="primary" onClick={ () => setModal2Visible(true)}>
                         주문하기
@@ -186,10 +179,15 @@ function CartPage(props) {
                                 주문 정보 저장
                             </Button>
                         </Form>
-
                     </Modal>
                 </div>
-            </React.Fragment>
+                </>
+                :
+                <>
+                    <br />
+                    <Empty description={false}/>
+                </>
+            }
 
         </div>
     )

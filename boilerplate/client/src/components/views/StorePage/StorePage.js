@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Col, Card, Row, Typography, Empty, Button } from 'antd';
 import Radiobox from './Sections/RadioBox';
@@ -195,7 +196,10 @@ function StorePage(props) {
     const renderCards = stores && stores.map((store, index) => {
         return (
             <Col sm={12} xs={24} key={index}>
-                <a href={`/store/${store._id}`}>
+                <Link to={{
+                    pathname: `/store/${store._id}`,
+                    state: { distance: store.distance }
+                }}>
                     <Card
                         title={store.storeName}
                         hoverable
@@ -210,7 +214,11 @@ function StorePage(props) {
                             </Col>
                             <Col lg={15} md={24}>
                                 <Row>
-                                    <Text strong>별점 {store.ratings}</Text>
+                                    <Text strong>별점&nbsp;&nbsp;</Text>
+                                    { store.reviews ? (
+                                        parseFloat(store.reviews.ratings) / store.reviews.count
+                                    ) : ( "-" ) 
+                                    }
                                 </Row>
                                 <Row style={{ marginTop: "0.5rem" }}>
                                     <Text strong>거리</Text>
@@ -230,7 +238,7 @@ function StorePage(props) {
                             </Col>
                         </Row>
                     </Card>
-                </a>
+                </Link>
             </Col>
         );
     })

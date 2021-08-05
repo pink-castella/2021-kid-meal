@@ -38,9 +38,6 @@ const storeSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    ratings: {
-        type: Number
-    },
     storeOwner: {// 사업자 정보
         ownerName: String, 
         tradeName: String, 
@@ -51,7 +48,7 @@ const storeSchema = mongoose.Schema({
         default: 0
     },
     reviews: {
-        type: Array
+        type: Object
     }
 }, { timestamps: true });
 

@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { Store } = require("../models/Store");
-const {Product} = require("../models/Product");
-const { User } = require("../models/User");
 const { auth } = require("../middleware/auth");
 
 
@@ -112,20 +110,33 @@ router.post('/getFavorites', auth, (req, res) => {
 /*리뷰작성*/
 router.post('/addReview', auth, (req, res) => {
     let storeId = req.body.storeId;
-    let ratings = req.body.ratings;
     let reviews = req.body.reviews;
 
     Store.findOneAndUpdate(
         { "_id": storeId },
-        { $push: {
-            ratings: ratings,
-            reviews: {
-                first: reviews.first,
-                second: reviews.second,
-                third: reviews.third,
-                fourth: reviews.fourth,
-                fifth: reviews.fifth
-            }
+        { $inc: {
+            "reviews.count": 1,
+            "reviews.ratings": reviews.ratings,
+
+            "reviews.first.green": reviews.first.green,
+            "reviews.first.yellow": reviews.first.yellow,
+            "reviews.first.orange": reviews.first.orange,
+
+            "reviews.second.green": reviews.second.green,
+            "reviews.second.yellow": reviews.second.yellow,
+            "reviews.second.orange": reviews.second.orange,
+
+            "reviews.third.green": reviews.third.green,
+            "reviews.third.yellow": reviews.third.yellow,
+            "reviews.third.orange": reviews.third.orange,
+
+            "reviews.fourth.green": reviews.fourth.green,
+            "reviews.fourth.yellow": reviews.fourth.yellow,
+            "reviews.fourth.orange": reviews.fourth.orange,
+
+            "reviews.fifth.green": reviews.fifth.green,
+            "reviews.fifth.yellow": reviews.fifth.yellow,
+            "reviews.fifth.orange": reviews.fifth.orange,
         } },
         { new: true },
         (err, storeInfo) => {

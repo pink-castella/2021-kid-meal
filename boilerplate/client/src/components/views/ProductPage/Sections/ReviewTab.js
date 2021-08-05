@@ -1,36 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Typography, Rate, Empty } from 'antd';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const { Title, Text } = Typography;
 
 
-function ReviewTab() {
-    const user = useSelector(state => state.user)
-    const [ratings, setTableRowRatings] = useState(0.0)
-    const [reviews, setTableRowReviews] = useState({})
+function ReviewTab(props) {
+    const [ratings, setRatings] = useState(0.0)
+    const [reviews, setReviews] = useState({})
 
     useEffect(() => {
-        if (user.userData && user.userData.ratings && user.userData.reviews) {
-            setTableRowRatings(user.userData.ratings)
-            setTableRowReviews(user.userData.reviews)
-            alert(user.userData.reviews)
+        let body = { 
+            store: props.storeId
         }
-        else {
-            /* FOR TEST
 
-            setTableRowatings(4.9)
-            setTableRoweviews({ 
-                first: {green: 8, yellow: 7, orange: 0 },
-                second: {green: 7, yellow: 5, orange: 3 },
-                third: {green: 3, yellow: 10, orange: 2 },
-                fourth: {green: 10, yellow: 5, orange: 1 },
-                fifth: {green: 5, yellow: 10, orange: 0 }
-            })
-            
-            */
-        }
+        axios.post(`/api/stores/getStoreInfo`, body)
+        .then(response => {
+            let storeInfo = response.data.storeInfo[0]
+            if (storeInfo && storeInfo.reviews) {
+                setRatings(storeInfo.reviews.ratings / storeInfo.reviews.count)
+                setReviews(storeInfo.reviews)    
+            }
+        })
+        .catch(err => alert(err))
     }, [])
  
     return (

@@ -4,6 +4,8 @@ import { getCartItems, removeCartItem } from '../../../_actions/user_actions';
 import UserCardBlock from './Sections/UserCardBlock'
 import { Empty, Modal, Button, Form, Input } from 'antd';
 import KakaoPay from '../../utils/KakaoPay';
+import { Container } from '../../style/styledDiv';
+
 
 function CartPage(props) {   
 
@@ -117,17 +119,18 @@ function CartPage(props) {
         }
         else{
             if(!CheckPhone){
-                return alert(" 올바른 휴대폰 번호를 입력해주세요.")
+                return alert(" 올바른 휴대폰 번호를 입력해주세요. \n (01x-xxxx-xxxx)")
             }
             else{
                 setLoading(true)
                 setInputSave(true)
+                alert('주문자 정보가 저장되었습니다.')
             }
         }
     }
 
     return (
-        <div style={{ width: '85%', margin: '3rem auto' }}>
+        <Container>
             <h1>My Cart</h1>
 
             <div>
@@ -167,7 +170,7 @@ function CartPage(props) {
                         <p></p>
                         <p></p>
                         <Form onSubmit={submitHandler}>
-                            <label>이름</label>
+                            <label>주문자 이름</label>
                             <Input onChange={titleChangeHandler} value={Name}/>
                             
                             <label>휴대폰 번호</label>
@@ -185,11 +188,12 @@ function CartPage(props) {
                 :
                 <>
                     <br />
-                    <Empty description={false}/>
+                    <br />
+                    <Empty description={'장바구니에 담긴 상품이 없습니다.'}/>
                 </>
             }
 
-        </div>
+        </Container>
     )
 }
 

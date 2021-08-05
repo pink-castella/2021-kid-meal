@@ -4,7 +4,6 @@ import Meta from 'antd/lib/card/Meta';
 import QrCode from './QrCode';
 import KakaoShareButton from './KakaoShareButton'
 import axios from 'axios';
-import Moment from 'react-moment';
 
 function ProductCard(props) {
     
@@ -23,7 +22,10 @@ function ProductCard(props) {
     
     useEffect(() => {
         setHistory(props.history)
+        // product.used === 0 인 것만 띄워야 함
         setCountCard(props.history.length)
+
+        
         
         let storeList= []
         let productList= []
@@ -72,6 +74,7 @@ function ProductCard(props) {
             setLoading(false)
             setModal2Visible(false)
         }, 500);
+        // 서버에 사용완료 알리기 
     };
     
     const handleCancel = () => {
@@ -94,12 +97,22 @@ function ProductCard(props) {
         })
     }
 
-    const MomentDateChage = (day) => {
-        return <Moment>{day}</Moment>;
-    }
+    const convertDate = (milliSecond)=> {
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+        const data = new Date(milliSecond);  //Date객체 생성
+        
+        const year = data.getFullYear();    //0000년 가져오기
+        const month = data.getMonth() + 1;  //월은 0부터 시작하니 +1하기
+        const date = data.getDate();        //일자 가져오기
+        const day = days[data.getDay()];    //요일 가져오기
+        
+        return `${year}.${month}.${date}. (${day})`;
+      }
 
     const renderCards = props.history && props.history.map((product, index) => { 
-        console.log('날짜: ', MomentDateChage(product.dateOfPurchase))
+        const purchaseDay = convertDate(product.dateOfPurchase)
+        const expiryDay = convertDate(product.expiredDate)
+
         return(
             <> { Image &&
             <Col lg={6} md={8} xs={24} key={index}> 
@@ -108,12 +121,18 @@ function ProductCard(props) {
                 >
                     <Meta 
                         title={product.name}
-                        description={`$${product.price} 결제일: ${product.dateOfPurchase}`}   // 가격
                     />
                     <br/>
+                    $ {product.price}
+                    <br/>
+                    결제일: {purchaseDay}
+                    <br/>
+                    만료일: {expiryDay}
+                    <br/>
+
                     <br/>
                     <Button type="primary" onClick={ () => showDetail(product.id)}>
-                        QR 공유하기
+                        상품권 공유하기
                     </Button>
                                     
                 </Card>
@@ -135,13 +154,14 @@ function ProductCard(props) {
             :
             <>
                 <br />
-                <Empty description={'결제를 완료한 상품이 없습니다.'}/>
+                <br />
+                <Empty description={'사용 가능한 결제 완료 상품이 없습니다.'}/>
             </>
             }
 
             { Detail && 
                 <Modal
-                    title="QR 공유하기"
+                    title="상품권 공유하기"
                     centered
                     visible={Modal2Visible}
                     onOk={() =>setModal2Visible(false)}
@@ -156,8 +176,9 @@ function ProductCard(props) {
                     ]}
                 > 
                     <h2> {StoreName} </h2>
-                    <p> {Detail.name} </p>
-                    <p> {Detail.price} 원</p>
+                    {Detail.name}
+                    <br/>
+                    {Detail.price} 원
                     <div>
                         <QrCode id={Detail.id}/>
                     </div>

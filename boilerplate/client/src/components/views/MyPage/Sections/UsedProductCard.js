@@ -106,6 +106,7 @@ function UsedProductCard(props) {
             :
             <>
                 <br />
+                <br />
                 <Empty description={'결제 완료 후 사용한 상품이 없습니다.'}/>
                 
             </>

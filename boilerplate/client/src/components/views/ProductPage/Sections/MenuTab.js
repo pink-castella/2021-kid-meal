@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Col, Card, Row, Typography, Collapse, Modal, Button, InputNumber, Tag, Popover, Icon } from 'antd';
 import styled from 'styled-components';
 import { addToCart } from '../../../../_actions/user_actions';
+import { EllipsisText } from '../../../style/styledDiv';
 
 const { Text, Title } = Typography;
 const { Panel } = Collapse;
@@ -83,14 +84,6 @@ function MenuTab(props) {
     const handleCancel = () => {
         setVisible(0)
     }
-
-    const EllipsisText = styled.div`
-        overflow: scroll;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 1; /* number of lines to show */
-        -webkit-box-orient: vertical;
-    `;
 
     const showTopFour = topFourItems && topFourItems.map((product, index) => {
         return (

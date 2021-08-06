@@ -147,7 +147,24 @@ router.post('/addReview', auth, (req, res) => {
             });
         }
     )
-        
 });
+
+/*가게 판매량 업데이트*/
+router.post('/updateStoreSold', auth, (req, res) => {
+    Store.findOneAndUpdate(
+        { "_id": req.body.storeId },
+        {
+            $inc: { "sold": 1 }
+        },
+        { new: true },
+        (err, storeInfo) => {
+            if (err) return res.status(400).json({success: false, err});
+            return res.status(200).json({
+                success: true,
+                storeInfo
+            });
+        }
+    );
+})
 
 module.exports = router;

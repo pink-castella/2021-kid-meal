@@ -271,7 +271,6 @@ router.get('/removeFromCart', auth, (req, res) => {
 
             // product Collection에 현재 남아있는 상품들의 정보를 가져오기
             Product.find({ _id: { $in: array }})
-            .populate('writer')
             .exec((err, productInfo) => {
                 return res.status(200).json({
                     productInfo,
@@ -382,7 +381,7 @@ router.post('/successBuy', auth, (req, res) => {
 //            MyPage
 //=================================
 /*상품 사용 완료*/
-router.post('/successUse', auth, (req, res) => {
+router.post('/successUse', auth, (req, res) => {    
     User.findOneAndUpdate(
         { _id: req.user._id, "history.id": req.body.id },
         {
@@ -395,7 +394,8 @@ router.post('/successUse', auth, (req, res) => {
             success: true,
                 userInfo
             });
-        });
+        }
+    );
 });
 
 

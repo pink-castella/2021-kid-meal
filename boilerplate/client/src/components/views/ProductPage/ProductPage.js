@@ -20,6 +20,7 @@ function ProductPage(props) {
     const [products, setProducts] = useState([])
     const [storeInfo, setStoreInfo] = useState()
     const [isFavorite, setIsFavorite] = useState(false)
+    const [distance, setDistance] = useState(0)
 
     useEffect(() => {   
         let body = { 
@@ -35,6 +36,7 @@ function ProductPage(props) {
         axios.post(`/api/stores/getStoreInfo`, body)
         .then(response => {
             setStoreInfo(response.data.storeInfo[0])
+            props.location?.state?.distance && setDistance(props.location.state.distance)
         })
         .catch(err => alert(err))
 
@@ -72,6 +74,13 @@ function ProductPage(props) {
         justify-content: space-between;  
     `
 
+    const Content = styled.div`
+        padding: 0 0 0 1rem;
+        @media screen and (max-width: 432px) {
+            padding: 0.5rem 0 0 0;
+        }
+    `;
+
     return (
         <Container>
             {storeInfo && (
@@ -90,15 +99,22 @@ function ProductPage(props) {
                         <div>
                             <img src={storeInfo.storeImages} style={{ height: "100px", width: "100px" }} />
                         </div>
-                        <div style={{ paddingLeft: "1rem" }}>
+                        <Content>
                             <div>
-                                <Text strong>별점 </Text>{parseFloat(storeInfo.ratings)}
+                                <Text strong>별점&nbsp;&nbsp;</Text>
+                                { storeInfo.reviews ? (
+                                    parseFloat(storeInfo.reviews.ratings) / storeInfo.reviews.count
+                                ) : ( "-" ) 
+                                }
                             </div>
+                            { distance ?
+                                <div style={{ marginTop: "0.25rem" }}>
+                                    <Text strong>거리&nbsp;&nbsp;</Text>
+                                    <Text>주소로부터 {parseInt(distance)} m</Text>
+                                </div>
+                            : null }
                             <div style={{ marginTop: "0.25rem" }}>
-                                <Text strong>거리 </Text><Text>주소로부터 {parseInt(storeInfo.distance)} m</Text>
-                            </div>
-                            <div style={{ marginTop: "0.25rem" }}>
-                                <Text strong>설명 </Text><Text>{storeInfo.storeDescription}</Text>
+                                <Text strong>설명&nbsp;&nbsp;</Text><Text>{storeInfo.storeDescription}</Text>
                             </div>
                             <div style={{ marginTop: "0.25rem" }}>
                                 {storeInfo.sanitary ? 
@@ -107,7 +123,7 @@ function ProductPage(props) {
                                     null
                                 }
                             </div>
-                        </div>
+                        </Content>
                     </Row>
                 </Card>        
             )}
@@ -126,7 +142,7 @@ function ProductPage(props) {
                     )}
                 </TabPane>
                 <TabPane tab="클린리뷰" key="2">
-                    <ReviewTab />
+                    <ReviewTab storeId={storeId} />
                 </TabPane>
                 <TabPane tab="정보" key="3">
                     <InfoTab storeId={storeId} />

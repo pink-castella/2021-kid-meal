@@ -67,7 +67,7 @@ function InfoTab(props) {
                             {storeInfo.sanitary ? 
                                 <Text mark>위생인증가게</Text>
                                 :
-                                <Text disabled>X</Text>
+                                <Text disabled>-</Text>
                             }
                         </Row>
                     </Card>

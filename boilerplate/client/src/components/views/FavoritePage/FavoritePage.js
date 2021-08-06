@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { removeFavorite } from '../../../_actions/user_actions';
 import { Col, Card, Row, Typography, Empty, Button, Icon } from 'antd';
@@ -55,33 +56,33 @@ function FavoritePage(props) {
                         hoverable
                     >
                         
-                        <a href={`/store/${store._id}`} style={{ color: "black", textDecoration: "none" }}>
+                        <Link to={`/store/${store._id}`} style={{ color: "black", textDecoration: "none" }}>
                             <Row gutter={[16, 16]}>
-                                <Col lg={10} md={24}>
+                                <Col lg={9} md={24}>
                                     <img style={{ height: "150px", width: "150px" }} src={store.storeImages} />
                                 </Col>
-                                <Col lg={14} md={24}>
+                                <Col lg={15} md={24}>
                                     <Row>
-                                        <Text strong>별점 </Text>{parseFloat(store.ratings)}
+                                        <Text strong style={{ paddingBottom: "1rem" }}>별점&nbsp;&nbsp;</Text>
+                                        { store.reviews ? (
+                                            parseFloat(store.reviews.ratings) / store.reviews.count
+                                        ) : ( "-" ) 
+                                        }
                                     </Row>
-                                    <Row style={{ marginTop: "0.5rem" }}>
-                                        <Text strong>거리</Text>
-                                        <div>주소로부터 {parseInt(store.distance)} m</div>
-                                    </Row>
-                                    <Row style={{ marginTop: "0.5rem" }}>
-                                        <Text strong>설명</Text>
+                                    <Row style={{ marginTop: "0.5rem", display: "flex" }}>
+                                        <Text strong>설명&nbsp;&nbsp;</Text>
                                         <EllipsisText>{store.storeDescription}</EllipsisText>
                                     </Row>
                                     <Row style={{ marginTop: "0.5rem" }}>
                                         {store.sanitary ? 
                                             <Text mark>위생인증가게</Text>
                                             :
-                                            <Text disabled>위생인증</Text>
+                                            <Text>&nbsp;</Text>
                                         }
                                     </Row>
                                 </Col>
                             </Row>
-                        </a>
+                        </Link>
 
                     </Card>
             

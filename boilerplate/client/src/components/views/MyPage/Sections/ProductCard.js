@@ -21,14 +21,13 @@ function ProductCard(props) {
     const [Loading, setLoading] = useState(false)
     
     useEffect(() => {
+        
         setHistory(props.history)
-        // product.used === 0 인 것만 띄워야 함
         setCountCard(props.history.length)
 
-        
-        
         let storeList= []
         let productList= []
+
         props.history && props.history.forEach(item => {
 
             let body = {
@@ -45,36 +44,65 @@ function ProductCard(props) {
             // 사진을 가져온다.
             axios.get(`/api/products/products_by_id?id=${item.productId}&type=single`)
                 .then(response => {
-                    productList.push(response.data[0])
+                    //console.log(typeof(response.data[0].image))
+                    productList.push(response.data[0].image)
                 })
-        
+                .catch(err => alert(err))
         })
+
+       // console.log('productList: ', productList)
         setStoreInfo(storeList)
         setProductInfo(productList)
-
         
-        // 이미지 저장
-        let imageList = []
-        props.history && props.history.forEach(item => {
-            console.log('>> item: ', item)
-            ProductInfo && ProductInfo.some(info =>{
-                console.log('>> info: ', info)
-                if(item.productId === info._id){
-                    imageList.push(info.image)
-                }
-            })
-        })
-        setImage(imageList)             
+        let variable1 = "http://www.alchon.co.kr/img/main/rolling/main_02.jpg"
+        let variable2 = "http://www.alchon.co.kr/img/main/rolling/season_02.jpg"
+        let image = []
+        image.push(variable1)
+        image.push(variable2)
+        setImage(image)
+        console.log('setImage: ', Image)
         
     }, [props.history])
 
-    const handleOk = () => {
+    /*
+    console.log('ProductInfo[1]', ProductInfo[1])
+    console.log('Image: ', Image)
+*/
+    const handleOk = (paymentId, StoreIdforSoldCheck) => {
+
         setLoading(true)
         setTimeout(() => {
             setLoading(false)
             setModal2Visible(false)
         }, 500);
+
+        console.log('고유Id: ', paymentId)
+        console.log('가게 Id: ', StoreIdforSoldCheck)
+        
+        let body = {
+            id: paymentId
+        }
+
+        let store_body = {
+            storeId: StoreIdforSoldCheck
+        }
+
+        /*
         // 서버에 사용완료 알리기 
+        axios.post('/api/users/successUse', body)
+    
+        axios.post('/api/stores/updateStoreSold', store_body)
+            .then(response => {
+                console.log('response.data: ', response.data)
+                setLoading(true)
+                setTimeout(() => {
+                    setLoading(false)
+                    setModal2Visible(false)
+                }, 500);
+            })
+            .catch(err => alert(err))
+            */
+        
     };
     
     const handleCancel = () => {
@@ -107,40 +135,54 @@ function ProductCard(props) {
         const day = days[data.getDay()];    //요일 가져오기
         
         return `${year}.${month}.${date}. (${day})`;
-      }
+    }
+
+    const calculateDay = (dday) => {
+        if (Math.round(dday) === 0){
+            return 'D-day'
+        }else{
+            return `D-${Math.round(dday)}`
+        }   
+    }
+
 
     const renderCards = props.history && props.history.map((product, index) => { 
         const purchaseDay = convertDate(product.dateOfPurchase)
         const expiryDay = convertDate(product.expiredDate)
+        console.log('[renderCards] ProductInfo: ', ProductInfo)
+        console.log('[renderCards] ProductInfo[index]: ', ProductInfo[index])
+     
+        return (
+            <>
+            { ProductInfo &&
+                <Col lg={6} md={8} xs={24} key={index}> 
+                    <Card            
+                        cover={<img src={Image[index]} />}
+                    >
+                        <Meta 
+                            title={product.name}
+                        />
+                        <br/>
+                        $ {product.price}
+                        <br/>
+                        결제일: {purchaseDay}
+                        <br/>
+                        만료일: {expiryDay}
+                        <br/>
+                        {calculateDay(product.dday)}
+                        <br/>
 
-        return(
-            <> { Image &&
-            <Col lg={6} md={8} xs={24} key={index}> 
-                <Card            
-                    cover={<img src={Image[index]} />}
-                >
-                    <Meta 
-                        title={product.name}
-                    />
-                    <br/>
-                    $ {product.price}
-                    <br/>
-                    결제일: {purchaseDay}
-                    <br/>
-                    만료일: {expiryDay}
-                    <br/>
-
-                    <br/>
-                    <Button type="primary" onClick={ () => showDetail(product.id)}>
-                        상품권 공유하기
-                    </Button>
-                                    
-                </Card>
-            </Col>
+                        <br/>
+                        <Button type="primary" onClick={ () => showDetail(product.id)}>
+                            상품권 공유하기
+                        </Button>
+                                        
+                    </Card>
+                </Col>
             }
-        </>
+            </>
         )
-    })
+        })
 
     return (
         <>
@@ -170,7 +212,7 @@ function ProductCard(props) {
                         <Button key="back" onClick={handleCancel}>
                             창 닫기
                         </Button>,
-                        <Button key="download" loading={Loading} type="primary" onClick={handleOk}>
+                        <Button key="download" loading={Loading} type="primary" onClick={ () => handleOk(Detail.id, Detail.storeId)}>
                             사용 완료
                         </Button>
                     ]}

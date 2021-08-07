@@ -1,13 +1,37 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import axios from 'axios'
 import"./UserCardBlock.css"
 
 function UserCardBlock(props) {
+        
+    const [StoreInfo, setStoreInfo] = useState([])
+
+    useEffect(() => {
+        
+        let storeList = []
+
+        props.products && props.products.forEach(item=> {
+
+            let body = {
+                store: item.store
+            }
+
+            axios.post(`/api/stores/getStoreInfo`, body)
+                .then(response => {
+                    storeList.push(response.data.storeInfo[0].storeName)
+                    setStoreInfo(StoreInfo.concat(storeList))
+                })
+                .catch(err => alert(err))
+        })
+    
+    }, [props.products])
+
+
     const renderItems = () => (
         props.products && props.products.map((product, index) => (
             <tr key={index}>
                 <td>
-                    // 고쳐야 함 !
-                    {product.store.StoreName}
+                    {StoreInfo[index]}
                 </td>
                 <td>
                     <img style={{ width: '70px' }} alt="product"

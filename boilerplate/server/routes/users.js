@@ -315,6 +315,7 @@ router.post('/successBuy', auth, (req, res) => {
                 productId: item._id,
                 price: item.price,
                 quantity: 1,
+                productImg: item.image,
                 paymentId: req.body.paymentData.id,
                 mid: req.body.paymentData.mid,
                 expiredDate: Date.now()+86400000*31,

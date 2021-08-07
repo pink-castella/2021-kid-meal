@@ -14,9 +14,6 @@ function ProductCard(props) {
     const [StoreInfo, setStoreInfo] = useState([])
     const [StoreName, setStoreName] = useState('')
     
-    const [ProductInfo, setProductInfo] = useState([])
-    const [Image, setImage] = useState([])  // 상품 사진 저장
-
     const [Modal2Visible, setModal2Visible] = useState(false)
     const [Loading, setLoading] = useState(false)
     
@@ -26,8 +23,6 @@ function ProductCard(props) {
         setCountCard(props.history.length)
 
         let storeList= []
-        let productList= []
-
         props.history && props.history.forEach(item => {
 
             let body = {
@@ -39,35 +34,13 @@ function ProductCard(props) {
                     storeList.push(response.data.storeInfo[0])
                 })
                 .catch(err => alert(err))
-
-            
-            // 사진을 가져온다.
-            axios.get(`/api/products/products_by_id?id=${item.productId}&type=single`)
-                .then(response => {
-                    //console.log(typeof(response.data[0].image))
-                    productList.push(response.data[0].image)
-                })
-                .catch(err => alert(err))
         })
 
-       // console.log('productList: ', productList)
         setStoreInfo(storeList)
-        setProductInfo(productList)
-        
-        let variable1 = "http://www.alchon.co.kr/img/main/rolling/main_02.jpg"
-        let variable2 = "http://www.alchon.co.kr/img/main/rolling/season_02.jpg"
-        let image = []
-        image.push(variable1)
-        image.push(variable2)
-        setImage(image)
-        console.log('setImage: ', Image)
         
     }, [props.history])
 
-    /*
-    console.log('ProductInfo[1]', ProductInfo[1])
-    console.log('Image: ', Image)
-*/
+
     const handleOk = (paymentId, StoreIdforSoldCheck) => {
 
         setLoading(true)
@@ -75,9 +48,6 @@ function ProductCard(props) {
             setLoading(false)
             setModal2Visible(false)
         }, 500);
-
-        console.log('고유Id: ', paymentId)
-        console.log('가게 Id: ', StoreIdforSoldCheck)
         
         let body = {
             id: paymentId
@@ -87,7 +57,7 @@ function ProductCard(props) {
             storeId: StoreIdforSoldCheck
         }
 
-        /*
+    
         // 서버에 사용완료 알리기 
         axios.post('/api/users/successUse', body)
     
@@ -101,7 +71,7 @@ function ProductCard(props) {
                 }, 500);
             })
             .catch(err => alert(err))
-            */
+
         
     };
     
@@ -149,39 +119,32 @@ function ProductCard(props) {
     const renderCards = props.history && props.history.map((product, index) => { 
         const purchaseDay = convertDate(product.dateOfPurchase)
         const expiryDay = convertDate(product.expiredDate)
-        console.log('[renderCards] ProductInfo: ', ProductInfo)
-        console.log('[renderCards] ProductInfo[index]: ', ProductInfo[index])
      
-        return (
-            <>
-            { ProductInfo &&
-                <Col lg={6} md={8} xs={24} key={index}> 
-                    <Card            
-                        cover={<img src={Image[index]} />}
-                    >
-                        <Meta 
-                            title={product.name}
-                        />
-                        <br/>
-                        $ {product.price}
-                        <br/>
-                        결제일: {purchaseDay}
-                        <br/>
-                        만료일: {expiryDay}
-                        <br/>
-                        {calculateDay(product.dday)}
-                        <br/>
+        return <Col lg={6} md={8} xs={24} key={index}> 
+                <Card            
+                    cover={<img src={product.productImg} />}
+                >
+                    <Meta 
+                        title={product.name}
+                    />
+                    <br/>
+                    $ {product.price}
+                    <br/>
+                    결제일: {purchaseDay}
+                    <br/>
+                    만료일: {expiryDay}
+                    <br/>
+                    {calculateDay(product.dday)}
+                    <br/>
 
-                        <br/>
-                        <Button type="primary" onClick={ () => showDetail(product.id)}>
-                            상품권 공유하기
-                        </Button>
-                                        
-                    </Card>
-                </Col>
-            }
-            </>
-        )
+                    <br/>
+                    <Button type="primary" onClick={ () => showDetail(product.id)}>
+                        상품권 공유하기
+                    </Button>
+                                    
+                </Card>
+            </Col>
+                
         })
 
     return (

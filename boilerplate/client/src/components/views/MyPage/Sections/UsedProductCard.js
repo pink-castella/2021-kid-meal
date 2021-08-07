@@ -13,9 +13,6 @@ function UsedProductCard(props) {
    
     const [StoreInfo, setStoreInfo] = useState([])
     const [StoreName, setStoreName] = useState('')
-    
-    const [ProductInfo, setProductInfo] = useState([])
-    const [Image, setImage] = useState([])  // 상품 사진 저장
 
     const [Modal2Visible, setModal2Visible] = useState(false)
     const [Loading, setLoading] = useState(false)
@@ -26,7 +23,6 @@ function UsedProductCard(props) {
         setCountCard(props.history.length)
 
         let storeList= []
-        let productList= []
         props.history && props.history.forEach(item => {
 
             let body = {
@@ -38,31 +34,9 @@ function UsedProductCard(props) {
                     storeList.push(response.data.storeInfo[0])
                 })
                 .catch(err => alert(err))
-
-            
-            // 사진을 가져온다.
-            axios.get(`/api/products/products_by_id?id=${item.productId}&type=single`)
-                .then(response => {
-                    productList.push(response.data[0])
-                })
         
         })
-        setStoreInfo(storeList)
-        setProductInfo(productList)
-
-        
-        // 이미지 저장
-        let imageList = []
-        props.history && props.history.forEach(item => {
-            //console.log('>> item: ', item)
-            ProductInfo && ProductInfo.some(info =>{
-                //console.log('>> info: ', info)
-                if(item.productId === info._id){
-                    imageList.push(info.image)
-                }
-            })
-        })
-        setImage(imageList)             
+        setStoreInfo(storeList)        
         
     }, [props.history])
 
@@ -94,14 +68,14 @@ function UsedProductCard(props) {
 
     const renderCards = props.history && props.history.map((product, index) => { 
         const purchaseDay = convertDate(product.dateOfPurchase)
-        const expiryDay = convertDate(product.expiredDate)
+        const usedDay = convertDate(product.used)
         console.log('product: ', product)
         return(
             <> 
             { Image &&
             <Col lg={6} md={8} xs={24} key={index}> 
                 <Card            
-                    cover={<img src={Image[index]} />}
+                    cover={<img src={product.productImg} />}
                 >
                     <Meta 
                         title={product.name}
@@ -111,7 +85,7 @@ function UsedProductCard(props) {
                     <br/>
                     결제일: {purchaseDay}
                     <br/>
-                    사용일: {expiryDay}
+                    사용일: {usedDay}
                     <br/>
                     <br/>                                    
                 </Card>

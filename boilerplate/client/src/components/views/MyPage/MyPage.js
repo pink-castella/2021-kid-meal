@@ -27,7 +27,6 @@ function MyPage(props) {
                     } else{
                         usedhistoryList.push(obj)
                     }
-                    
                 })
                 setusedHistoryInfo(usedhistoryList)
                 setHistoryInfo(historyList)

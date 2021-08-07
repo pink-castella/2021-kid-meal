@@ -8,7 +8,10 @@ import {
   Form,
   Input,
   Button,
+  Typography
 } from 'antd';
+
+const { Title } = Typography
 
 const formItemLayout = {
   labelCol: {
@@ -46,16 +49,16 @@ function RegisterPage(props) {
       }}
       validationSchema={Yup.object().shape({
         userName: Yup.string()
-          .required('UserName is required'),
+          .required('닉네임을 입력해야합니다'),
         email: Yup.string()
-          .email('Email is invalid')
-          .required('Email is required'),
+          .email('이메일이 올바르지 않습니다')
+          .required('이메일을 입력해야합니다'),
         password: Yup.string()
-          .min(6, 'Password must be at least 6 characters')
-          .required('Password is required'),
+          .min(6, '비밀번호는 여섯 글자 이상이어야 합니다')
+          .required('비밀번호를 입력해야합니다'),
         confirmPassword: Yup.string()
-          .oneOf([Yup.ref('password'), null], 'Passwords must match')
-          .required('Confirm Password is required')
+          .oneOf([Yup.ref('password'), null], '비밀번호가 일치해야합니다')
+          .required('비밀번호를 재입력해야합니다')
       })}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
@@ -92,13 +95,13 @@ function RegisterPage(props) {
         } = props;
         return (
           <div className="app">
-            <h2>Sign up</h2>
-            <Form style={{ minWidth: '375px' }} {...formItemLayout} onSubmit={handleSubmit} >
+            <Title level={2}>회원가입</Title>
+            <Form style={{ minWidth: '24rem' }} {...formItemLayout} onSubmit={handleSubmit} >
 
-              <Form.Item required label="Username">
+              <Form.Item required label="닉네임">
                 <Input
                   id="userName"
-                  placeholder="Enter your Username"
+                  placeholder="닉네임을 입력해주세요"
                   type="text"
                   value={values.userName}
                   onChange={handleChange}
@@ -112,10 +115,10 @@ function RegisterPage(props) {
                 )}
               </Form.Item>
 
-              <Form.Item required label="Email" hasFeedback validateStatus={errors.email && touched.email ? "error" : 'success'}>
+              <Form.Item required label="이메일" hasFeedback validateStatus={errors.email && touched.email ? "error" : 'success'}>
                 <Input
                   id="email"
-                  placeholder="Enter your Email"
+                  placeholder="you@example.com"
                   type="email"
                   value={values.email}
                   onChange={handleChange}
@@ -129,10 +132,10 @@ function RegisterPage(props) {
                 )}
               </Form.Item>
 
-              <Form.Item required label="Password" hasFeedback validateStatus={errors.password && touched.password ? "error" : 'success'}>
+              <Form.Item required label="비밀번호" hasFeedback validateStatus={errors.password && touched.password ? "error" : 'success'}>
                 <Input
                   id="password"
-                  placeholder="Enter your password"
+                  placeholder="비밀번호를 입력해주세요"
                   type="password"
                   value={values.password}
                   onChange={handleChange}
@@ -146,10 +149,10 @@ function RegisterPage(props) {
                 )}
               </Form.Item>
 
-              <Form.Item required label="Confirm" hasFeedback>
+              <Form.Item required label="비밀번호 확인" hasFeedback>
                 <Input
                   id="confirmPassword"
-                  placeholder="Enter your confirmPassword"
+                  placeholder="비밀번호를 다시 입력해주세요"
                   type="password"
                   value={values.confirmPassword}
                   onChange={handleChange}
@@ -165,7 +168,7 @@ function RegisterPage(props) {
 
               <Form.Item {...tailFormItemLayout}>
                 <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
-                  Submit
+                  우리 아이 밥심 회원가입
                 </Button>
               </Form.Item>
             </Form>

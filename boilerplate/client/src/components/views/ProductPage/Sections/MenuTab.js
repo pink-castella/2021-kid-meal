@@ -141,6 +141,30 @@ function MenuTab(props) {
         );
     })
 
+    const renderGiftCards = products && products.map((product, index) => {
+        return (
+            product.isGiftCard &&
+                <Col xs={24} key={index}>
+                    <Card hoverable onClick={() => showDetail((product._id).toString())} key={product._id}>
+                        <Row gutter={[16, 16]} type="flex" justify="space-between">
+                            <Col span={8}>
+                                <Row>
+                                    <Text strong>{product.title}</Text>
+                                </Row>
+                                <Row>
+                                    <Text>{product.price} 원</Text>
+                                </Row>
+                            </Col>
+                            <Col>
+                                <img src={product.image} 
+                                style={{ height: "100px", width: "100px" }} />
+                            </Col>
+                        </Row>
+                    </Card>
+                </Col>
+        );
+    })
+
     const calculatePrice = (value) => {
         setCount(value)
         setPrice(detail.price * value)
@@ -171,6 +195,11 @@ function MenuTab(props) {
             <Collapse defaultActiveKey={['0']}>
                 <Panel header="음료" key="1">
                     {renderCards("beverage")}
+                </Panel>
+            </Collapse>
+            <Collapse defaultActiveKey={['1']}>
+                <Panel header="금액권" key="1">
+                    {renderGiftCards}
                 </Panel>
             </Collapse>
 

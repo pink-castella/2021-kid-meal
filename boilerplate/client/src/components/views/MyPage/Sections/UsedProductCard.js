@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Empty, Col, Card, Row, Button, Modal } from 'antd';
+import { Empty, Col, Card, Row, Button, Modal, Rate, Radio } from 'antd';
 import Meta from 'antd/lib/card/Meta';
-import QrCode from './QrCode';
-import KakaoShareButton from './KakaoShareButton'
 import axios from 'axios';
+import ReviewGroup from './ReviewGroup';
 
 function UsedProductCard(props) {
     
@@ -16,10 +15,11 @@ function UsedProductCard(props) {
 
     const [Modal2Visible, setModal2Visible] = useState(false)
     const [Loading, setLoading] = useState(false)
+
+    const [Star, setStar] = useState(0)
     
     useEffect(() => {
         setHistory(props.history)
-        // product.used === 0 인 것만 띄워야 함
         setCountCard(props.history.length)
 
         let storeList= []
@@ -40,19 +40,21 @@ function UsedProductCard(props) {
         
     }, [props.history])
 
-    const handleOk = () => {
-        setLoading(true)
-        setTimeout(() => {
-            setLoading(false)
-            setModal2Visible(false)
-        }, 500);
-        //reivewModal 띄우기
-    };
     
-    const handleCancel = () => {
-        setModal2Visible(false)
-    };
+    const showDetail = (buyId) => {     // 클릭한 구매건 고유id
+        setModal2Visible(true)
 
+        History.forEach(item => {
+            if(item.id === buyId){
+                setDetail(item)
+                StoreInfo.some(info => {
+                    if(item.storeId === info._id){
+                        setStoreName(info.storeName)
+                    }
+                })
+            }
+        })
+    }
 
     const convertDate = (milliSecond)=> {
         const days = ['일', '월', '화', '수', '목', '금', '토'];
@@ -69,13 +71,11 @@ function UsedProductCard(props) {
     const renderCards = props.history && props.history.map((product, index) => { 
         const purchaseDay = convertDate(product.dateOfPurchase)
         const usedDay = convertDate(product.used)
-        console.log('product: ', product)
-        return(
-            <> 
-            { Image &&
-            <Col lg={6} md={8} xs={24} key={index}> 
+        
+        return<Col lg={6} md={8} xs={24} key={index}> 
                 <Card            
-                    cover={<img src={product.productImg} />}
+                    cover={<img src={product.productImg}/>}
+                    onClick={ () => showDetail(product.id)}
                 >
                     <Meta 
                         title={product.name}
@@ -90,10 +90,36 @@ function UsedProductCard(props) {
                     <br/>                                    
                 </Card>
             </Col>
-            }
-        </>
-        )
-    })
+        })
+
+        const [Answer, setAnswer] = useState({})
+
+        const saveAnswer = (value) => {
+            setAnswer(value)
+        };
+
+        const handleOk = () => {
+            console.log('완료시 Star: ', Star)
+            console.log('완료시 Answer: ', Answer)
+
+            setLoading(true)
+
+            setTimeout(() => {
+                setLoading(false)
+                setModal2Visible(false)
+            }, 500);
+
+            // 리뷰 작성 여부를 false로 바꿔버리기 
+         
+        };
+        
+        const handleCancel = () => {
+            setModal2Visible(false)
+        };
+
+        const handleChange = (number) =>{
+            setStar(number)
+        }
 
     return (
         <>
@@ -129,9 +155,11 @@ function UsedProductCard(props) {
                     ]}
                 > 
                     <h2> {StoreName} </h2>
-                    {Detail.name}
+                    <img src = {Detail.productImg} width="120px"/> {Detail.name} 
+                    <br/> 
+                    <Rate allowHalf defaultValue={2.5} onChange={handleChange}/>
                     <br/>
-                    // 리뷰 별 rating       
+                    <ReviewGroup answer={(value) => saveAnswer(value) }/>   
                 </Modal>
             }           
         </>
@@ -139,6 +167,4 @@ function UsedProductCard(props) {
 }
 
 export default UsedProductCard
-
-
 

@@ -69,6 +69,7 @@ function ProductCard(props) {
                     setLoading(false)
                     setModal2Visible(false)
                 }, 500);
+                props.history.push('/store')
             })
             .catch(err => alert(err))
 

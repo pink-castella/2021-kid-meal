@@ -11,14 +11,20 @@ function UserCardBlock(props) {
         let storeList = []
 
         props.products && props.products.forEach(item=> {
-
             let body = {
                 store: item.store
             }
 
             axios.post(`/api/stores/getStoreInfo`, body)
                 .then(response => {
-                    storeList.push(response.data.storeInfo[0].storeName)
+                    console.log('item: ', item)
+                    /*storeList.push(response.data.storeInfo[0].storeName)
+                    setStoreInfo(StoreInfo.concat(storeList))
+                    */
+                    let name = { store: response.data.storeInfo[0].storeName }
+                    let obj = Object.assign({}, item, name)
+                    storeList.push(obj)
+
                     setStoreInfo(StoreInfo.concat(storeList))
                 })
                 .catch(err => alert(err))
@@ -26,12 +32,42 @@ function UserCardBlock(props) {
     
     }, [props.products])
 
+    console.log('>> StoreInfo: ', StoreInfo)
 
+/*
     const renderItems = () => (
         props.products && props.products.map((product, index) => (
             <tr key={index}>
                 <td>
                     {StoreInfo[index]}
+                </td>
+                <td>
+                    <img style={{ width: '70px' }} alt="product"
+                        src={product.image} /> 
+                </td>
+                <td>
+                    {product.title}
+                </td>
+                <td>
+                    {product.quantity} EA
+                </td>
+                <td>
+                    $ {product.price}
+                </td>
+                <td>
+                    <button onClick={() => props.removeItem(product._id)}>
+                        Remove 
+                    </button>
+                </td>
+            </tr>
+        ))
+    )
+*/
+    const renderItems = () => (
+        StoreInfo && StoreInfo.map((product, index) => (
+            <tr key={index}>
+                <td>
+                    {product.store}
                 </td>
                 <td>
                     <img style={{ width: '70px' }} alt="product"
@@ -70,7 +106,11 @@ function UserCardBlock(props) {
                 </thead>
 
                 <tbody>
-                    {renderItems()}
+                    { StoreInfo && 
+                        <>
+                            {renderItems()} 
+                        </>
+                    }
                 </tbody>
             </table>
         </div>

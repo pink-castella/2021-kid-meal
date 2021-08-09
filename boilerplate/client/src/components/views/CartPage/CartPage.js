@@ -27,7 +27,6 @@ function CartPage(props) {
         let cartItems=[]
 
         if(props.user.userData && props.user.userData.cart){
-            console.log('props.user.userData.cart')
             if(props.user.userData.cart.length >0){
                 props.user.userData.cart.forEach(item => {
                     cartItems.push(item.productId)                 // cartItems은 cart 객체에 담긴 요소들의 id를 담는 배열 

@@ -17,6 +17,7 @@ function UsedProductCard(props) {
     const [Loading, setLoading] = useState(false)
 
     const [Star, setStar] = useState(0)
+    const [Answer, setAnswer] = useState({})
     
     useEffect(() => {
         setHistory(props.history)
@@ -39,21 +40,26 @@ function UsedProductCard(props) {
         setStoreInfo(storeList)        
         
     }, [props.history])
-
     
     const showDetail = (buyId) => {     // 클릭한 구매건 고유id
-        setModal2Visible(true)
 
-        History.forEach(item => {
-            if(item.id === buyId){
-                setDetail(item)
-                StoreInfo.some(info => {
-                    if(item.storeId === info._id){
-                        setStoreName(info.storeName)
-                    }
-                })
-            }
-        })
+        if(/*이미 리뷰 보낸거면*/){
+            alert("이미 리뷰 작성을 완료한 건입니다.")
+        }
+        else{
+            setModal2Visible(true)
+
+            History.forEach(item => {
+                if(item.id === buyId){
+                    setDetail(item)
+                    StoreInfo.some(info => {
+                        if(item.storeId === info._id){
+                            setStoreName(info.storeName)
+                        }
+                    })
+                }
+            })
+        }
     }
 
     const convertDate = (milliSecond)=> {
@@ -72,7 +78,7 @@ function UsedProductCard(props) {
         const purchaseDay = convertDate(product.dateOfPurchase)
         const usedDay = convertDate(product.used)
         
-        return<Col lg={6} md={8} xs={24} key={index}> 
+        return <Col lg={6} md={8} xs={24} key={index}> 
                 <Card            
                     cover={<img src={product.productImg}/>}
                     onClick={ () => showDetail(product.id)}
@@ -92,34 +98,117 @@ function UsedProductCard(props) {
             </Col>
         })
 
-        const [Answer, setAnswer] = useState({})
-
-        const saveAnswer = (value) => {
-            setAnswer(value)
-        };
-
-        const handleOk = () => {
-            console.log('완료시 Star: ', Star)
-            console.log('완료시 Answer: ', Answer)
-
-            setLoading(true)
-
-            setTimeout(() => {
-                setLoading(false)
-                setModal2Visible(false)
-            }, 500);
-
-            // 리뷰 작성 여부를 false로 바꿔버리기 
-         
-        };
         
-        const handleCancel = () => {
-            setModal2Visible(false)
-        };
+        /* 리뷰 받아오기 & 전송하기 */
+    const saveAnswer = (value) => {
+        setAnswer(value)
+    };
 
-        const handleChange = (number) =>{
-            setStar(number)
+    const saveColor = (answerObj, reivewObj) =>{
+        switch (answerObj) {
+            case "green":
+                reivewObj.green = 1
+               break;
+
+            case "yellow":
+                reivewObj.yellow = 1
+                break;
+
+            case "orange":
+                reivewObj.orange = 1
+                break;
+
+            default:
+               break;
         }
+    }
+
+    const setBody = () =>{
+        const reivewBody = {
+            first: {
+                "green": 0,
+                "yellow": 0,
+                "orange": 0
+            },
+            second: {
+                "green": 0,
+                "yellow": 0,
+                "orange": 0
+            },
+            third: {
+                "green": 0,
+                "yellow": 0,
+                "orange": 0
+            },
+            fourth: {
+                "green": 0,
+                "yellow": 0,
+                "orange": 0
+            },
+            fifth: {
+                "green": 0,
+                "yellow": 0,
+                "orange": 0
+            }        
+        }
+
+        saveColor(Answer.first, reivewBody.first)
+        saveColor(Answer.second, reivewBody.second)
+        saveColor(Answer.third, reivewBody.third)
+        saveColor(Answer.fourth, reivewBody.fourth)
+        saveColor(Answer.fifth, reivewBody.fifth)
+
+        return reivewBody
+    }
+
+
+    const handleOk = () => {
+           // console.log('완료시 Star: ', Star)
+          //  console.log('완료시 Answer: ', Answer)
+            console.log('고유id: ', Detail.id)
+            //console.log('>>> 변환: ', setBody())
+
+        let reviews = setBody()
+
+        let body = {
+            "storeId": Detail.id,
+            "reviews": {
+                "ratings": Star,
+                reviews
+            }
+        }
+
+        console.log(body)
+/*
+        axios.post(`/api/stores/addReivew`, body)
+            .then(response => {
+                // 리뷰 작성 여부 (모달창) false로 바꿔버리기 
+                setLoading(true)
+
+                setTimeout(() => {
+                    setLoading(false)
+                    setModal2Visible(false)
+                }, 500);
+            })
+            .catch(err => alert(err))
+
+            */
+
+        setLoading(true)
+
+        setTimeout(() => {
+               setLoading(false)
+               setModal2Visible(false)
+        }, 500);
+    };
+        
+    const handleCancel = () => {
+        setModal2Visible(false)
+    };
+
+    const handleChange = (number) =>{
+        setStar(number)
+    }
 
     return (
         <>

@@ -315,10 +315,12 @@ router.post('/successBuy', auth, (req, res) => {
                 productId: item._id,
                 price: item.price,
                 quantity: 1,
+                productImg: item.image,
                 paymentId: req.body.paymentData.id,
                 mid: req.body.paymentData.mid,
                 expiredDate: Date.now()+86400000*31,
                 used: 0,
+                hasReview: false
             })                
         }
     })
@@ -386,6 +388,24 @@ router.post('/successUse', auth, (req, res) => {
         { _id: req.user._id, "history.id": req.body.id },
         {
             $set: { "history.$.used": Date.now() } 
+        },
+        { new: true },
+        (err, userInfo) => { 
+            if(err) return res.status(400).json({suceess: false, err});
+            return res.status(200).json({
+            success: true,
+                userInfo
+            });
+        }
+    );
+});
+
+/*후기 작성 완료*/
+router.post('/successReview', auth, (req, res) => {    
+    User.findOneAndUpdate(
+        { _id: req.user._id, "history.id": req.body.id },
+        {
+            $set: { "history.$.hasReview": true } 
         },
         { new: true },
         (err, userInfo) => { 

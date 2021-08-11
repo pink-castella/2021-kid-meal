@@ -13,8 +13,9 @@ import {
     ADD_TO_CART,
     GET_CART_ITEMS,
     REMOVE_CART_ITEM,
-    BUY_CART_ITEMS,
-    GET_PRODUCT_IMAGE
+    BUY_CART_ITEMS, 
+    SUCCESS_USE,
+    UPDATE_STORE_SOLD
 } from './types';
 import { USER_SERVER } from '../components/Config.js';
 
@@ -234,14 +235,34 @@ export function buyCartItem(imp_id, merchant_id, cartDetail) {
         payload: request
     }
 }
-/*
-// 사진을 가져온다.
-export function getProductImage(historyItem) {  
-    const request = axios.get(`/api/products/products_by_id?id=${historyItem}&type=array`)     // 2. 라우터로 보냄
-        .then(response => response.data)
 
+
+export function successUseItem(paymentId){
+    let body = {
+        id: paymentId
+    }
+
+    const request = axios.post('/api/users/successUse', body)
+        .then(response => response.data);
+    
     return {
-        type: GET_PRODUCT_IMAGE,
+        type: SUCCESS_USE,
         payload: request
     }
-}*/
+}
+
+export function updateSold(StoreIdforSoldCheck){
+    let body = {
+        storeId: StoreIdforSoldCheck
+    }
+
+    const request = axios.post('/api/stores/updateStoreSold', body)
+        .then(response => response.data);
+    
+    return {
+        type: UPDATE_STORE_SOLD,
+        payload: request
+    }
+}
+
+

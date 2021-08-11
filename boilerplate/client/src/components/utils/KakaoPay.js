@@ -1,4 +1,3 @@
-import jQuery from "jquery";
 import React from 'react'
 import { useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -53,9 +52,9 @@ function KakaoPay(props) {
     return (
        
         props.isSave ?
-        <button loading={props.loading} type="primary" onClick={requestPay}>결제하기</button>
+        <button type="primary" onClick={requestPay}>결제하기</button>
         :
-        <button loading={props.loading} type="primary" onClick={saveCheck}>결제하기</button>
+        <button type="primary" onClick={saveCheck}>결제하기</button>
     )
 
 }

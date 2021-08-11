@@ -13,7 +13,8 @@ import {
     GET_CART_ITEMS,
     REMOVE_CART_ITEM,
     BUY_CART_ITEMS,
-    GET_PRODUCT_IMAGE
+    SUCCESS_USE,
+    UPDATE_STORE_SOLD
 } from '../_actions/types';
  
 
@@ -88,16 +89,12 @@ export default function(state={}, action){
                     }
                 }
 
-        case BUY_CART_ITEMS:{
-            return {...state, 
-                payment: action.payload }
-            }
-        case GET_PRODUCT_IMAGE: {
-            return {
-                ...state,
-                Product: action.payload
-            }
-        }
+        case BUY_CART_ITEMS:
+            return {...state, payment: action.payload }
+        case SUCCESS_USE:
+            return { ...state, useditem: action.payload }
+        case UPDATE_STORE_SOLD:
+            return { ...state, updateSold: action.payload }
         default:
             return state;
     }

@@ -27,7 +27,6 @@ function CartPage(props) {
         let cartItems=[]
 
         if(props.user.userData && props.user.userData.cart){
-            console.log('props.user.userData.cart')
             if(props.user.userData.cart.length >0){
                 props.user.userData.cart.forEach(item => {
                     cartItems.push(item.productId)                 // cartItems은 cart 객체에 담긴 요소들의 id를 담는 배열 
@@ -38,23 +37,6 @@ function CartPage(props) {
         }
         
     }, [props.user.userData])
-
-    const formatNumber = (value) => {   //  2000 -> '2,000'
-        value += '';
-        const list = value.split('.');
-        const prefix = list[0].charAt(0) === '-' ? '-' : '';
-        let num = prefix ? list[0].slice(1) : list[0];
-        let result = '';
-        while (num.length > 3) {
-          result = `,${num.slice(-3)}${result}`;
-          num = num.slice(0, num.length - 3);
-        }
-        if (num) {
-          result = num + result;
-        }
-        return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
-      }
-
 
     const calculateTotal = (cartDetail) => {
         let total = 0;
@@ -74,15 +56,6 @@ function CartPage(props) {
                 }
             })
     }
-    
-    
-    const handleOk = () => {
-        console.log('확인')
-        setLoading(true)
-        setTimeout(() => {
-            setModal2Visible(false)
-        }, 3000);
-    };
     
     const handleCancel = () => {
         //setState({ visible: false });
@@ -119,11 +92,12 @@ function CartPage(props) {
         }
         else{
             if(!CheckPhone){
-                return alert(" 올바른 휴대폰 번호를 입력해주세요.")
+                return alert(" 올바른 휴대폰 번호를 입력해주세요. \n (01x-xxxx-xxxx)")
             }
             else{
                 setLoading(true)
                 setInputSave(true)
+                alert('주문자 정보가 저장되었습니다.')
             }
         }
     }
@@ -137,17 +111,10 @@ function CartPage(props) {
             </div>
 
             {ShowTotal ? 
+                <>
                 <div style={{ marginTop: '3rem' }}>
                     <h2>Total Amount: ${Total}</h2>
                 </div>
-                :
-                <>
-                    <br />
-                    <Empty description={false}/>
-                </>
-            }
-
-             <React.Fragment>
                 <div>
                     <Button type="primary" onClick={ () => setModal2Visible(true)}>
                         주문하기
@@ -176,7 +143,7 @@ function CartPage(props) {
                         <p></p>
                         <p></p>
                         <Form onSubmit={submitHandler}>
-                            <label>이름</label>
+                            <label>주문자 이름</label>
                             <Input onChange={titleChangeHandler} value={Name}/>
                             
                             <label>휴대폰 번호</label>
@@ -188,10 +155,16 @@ function CartPage(props) {
                                 주문 정보 저장
                             </Button>
                         </Form>
-
                     </Modal>
                 </div>
-            </React.Fragment>
+                </>
+                :
+                <>
+                    <br />
+                    <br />
+                    <Empty description={'장바구니에 담긴 상품이 없습니다.'}/>
+                </>
+            }
 
         </Container>
     )

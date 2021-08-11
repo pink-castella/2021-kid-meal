@@ -38,23 +38,6 @@ function CartPage(props) {
         
     }, [props.user.userData])
 
-    const formatNumber = (value) => {   //  2000 -> '2,000'
-        value += '';
-        const list = value.split('.');
-        const prefix = list[0].charAt(0) === '-' ? '-' : '';
-        let num = prefix ? list[0].slice(1) : list[0];
-        let result = '';
-        while (num.length > 3) {
-          result = `,${num.slice(-3)}${result}`;
-          num = num.slice(0, num.length - 3);
-        }
-        if (num) {
-          result = num + result;
-        }
-        return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
-      }
-
-
     const calculateTotal = (cartDetail) => {
         let total = 0;
 
@@ -73,15 +56,6 @@ function CartPage(props) {
                 }
             })
     }
-    
-    
-    const handleOk = () => {
-        console.log('확인')
-        setLoading(true)
-        setTimeout(() => {
-            setModal2Visible(false)
-        }, 3000);
-    };
     
     const handleCancel = () => {
         //setState({ visible: false });

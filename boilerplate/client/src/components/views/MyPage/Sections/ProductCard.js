@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { successUseItem, updateSold } from '../../../../_actions/user_actions';
 import { Empty, Col, Card, Row, Button, Modal } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import QrCode from './QrCode';
 import KakaoShareButton from './KakaoShareButton'
 import axios from 'axios';
+
 
 function ProductCard(props) {
     
@@ -16,6 +19,8 @@ function ProductCard(props) {
     
     const [Modal2Visible, setModal2Visible] = useState(false)
     const [Loading, setLoading] = useState(false)
+
+    const dispatch = useDispatch()
     
     useEffect(() => {
         
@@ -43,35 +48,18 @@ function ProductCard(props) {
 
     const handleOk = (paymentId, StoreIdforSoldCheck) => {
 
-        setLoading(true)
-        setTimeout(() => {
-            setLoading(false)
-            setModal2Visible(false)
-        }, 500);
-        
-        let body = {
-            id: paymentId
-        }
-
-        let store_body = {
-            storeId: StoreIdforSoldCheck
-        }
-    
+        dispatch(successUseItem(paymentId))
+        dispatch(updateSold(StoreIdforSoldCheck))
+        .then(response => {
+            setLoading(true)
+            setTimeout(() => {
+                setLoading(false)
+                setModal2Visible(false)
+            }, 500);
+           window.location.replace("/mypage")
+        })
         // 서버에 사용완료 알리기 
-        axios.post('/api/users/successUse', body)
-    
-        axios.post('/api/stores/updateStoreSold', store_body)
-            .then(response => {
-                console.log('response.data: ', response.data)
-                setLoading(true)
-                setTimeout(() => {
-                    setLoading(false)
-                    setModal2Visible(false)
-                }, 500);
-               window.location.replace("/mypage")
-            })
-            .catch(err => alert(err))
-        
+               
     };
     
     const handleCancel = () => {

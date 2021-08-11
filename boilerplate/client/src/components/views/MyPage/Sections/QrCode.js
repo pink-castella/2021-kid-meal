@@ -3,14 +3,9 @@ import React, { useEffect, useState } from 'react'
 
 function QrCode(props) {
     
-    const [OrderId, setOrderId] = useState('')
     const [imageUrl, setImageUrl] = useState('')
   
     useEffect(() => {
-        setOrderId(props.id)
-        //console.log('OrderId: ', OrderId)
-        //console.log('props.id: ', props.id)
-
         const canvas = document.createElement('canvas')
         bwipjs.toCanvas(canvas, {
             bcid: 'qrcode', // Barcode type, 바코드는 code128

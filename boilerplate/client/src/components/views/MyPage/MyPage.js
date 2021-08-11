@@ -7,7 +7,7 @@ import UsedProductCard from './Sections/UsedProductCard';
 const { TabPane } = Tabs;
 
 function MyPage(props) {
-    const [HistoryInfo, setHistoryInfo] = useState([])
+    const [historyInfo, sethistoryInfo] = useState([])
     const [usedHistoryInfo, setusedHistoryInfo] = useState([])
     
     
@@ -29,7 +29,7 @@ function MyPage(props) {
                     }
                 })
                 setusedHistoryInfo(usedhistoryList)
-                setHistoryInfo(historyList)
+                sethistoryInfo(historyList)
             }   
         }
     }, [props.user.userData])
@@ -40,7 +40,7 @@ function MyPage(props) {
             <Tabs defaultActiveKey="1">
             <TabPane tab="사용 가능" key="1">
                <ProductCard 
-                history={HistoryInfo}
+                history={historyInfo}
                 user={props.user.userData}/>
             </TabPane>
             <TabPane tab="사용 완료" key="2">

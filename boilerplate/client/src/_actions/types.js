@@ -12,3 +12,5 @@ export const ADD_TO_CART = 'add_to_cart';
 export const GET_CART_ITEMS = 'get_cart_items';
 export const REMOVE_CART_ITEM = 'remove_cart_items';
 export const BUY_CART_ITEMS = 'buy_cart_items';
+export const SUCCESS_USE = 'success_use_item'
+export const UPDATE_STORE_SOLD = 'update_stroe_sold'

@@ -11,10 +11,7 @@ function UserCardBlock(props) {
         if (props.products){
             // 상품을 담고 처음 페이지에 진입할 때 useEffect가 두 번 실행됨 
             // 저장 완료 후 두번째 실행 시 초기화를 막기위한 조건문
-            if(StoreInfo.length == props.products.length){ 
-                // 이미 불러오고 저장완료된 상태이므로 
-                // pass
-            } else{
+            if(StoreInfo.length != props.products.length){ 
                 let storeList = []
                 setStoreInfo(storeList) // 초기화시켜줘서 삭제해야 remove 뒤에도 새롭게 바뀐(남은 상품 목록) 정보를 잘 받아옴
         

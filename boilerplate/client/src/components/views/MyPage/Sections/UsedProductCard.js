@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Empty, Col, Card, Row, Button, Modal, Rate, Radio } from 'antd';
+import { Empty, Col, Card, Row, Button, Modal, Rate } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import axios from 'axios';
 import ReviewGroup from './ReviewGroup';
@@ -41,14 +41,12 @@ function UsedProductCard(props) {
         
     }, [props.history])
     
-    const showDetail = (buyId) => {     // 클릭한 구매건 고유id
-
-        if(/*이미 리뷰 보낸거면*/){
+    const showDetail = (buyId, hasReview) => {     // 클릭한 구매건 고유id
+        if(hasReview){      // hasReview == true 일 때
             alert("이미 리뷰 작성을 완료한 건입니다.")
         }
-        else{
+        else{               // hasReview == false 일 때
             setModal2Visible(true)
-
             History.forEach(item => {
                 if(item.id === buyId){
                     setDetail(item)
@@ -81,7 +79,7 @@ function UsedProductCard(props) {
         return <Col lg={6} md={8} xs={24} key={index}> 
                 <Card            
                     cover={<img src={product.productImg}/>}
-                    onClick={ () => showDetail(product.id)}
+                    onClick={ () => showDetail(product.id, product.hasReview)}
                 >
                     <Meta 
                         title={product.name}
@@ -99,7 +97,7 @@ function UsedProductCard(props) {
         })
 
         
-        /* 리뷰 받아오기 & 전송하기 */
+    /* 리뷰 받아오기 & 전송하기 */
     const saveAnswer = (value) => {
         setAnswer(value)
     };
@@ -123,7 +121,7 @@ function UsedProductCard(props) {
         }
     }
 
-    const setBody = () =>{
+    const setBody = () => {
         const reivewBody = {
             first: {
                 "green": 0,
@@ -162,44 +160,40 @@ function UsedProductCard(props) {
     }
 
 
-    const handleOk = () => {
-           // console.log('완료시 Star: ', Star)
-          //  console.log('완료시 Answer: ', Answer)
-            console.log('고유id: ', Detail.id)
-            //console.log('>>> 변환: ', setBody())
 
-        let reviews = setBody()
+    const handleOk = () => {    
+        let answer = setBody()
 
         let body = {
-            "storeId": Detail.id,
-            "reviews": {
-                "ratings": Star,
-                reviews
+            storeId: Detail.storeId,
+            reviews: {
+                ratings: Star,
+                first: answer.first, 
+                second: answer.second,
+                third: answer.third,
+                fourth: answer.fourth,
+                fifth: answer.fifth,
             }
         }
 
-        console.log(body)
-/*
-        axios.post(`/api/stores/addReivew`, body)
-            .then(response => {
-                // 리뷰 작성 여부 (모달창) false로 바꿔버리기 
-                setLoading(true)
+        let success_body = {
+            id: Detail.id
+        }
 
-                setTimeout(() => {
-                    setLoading(false)
-                    setModal2Visible(false)
-                }, 500);
+        axios.post(`/api/stores/addReview`, body)
+            .then(response => {
+                axios.post(`/api/users/successReview`, success_body)
+                .then(response => {
+                    alert("소중한 리뷰를 남겨주셔서 감사합니다.")
+                    setLoading(true)
+                    setTimeout(() => {
+                        setLoading(false)
+                        setModal2Visible(false)
+                    }, 500);
+                    window.location.replace("/mypage")
+                })
             })
             .catch(err => alert(err))
-
-            */
-
-        setLoading(true)
-
-        setTimeout(() => {
-               setLoading(false)
-               setModal2Visible(false)
-        }, 500);
     };
         
     const handleCancel = () => {

@@ -56,7 +56,6 @@ function ProductCard(props) {
         let store_body = {
             storeId: StoreIdforSoldCheck
         }
-
     
         // 서버에 사용완료 알리기 
         axios.post('/api/users/successUse', body)
@@ -69,10 +68,9 @@ function ProductCard(props) {
                     setLoading(false)
                     setModal2Visible(false)
                 }, 500);
-                props.history.push('/store')
+               window.location.replace("/mypage")
             })
             .catch(err => alert(err))
-
         
     };
     

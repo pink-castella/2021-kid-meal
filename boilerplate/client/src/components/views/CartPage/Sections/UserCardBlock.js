@@ -54,22 +54,7 @@ function UserCardBlock(props) {
             setStoreInfo(StoreInfo.concat(list))
         }
     }
-/*
-    const spanName = (storeName) => {
-        StoreInfo.map(item=>{
 
-        })
-        if(){
-            return  <td> {storeName} </td>
-        }
-        if else() {
-            return  <></>
-        }
-        else{
-            return <td> {storeName} </td>
-        }
-    }
-*/
     const renderItems = () => (
         StoreInfo && StoreInfo.map((product, index) => (
             <tr key={index}>

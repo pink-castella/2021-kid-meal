@@ -53,13 +53,14 @@ function LandingPage(props) {
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-        padding: 3rem calc((100vw - 1193px) / 2 + 1rem);
+        padding: 3rem calc((100vw - 1193px) / 2 + 2rem);
         @media screen and (max-width: 1193px) {
-            padding: 3rem 1rem;
+            padding: 3rem 2rem;
         }
         @media screen and (max-width:767px) {
             padding: 3rem 2rem;
             flex-direction: column;
+            text-align: end;
         }
     `;
 

@@ -37,7 +37,7 @@ function ReviewTab(props) {
                     <tbody>
                         <TableRow>
                             <TableHeadLeft><Text strong>아이에게 친절해요</Text></TableHeadLeft>
-                            <td>
+                            <td style={{ border: "none" }}>
                                 <CircleWrapper>
                                     <GreenCircle>최고</GreenCircle> <TableValue><Text strong>{reviews.first.green} 명</Text></TableValue>
                                     <YellowCircle>좋아</YellowCircle> <TableValue><Text strong>{reviews.first.yellow} 명</Text></TableValue>
@@ -51,15 +51,15 @@ function ReviewTab(props) {
                             <td>
                                 <CircleWrapper>
                                     <GreenCircle>순해</GreenCircle><TableValue> <Text strong>{reviews.second.green} 명</Text></TableValue>
-                                    <YellowCircle>적당</YellowCircle><TableValue> <Text strong>{reviews.second.green} 명</Text></TableValue>
-                                    <OrangeCircle>자극</OrangeCircle><TableValue> <Text strong>{reviews.second.green} 명</Text></TableValue>
+                                    <YellowCircle>적당</YellowCircle><TableValue> <Text strong>{reviews.second.yellow} 명</Text></TableValue>
+                                    <OrangeCircle>자극</OrangeCircle><TableValue> <Text strong>{reviews.second.orange} 명</Text></TableValue>
                                 </CircleWrapper>
                             </td>
                             <TableHeadRight><Text strong>맛이 자극적이예요</Text></TableHeadRight>
                         </TableRow>
                         <TableRow>
                             <TableHeadLeft><Text strong>양이 많아요</Text></TableHeadLeft>
-                            <td>
+                            <td style={{ border: "none" }}> 
                                 <CircleWrapper>
                                     <GreenCircle>많아</GreenCircle> <TableValue><Text strong>{reviews.third.green} 명</Text></TableValue>
                                     <YellowCircle>적당</YellowCircle> <TableValue><Text strong>{reviews.third.yellow} 명</Text></TableValue>
@@ -81,7 +81,7 @@ function ReviewTab(props) {
                         </TableRow>                        
                         <TableRow>
                             <TableHeadLeft><Text strong>또 가고 싶어요</Text></TableHeadLeft>
-                            <td>
+                            <td style={{ border: "none" }}>
                                 <CircleWrapper>
                                     <GreenCircle>최고</GreenCircle> <TableValue><Text strong>{reviews.fifth.green} 명</Text></TableValue>
                                     <YellowCircle>좋아</YellowCircle> <TableValue><Text strong>{reviews.fifth.yellow} 명</Text></TableValue>
@@ -109,7 +109,7 @@ function ReviewTab(props) {
 const Table = styled.table`
     padding: 2rem;
     border-top: 2px solid black;
-    border-bottom: 2px solid black;
+    border-bottom: 3px solid black;
 `;
 
 const TableRow = styled.tr`

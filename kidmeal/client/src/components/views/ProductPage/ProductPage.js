@@ -51,21 +51,25 @@ function ProductPage(props) {
     }, [props.user.userData])
 
     const handleFavorite = () => {
-        if (isFavorite) {
-            dispatch(removeFavorite(storeId))
-            .then(response => {
-                if (response.payload.success) {
-                    setIsFavorite(false)
-                }
-            })
-        }
-        else {
-            dispatch(saveFavorite(storeId))
-            .then(response => {
-                if (response.payload.success) {
-                    setIsFavorite(true)
-                }
-            })
+        if (props.user?.userData?.isAuth) {
+            if (isFavorite) {
+                dispatch(removeFavorite(storeId))
+                .then(response => {
+                    if (response.payload.success) {
+                        setIsFavorite(false)
+                    }
+                })
+            }
+            else {
+                dispatch(saveFavorite(storeId))
+                .then(response => {
+                    if (response.payload.success) {
+                        setIsFavorite(true)
+                    }
+                })
+            }    
+        } else {
+            alert("로그인 후 이용가능합니다.")
         }
     }
 

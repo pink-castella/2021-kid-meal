@@ -7,7 +7,7 @@ function UserCardBlock(props) {
 
     const { Panel } = Collapse;
     const [ProductInfo, setProductInfo] = useState([])  // 상품 정보와 가게 이름을 하나의 객체로 저장할 변수
-    const [StoreName, setStoreName] = useState([])      // 묶어주기 위해 장바구니에 담긴 상품의 가게 이름을 중복 없이 저장하는 변수.
+    const [StoreName, setStoreName] = useState([])      // 묶어주기 위해 장바구니에 담긴 상품의 가게 이름을 중복 없이 저장하는 변수
     const [AllNames, setAllNames] = useState([])        // 상품 갯수를 측정하는 변수. 새로운 아이템 추가 시 중복 불러오기 방지를 위함
 
     useEffect(() => {
